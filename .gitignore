@@ -1,8 +1,8 @@
 node_modules
 dist
 build
+coverage
 
-.env
+.env*
 
 *.log
-pnpm-debug.log
