@@ -34,8 +34,8 @@ bank statement reconciliation possible later instead of a rewrite.
 computed from the sum of allocations against the installment amount and its due date. A status
 column would be a second source of truth, and the two would drift.
 
-**Budget, contract and payment are three different numbers.** A category shows *planned* vs
-*contracted* vs *paid*, so the overspend is visible before it happens — not after the vendor
+**Budget, contract and payment are three different numbers.** A category shows _planned_ vs
+_contracted_ vs _paid_, so the overspend is visible before it happens — not after the vendor
 is hired.
 
 **Savings tell the truth about the past and estimate the future.** Deposits and manual balance
@@ -53,15 +53,15 @@ The reasoning behind each choice is recorded as an ADR in [`docs/adr/`](docs/adr
 
 ## Stack
 
-| Layer | Choice |
-|---|---|
-| API | Node, NestJS, TypeScript |
-| Database | PostgreSQL, Prisma for CRUD, hand-written SQL for reports |
-| Web | React, Vite, TanStack Query, React Router, Tailwind, shadcn/ui |
-| Validation | Zod schemas shared between API and web |
-| Files | S3-compatible storage, presigned uploads (MinIO locally, R2 in production) |
-| Tests | Unit tests on the domain, integration tests on a real Postgres via Testcontainers, Playwright for critical flows |
-| Ops | Docker Compose for local development, GitHub Actions for CI, structured logs with pino |
+| Layer      | Choice                                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| API        | Node, NestJS, TypeScript                                                                                         |
+| Database   | PostgreSQL, Prisma for CRUD, hand-written SQL for reports                                                        |
+| Web        | React, Vite, TanStack Query, React Router, Tailwind, shadcn/ui                                                   |
+| Validation | Zod schemas shared between API and web                                                                           |
+| Files      | S3-compatible storage, presigned uploads (MinIO locally, R2 in production)                                       |
+| Tests      | Unit tests on the domain, integration tests on a real Postgres via Testcontainers, Playwright for critical flows |
+| Ops        | Docker Compose for local development, GitHub Actions for CI, structured logs with pino                           |
 
 ## Repository layout
 
@@ -103,7 +103,7 @@ Payments debit an account, which is what keeps the cash flow projection honest.
 
 ## About this project
 
-Built by [João Assunção](https://github.com/) as a learning project: every line is written by
+Built by [João Assunção](https://github.com/JoaoAssRego) as a learning project: every line is written by
 hand, on purpose, to learn backend engineering properly rather than to assemble something
 quickly. The study plan is in [`docs/curso/`](docs/curso/00-plano-de-estudos.md).
 
