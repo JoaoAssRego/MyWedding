@@ -21,6 +21,9 @@ export function dividirEmParcelas(totalCentavos, numeroParcelas) {
     arrayParcelas.push(valorParcelaCentavos);
   }
 
+  if (!(numeroParcelas === arrayParcelas.length)) {
+    throw new Error("Número de parcelas diferente do tamanho do array!");
+  }
   let i = 0;
 
   while (centavosRestantes !== 0) {
