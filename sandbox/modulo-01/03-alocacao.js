@@ -13,7 +13,7 @@ function dividirEmParcelas(totalCentavos, numeroParcelas) {
     );
   }
 
-  const valorParcela = totalCentavos / numeroParcelas;
+  let valorParcela = totalCentavos / numeroParcelas;
   let centavosRestantes = totalCentavos % numeroParcelas;
   let arrayParcelas = [];
 
@@ -30,6 +30,15 @@ function dividirEmParcelas(totalCentavos, numeroParcelas) {
   }
 
   return arrayParcelas;
+}
+
+function somar(arrayParcelas) {
+  let soma = 0;
+  for (let i = 0; i < arrayParcelas.length; i++) {
+    soma += arrayParcelas[i];
+  }
+
+  return soma;
 }
 
 console.log(dividirEmParcelas(175000, 6));
