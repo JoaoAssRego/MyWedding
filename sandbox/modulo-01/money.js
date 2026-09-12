@@ -1,16 +1,22 @@
 export function dividirEmParcelas(totalCentavos, numeroParcelas) {
   if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
-    throw new Error("O número de parcelas deve ser inteiro e maior que zero");
+    throw new Error(
+      "Numero de Parcelas deve ser inteiro >= 1, recebido: ",
+      numeroParcelas,
+    );
   }
 
   if (!(Number.isInteger(totalCentavos) && totalCentavos >= 0)) {
     throw new Error(
-      "O número de centavos deve ser inteiro e maior ou igual que zero",
+      "Total em centavos deve ser inteiro >=0, recebido: ",
+      totalCentavos,
     );
   }
 
   if (numeroParcelas > totalCentavos) {
-    throw new Error("Numero total deve ser maior que o número de parcelas");
+    throw new Error(
+      `Total em centavos deve ser > numero de Parcelas, recebido: ${numeroParcelas} e ${totalCentavos}`,
+    );
   }
 
   const valorParcelaCentavos = Math.floor(totalCentavos / numeroParcelas);
@@ -19,10 +25,6 @@ export function dividirEmParcelas(totalCentavos, numeroParcelas) {
 
   for (let i = 0; i < numeroParcelas; i++) {
     arrayParcelas.push(valorParcelaCentavos);
-  }
-
-  if (!(numeroParcelas === arrayParcelas.length)) {
-    throw new Error("Número de parcelas diferente do tamanho do array!");
   }
   let i = 0;
 

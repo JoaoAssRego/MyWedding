@@ -1,34 +1,53 @@
 import { dividirEmParcelas, somar } from "./01-money.js";
 
-function verificar(descricao, condicao) {}
+/**verificar(descricao, condicao) recebe um texto e um booleano.
+ * Imprime uma linha só, juntando o texto com OK se a condição for
+ * verdadeira, ou FALHOU se for falsa. Três linhas, no máximo quatro.
+ * Não sabe nada sobre parcelas. */
+function verificar(descricao, condicao) {
+  if (condicao) {
+    console.log("Ok", descricao);
+  }
+  console.log("FALHOU", descricao);
+}
 
 function verificarErro(descricao, fn) {
   try {
-    fn(1750000, 6);
-    fn(1200000, 6);
-    fn(100, 3);
-    fn(1, 1);
-    fn(10, 10);
-    fn(10, -1);
-    fn(-100, 5);
-    fn(10, 2.5);
-
-    verificar("FALHOU!", e);
+    fn();
+    console.log("FALHOU");
   } catch (e) {
-    verificar("OK", e);
+    console.log("OK", e.message);
   }
 }
 
-console.log(
-  verificarErro("cinco centavos em dez parcelas", () =>
-    dividirEmParcelas(5, 10),
-  ),
+fn(1750000, 6);
+fn(1200000, 6);
+fn(100, 3);
+fn(1, 1);
+fn(10, 10);
+fn(10, -1);
+fn(-100, 5);
+fn(10, 2.5);
+
+verificar(
+  "Valor em Centavos é igual",
+  somar(dividirEmParcelas(1750000, 6)) === 1750000,
 );
-/**verificar(descricao, condicao) — imprime a descrição junto com OK ou FALHOU, 
-conforme a condição.
-verificarErro(descricao, fn) — recebe uma função, executa dentro de um try/catch, 
-e imprime OK se ela estourou um erro (junto com a mensagem capturada) ou FALHOU se 
-ela não estourou. Pra passar uma função como argumento sem executá-la na hora, você 
-a envolve: verificarErro("cinco centavos em dez parcelas", () => dividirEmParcelas(5, 10)). 
-Aquele () => cria uma função anônima que só roda quando 
-alguém chamar — a gente aprofunda isso na próxima aula. */
+verificar(
+  "Valor em Centavos é igual",
+  somar(dividirEmParcelas(1200000, 6)) === 1200000,
+);
+verificar(
+  "Valor em Centavos é igual",
+  somar(dividirEmParcelas(100, 3)) === 100,
+);
+verificar("Valor em Centavos é igual", somar(dividirEmParcelas(1, 1)) === 1);
+verificar("Valor em Centavos é igual", somar(dividirEmParcelas(10, 10)) === 10);
+
+(verificarErro("parcelas negativas", () => somar(dividirEmParcelas(10, -1))),
+  verificarErro("total em centavos negativo", () =>
+    somar(dividirEmParcelas(-100, 5)),
+  ),
+  verificarErro("valor não inteiro para parcelas", () =>
+    somar(dividirEmParcelas(10, 2.5)),
+  ));

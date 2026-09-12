@@ -1,6 +1,10 @@
 function provar(totalCentavos, numeroParcelas) {
   let arrayParcelas = dividirEmParcelas(totalCentavos, numeroParcelas);
 
+  if (!(numeroParcelas === arrayParcelas.length)) {
+    throw new Error("Número de parcelas diferente do tamanho do array!");
+  }
+
   return somar(arrayParcelas) === totalCentavos;
 }
 
