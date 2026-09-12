@@ -1,4 +1,18 @@
 function dividirEmParcelas(totalCentavos, numeroParcelas) {
+  if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 1)) {
+    throw new Error("O número de parcelas deve ser inteiro e maior que zero");
+  }
+
+  if (!(Number.isInteger(totalCentavos) && totalCentavos > 0)) {
+    throw new Error("O número de centavos deve ser inteiro e maior que zero");
+  }
+
+  if (numeroParcelas > totalCentavos) {
+    throw new Error(
+      "Numero totalcentavos deve ser maior que o número de parcelas",
+    );
+  }
+
   const valorParcela = totalCentavos / numeroParcelas;
   let centavosRestantes = totalCentavos % numeroParcelas;
   let arrayParcelas = [];
