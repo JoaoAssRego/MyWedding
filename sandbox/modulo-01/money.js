@@ -1,14 +1,14 @@
 export function dividirEmParcelas(totalCentavos, numeroParcelas) {
   if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
     throw new Error(
-      "Numero de Parcelas deve ser inteiro >= 1, recebido: ",
+      `Numero de Parcelas deve ser inteiro >= 1, recebido: ${numeroParcelas} `,
       numeroParcelas,
     );
   }
 
   if (!(Number.isInteger(totalCentavos) && totalCentavos >= 0)) {
     throw new Error(
-      "Total em centavos deve ser inteiro >=0, recebido: ",
+      `Total em centavos deve ser inteiro >=0, recebido: ${totalCentavos} `,
       totalCentavos,
     );
   }
