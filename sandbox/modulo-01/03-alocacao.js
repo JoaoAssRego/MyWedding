@@ -41,4 +41,17 @@ function somar(arrayParcelas) {
   return soma;
 }
 
-console.log(dividirEmParcelas(175000, 6));
+function provar(totalCentavos, numeroParcelas) {
+  let arrayParcelas = dividirEmParcelas(totalCentavos, numeroParcelas);
+
+  if (soma(arrayParcelas) === totalCentavos) {
+    return true;
+  }
+
+  return false;
+}
+
+console.log(provar(1750000, 6));
+console.log(provar(1200000, 6));
+console.log(provar(100, 3));
+console.log(provar());
