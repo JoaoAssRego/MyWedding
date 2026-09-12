@@ -1,29 +1,29 @@
 function dividirEmParcelas(totalCentavos, numeroParcelas) {
-  if (!(Number.isInteger(numeroParcelas) && numeroParcelas >= 1)) {
+  if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
     throw new Error("O número de parcelas deve ser inteiro e maior que zero");
   }
 
   if (!(Number.isInteger(totalCentavos) && totalCentavos >= 0)) {
-    throw new Error("O número de centavos deve ser inteiro e maior que zero");
-  }
-
-  if (numeroParcelas > totalCentavos) {
     throw new Error(
-      "Numero totalcentavos deve ser maior que o número de parcelas",
+      "O número de centavos deve ser inteiro e maior ou igual que zero",
     );
   }
 
-  let valorParcela = totalCentavos / numeroParcelas;
+  if (numeroParcelas > totalCentavos) {
+    throw new Error("Numero total deve ser maior que o número de parcelas");
+  }
+
+  const valorParcelaCentavos = Math.floor(totalCentavos / numeroParcelas);
   let centavosRestantes = totalCentavos % numeroParcelas;
-  let arrayParcelas = [];
+  const arrayParcelas = [];
 
   for (let i = 0; i < numeroParcelas; i++) {
-    arrayParcelas.push(Math.floor(valorParcela));
+    arrayParcelas.push(valorParcelaCentavos);
   }
 
   let i = 0;
 
-  while (centavosRestantes != 0) {
+  while (centavosRestantes !== 0) {
     arrayParcelas[i] += 1;
     centavosRestantes -= 1;
     i++;
@@ -44,11 +44,7 @@ function somar(arrayParcelas) {
 function provar(totalCentavos, numeroParcelas) {
   let arrayParcelas = dividirEmParcelas(totalCentavos, numeroParcelas);
 
-  if (somar(arrayParcelas) === totalCentavos) {
-    return true;
-  }
-
-  return false;
+  return somar(arrayParcelas) === totalCentavos;
 }
 
 console.log(provar(1750000, 6));
