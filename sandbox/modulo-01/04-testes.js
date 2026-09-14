@@ -1,9 +1,5 @@
 import { dividirEmParcelas, somar } from "./money.js";
 
-/**verificar(descricao, condicao) recebe um texto e um booleano.
- * Imprime uma linha só, juntando o texto com OK se a condição for
- * verdadeira, ou FALHOU se for falsa. Três linhas, no máximo quatro.
- * Não sabe nada sobre parcelas. */
 function verificar(descricao, condicao) {
   if (condicao) {
     console.log("OK", descricao);
@@ -57,7 +53,8 @@ verificarErro("total em centavos negativo", () => dividirEmParcelas(-100, 5));
 verificarErro("valor não inteiro para parcelas", () =>
   dividirEmParcelas(10, 2.5),
 );
-verificarErro("total menor que o número de parcelas (5 centavos em 10 parcelas)", () =>
-  dividirEmParcelas(5, 10),
+verificarErro(
+  "total menor que o número de parcelas (5 centavos em 10 parcelas)",
+  () => dividirEmParcelas(5, 10),
 );
 verificarErro("zero parcelas", () => dividirEmParcelas(10, 0));

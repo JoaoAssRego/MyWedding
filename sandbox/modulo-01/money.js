@@ -15,7 +15,7 @@ export function dividirEmParcelas(totalCentavos, numeroParcelas) {
 
   if (numeroParcelas > totalCentavos) {
     throw new Error(
-      `Total em centavos deve ser > numero de Parcelas, recebido: ${numeroParcelas} e ${totalCentavos}`,
+      `Total em centavos deve ser > numero de Parcelas, recebido: Número de Parcelas =${numeroParcelas} e Total em Centavos=${totalCentavos}`,
     );
   }
 
@@ -44,4 +44,8 @@ export function somar(arrayParcelas) {
   }
 
   return soma;
+}
+
+export function formatarCentavos(centavos) {
+  return `R$ ${new Intl.NumberFormat("pt-BR").format(centavos)}`;
 }
