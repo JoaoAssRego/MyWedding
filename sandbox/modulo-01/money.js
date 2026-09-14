@@ -49,3 +49,21 @@ export function somar(arrayParcelas) {
 export function formatarCentavos(centavos) {
   return `R$ ${new Intl.NumberFormat("pt-BR").format(centavos)}`;
 }
+
+// Receive an object containing TotalCentavos and numeroParcelas
+export function gerarParcelas(contrato) {
+  const parcelas = dividirEmParcelas(
+    contrato.totalCentavos,
+    contrato.numeroParcelas,
+  );
+  const arrayObject = [];
+
+  for (let i = 0; i < parcelas.length; i++) {
+    arrayObject.push({
+      numero: i,
+      valorCentavos: parcelas[i],
+    });
+  }
+
+  return arrayObject;
+}
