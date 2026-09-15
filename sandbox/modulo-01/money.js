@@ -60,10 +60,44 @@ export function gerarParcelas(contrato) {
 
   for (let i = 0; i < parcelas.length; i++) {
     arrayObject.push({
-      numero: i,
+      numero: i + 1,
       valorCentavos: parcelas[i],
     });
   }
 
   return arrayObject;
 }
+
+export function imprimeParcelas(contrato) {
+  const parcelas = gerarParcelas(contrato);
+
+  for (let i = 0; i < contrato.length; i++) {
+    console.log(`${contrato.nome} - parcela ${contrato.numero}`);
+  }
+}
+
+const contratosSalao = {
+  nome: "Casarão do Paraiso",
+  totalCentavos: 17500000,
+  numeroParcelas: 27,
+};
+
+const contratosFotografo = {
+  nome: "Gauss",
+  totalCentavos: 390000,
+  numeroParcelas: 20,
+};
+
+const contratossSalao = gerarParcelas(contratosSalao);
+const contratossFotografo = gerarParcelas(contratosFotografo);
+
+for (const parcela of contratossSalao) {
+  console.log(
+    `${contratosSalao.nome} - ${parcela.numero}/${Object.keys(contratossSalao).length}: ${parcela.valorCentavos}`,
+  );
+}
+
+// for (const parcela of contratossFotografo) {
+//   console.log(`${parcela.numero}: ${parcela.valorCentavos}`);
+// }
+// console.log(gerarParcelas(contratosFotografo));
