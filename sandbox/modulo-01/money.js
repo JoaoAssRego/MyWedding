@@ -1,15 +1,13 @@
 export function dividirEmParcelas(totalCentavos, numeroParcelas) {
   if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
     throw new Error(
-      `Numero de Parcelas deve ser inteiro >= 1, recebido: ${numeroParcelas} `,
-      numeroParcelas,
+      `Numero de Parcelas deve ser inteiro >= 1, recebido: ${numeroParcelas}`,
     );
   }
 
   if (!(Number.isInteger(totalCentavos) && totalCentavos >= 0)) {
     throw new Error(
-      `Total em centavos deve ser inteiro >=0, recebido: ${totalCentavos} `,
-      totalCentavos,
+      `Total em centavos deve ser inteiro >=0, recebido: ${totalCentavos}`,
     );
   }
 
@@ -51,7 +49,7 @@ export function formatarCentavos(centavos) {
     style: "currency",
     currency: "BRL",
   });
-  return `R$ ${formatador.format(centavos)}`;
+  return formatador.format(centavos / 100).replace(/\u00A0/g, " ");
 }
 
 // Receive an object containing TotalCentavos and numeroParcelas
@@ -70,12 +68,4 @@ export function gerarParcelas(contrato) {
   }
 
   return arrayObject;
-}
-
-export function imprimeParcelas(contrato) {
-  const parcelas = gerarParcelas(contrato);
-
-  for (let i = 0; i < contrato.length; i++) {
-    console.log(`${contrato.nome} - parcela ${contrato.numero}`);
-  }
 }

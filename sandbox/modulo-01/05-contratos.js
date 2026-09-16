@@ -1,19 +1,19 @@
 import { gerarParcelas, formatarCentavos } from "./money.js";
 
-const contratosSalao = {
+const contratoSalao = {
   nome: "Casarão do Paraiso",
-  totalCentavos: 17500,
+  totalCentavos: 1750000,
   numeroParcelas: 27,
 };
 
-const contratosFotografo = {
+const contratoFotografo = {
   nome: "Gauss",
-  totalCentavos: 3900,
+  totalCentavos: 390000,
   numeroParcelas: 20,
 };
 
-const contratossSalao = gerarParcelas(contratosSalao);
-const contratossFotografo = gerarParcelas(contratosFotografo);
+const parcelasSalao = gerarParcelas(contratoSalao);
+const parcelasFotografo = gerarParcelas(contratoFotografo);
 
 function exibirRelatorio(contrato, parcelas) {
   let somaParcelas = 0;
@@ -32,5 +32,5 @@ function exibirRelatorio(contrato, parcelas) {
   );
 }
 
-exibirRelatorio(contratosSalao, contratossSalao);
-exibirRelatorio(contratosFotografo, contratossFotografo);
+exibirRelatorio(contratoSalao, parcelasSalao);
+exibirRelatorio(contratoFotografo, parcelasFotografo);
