@@ -2,5 +2,8 @@
   "name": "sandbox",
   "version": "1.0.0",
   "description": "",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
 }
