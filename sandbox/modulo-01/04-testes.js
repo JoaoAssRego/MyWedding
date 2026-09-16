@@ -28,14 +28,6 @@ function verificarErro(descricao, fn) {
   }
 }
 
-function verificarFormatarCentavos(descricao, condicao) {
-  if (condicao) {
-    console.log("OK", descricao);
-  } else {
-    console.log("FALHOU", descricao);
-  }
-}
-
 const parcelasGeradas = gerarParcelas(contratoFotografo);
 
 verificar(
@@ -76,25 +68,25 @@ verificar(
   formatarCentavos(5) === "R$ 0,05",
 );
 
-// verificarQuantidadeParcelas(
-//   "Parcelas devem ser a mesma quantidade",
-//   gerarParcelas(contratosFotografo).length ===
-//     contratosFotografo.numeroParcelas,
-// );
+verificarQuantidadeParcelas(
+  "Parcelas devem ser a mesma quantidade",
+  gerarParcelas(contratosFotografo).length ===
+    contratosFotografo.numeroParcelas,
+);
 
-// verificarFormatarCentavos(
-//   "formatarCentavos recebe: 1750000 deve retornar: R$ 17.500,00",
-//   formatarCentavos(1750000) === "R$ 17.500,00",
-// );
-// verificarFormatarCentavos(
-//   "formatarCentavos recebe: 291667 deve retornar: R$ 2.916,67",
-//   formatarCentavos(291667) === "R$ 2.916,67",
-// );
-// verificarFormatarCentavos(
-//   "formatarCentavos recebe: 5 deve retornar: R$ 0,05",
-//   formatarCentavos(5) === "R$ 0,05",
-// );
-/**
+verificarFormatarCentavos(
+  "formatarCentavos recebe: 1750000 deve retornar: R$ 17.500,00",
+  formatarCentavos(1750000) === "R$ 17.500,00",
+);
+verificarFormatarCentavos(
+  "formatarCentavos recebe: 291667 deve retornar: R$ 2.916,67",
+  formatarCentavos(291667) === "R$ 2.916,67",
+);
+verificarFormatarCentavos(
+  "formatarCentavos recebe: 5 deve retornar: R$ 0,05",
+  formatarCentavos(5) === "R$ 0,05",
+);
+
 verificar("Calibração verdadeira: deve imprimir OK", 1 === 1);
 verificar("Calibração falsa: deve imprimir FALHOU", 1 === 2);
 
@@ -137,4 +129,3 @@ verificarErro(
   () => dividirEmParcelas(5, 10),
 );
 verificarErro("zero parcelas", () => dividirEmParcelas(10, 0));
-*/
