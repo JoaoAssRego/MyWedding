@@ -47,7 +47,11 @@ export function somar(arrayParcelas) {
 }
 
 export function formatarCentavos(centavos) {
-  return `R$ ${new Intl.NumberFormat("pt-BR").format(centavos)}`;
+  const formatador = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+  return `R$ ${formatador.format(centavos)}`;
 }
 
 // Receive an object containing TotalCentavos and numeroParcelas

@@ -1,9 +1,4 @@
-import { gerarParcelas } from "./money.js";
-
-const formatador = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
+import { gerarParcelas, formatarCentavos } from "./money.js";
 
 const contratosSalao = {
   nome: "Casarão do Paraiso",
@@ -25,14 +20,16 @@ function exibirRelatorio(contrato, parcelas) {
   for (const parcela of parcelas) {
     somaParcelas += parcela.valorCentavos;
     console.log(
-      `${contrato.nome} - parcela ${parcela.numero}/${parcelas.length}: ${formatador.format(parcela.valorCentavos)}`,
+      `${contrato.nome} - parcela ${parcela.numero}/${parcelas.length}: ${formatarCentavos(parcela.valorCentavos)}`,
     );
   }
-  
+
   console.log(`\n--- Resumo: ${contrato.nome} ---`);
-  console.log(`Total do contrato: ${formatador.format(contrato.totalCentavos)}`);
-  console.log(`Soma das parcelas: ${formatador.format(somaParcelas)}`);
-  console.log(`Conferência: A soma ${somaParcelas === contrato.totalCentavos ? 'BATE' : 'NÃO BATE'} com o total!\n`);
+  console.log(`Total do contrato: ${formatarCentavos(contrato.totalCentavos)}`);
+  console.log(`Soma das parcelas: ${formatarCentavos(somaParcelas)}`);
+  console.log(
+    `Conferência: A soma ${somaParcelas === contrato.totalCentavos ? "BATE" : "NÃO BATE"} com o total!\n`,
+  );
 }
 
 exibirRelatorio(contratosSalao, contratossSalao);
