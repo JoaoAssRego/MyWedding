@@ -1,4 +1,9 @@
-export function dividirEmParcelas(totalCentavos, numeroParcelas) {
+import { type contrato } from "./types/contrato.js";
+
+export function dividirEmParcelas(
+  totalCentavos: number,
+  numeroParcelas: number,
+) {
   if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
     throw new Error(
       `Numero de Parcelas deve ser inteiro >= 1, recebido: ${numeroParcelas}`,
@@ -17,34 +22,29 @@ export function dividirEmParcelas(totalCentavos, numeroParcelas) {
     );
   }
 
-  const valorParcelaCentavos = Math.floor(totalCentavos / numeroParcelas);
-  let centavosRestantes = totalCentavos % numeroParcelas;
-  const arrayParcelas = [];
+  const valorParcelaCentavos: number = Math.floor(
+    totalCentavos / numeroParcelas,
+  );
+  const centavosRestantes: number = totalCentavos % numeroParcelas;
+  const arrayParcelas: Array<number> = [];
 
   for (let i = 0; i < numeroParcelas; i++) {
-    arrayParcelas.push(valorParcelaCentavos);
-  }
-  let i = 0;
-
-  while (centavosRestantes !== 0) {
-    arrayParcelas[i] += 1;
-    centavosRestantes -= 1;
-    i++;
+    arrayParcelas.push(valorParcelaCentavos + (i < centavosRestantes ? 1 : 0));
   }
 
   return arrayParcelas;
 }
 
-export function somar(arrayParcelas) {
+export function somar(arrayParcelas: Array<number>) {
   let soma = 0;
-  for (let i = 0; i < arrayParcelas.length; i++) {
-    soma += arrayParcelas[i];
-  }
 
+  for (const parcela of arrayParcelas) {
+    soma += parcela;
+  }
   return soma;
 }
 
-export function formatarCentavos(centavos) {
+export function formatarCentavos(centavos: number) {
   const formatador = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -53,7 +53,7 @@ export function formatarCentavos(centavos) {
 }
 
 // Receive an object containing TotalCentavos and numeroParcelas
-export function gerarParcelas(contrato) {
+export function gerarParcelas(contrato: contrato) {
   const parcelas = dividirEmParcelas(
     contrato.totalCentavos,
     contrato.numeroParcelas,
