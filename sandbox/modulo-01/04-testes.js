@@ -3,7 +3,7 @@ import {
   dividirEmParcelas,
   formatarCentavos,
   somar,
-} from "./money.js";
+} from "./money.ts";
 
 const contratoFotografo = {
   nome: "Gauss",
