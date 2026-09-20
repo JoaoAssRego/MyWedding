@@ -1,4 +1,4 @@
-import { gerarParcelas, formatarCentavos } from "./money.js";
+import { gerarParcelas, formatarCentavos } from "./money.ts";
 
 const contratoSalao = {
   nome: "Casarão do Paraiso",
