@@ -1,4 +1,4 @@
-export interface contrato {
+export interface Contrato {
   nome: string;
   totalCentavos: number;
   numeroParcelas: number;

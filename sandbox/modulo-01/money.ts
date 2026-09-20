@@ -1,4 +1,4 @@
-import { type contrato } from "./types/contrato.ts";
+import { type Contrato } from "./types/contrato.ts";
 
 export function dividirEmParcelas(
   totalCentavos: number,
@@ -53,19 +53,23 @@ export function formatarCentavos(centavos: number) {
 }
 
 // Receive an object containing TotalCentavos and numeroParcelas
-export function gerarParcelas(contrato: contrato) {
+export function gerarParcelas(contrato: Contrato): Array<Object> {
   const parcelas = dividirEmParcelas(
     contrato.totalCentavos,
     contrato.numeroParcelas,
   );
-  const arrayObject = [];
-
-  for (let i = 0; i < parcelas.length; i++) {
-    arrayObject.push({
-      numero: i + 1,
-      valorCentavos: parcelas[i],
-    });
-  }
+  const arrayObject = parcelas.map((parcela, index) => ({
+    numero: index + 1,
+    parcela,
+  }));
 
   return arrayObject;
 }
+
+const contratoFotografo = {
+  nome: "Gauss",
+  totalCentavos: 390000,
+  numeroParcelas: 20,
+};
+
+console.log(gerarParcelas(contratoFotografo));
