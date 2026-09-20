@@ -1,4 +1,4 @@
-import { type contrato } from "./types/contrato.js";
+import { type contrato } from "./types/contrato.ts";
 
 export function dividirEmParcelas(
   totalCentavos: number,
