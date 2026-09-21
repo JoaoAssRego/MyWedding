@@ -11,6 +11,10 @@ Cada aula tem três partes: um pouco de teoria (curta), uma **tarefa** que você
 tarefa, reviso o que você fez e aponto o que melhorar. Quando você errar, o erro é material de
 aula, não problema.
 
+Cada aula vira um arquivo próprio em `docs/curso/`; o formato está em
+[como-registrar-as-aulas.md](como-registrar-as-aulas.md), e as regras que valem para o projeto
+inteiro em [convencoes.md](convencoes.md).
+
 Regra de ouro: **não avance de módulo sem ter feito as tarefas do anterior.** Ler sobre
 programação dá a sensação de aprender; só escrever ensina de verdade.
 
@@ -55,7 +59,7 @@ alta** o que escreveu, sem olhar o código.
 
 - [x] Módulo 0 — Preparação
 - [x] Módulo 1 — JavaScript essencial
-- [ ] Módulo 2 — TypeScript
+- [ ] [Módulo 2 — TypeScript](modulo-02/README.md)
 - [ ] Módulo 3 — Node e HTTP sem framework
 - [ ] Módulo 4 — Postgres e modelagem
 - [ ] Módulo 5 — Monorepo e NestJS
