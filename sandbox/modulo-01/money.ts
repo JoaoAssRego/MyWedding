@@ -4,7 +4,7 @@ import type { Parcela } from "./types/parcela.ts";
 export function dividirEmParcelas(
   totalCentavos: number,
   numeroParcelas: number,
-) {
+): Array<number> {
   if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
     throw new Error(
       `Numero de Parcelas deve ser inteiro >= 1, recebido: ${numeroParcelas}`,
@@ -36,7 +36,7 @@ export function dividirEmParcelas(
   return arrayParcelas;
 }
 
-export function somar(arrayParcelas: Array<number>) {
+export function somar(arrayParcelas: Array<number>): number {
   let soma = 0;
 
   for (const parcela of arrayParcelas) {
@@ -45,7 +45,7 @@ export function somar(arrayParcelas: Array<number>) {
   return soma;
 }
 
-export function formatarCentavos(centavos: number) {
+export function formatarCentavos(centavos: number): string {
   const formatador = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -66,11 +66,3 @@ export function gerarParcelas(contrato: Contrato): Array<Parcela> {
 
   return arrayObject;
 }
-
-const contratoFotografo = {
-  nome: "Gauss",
-  totalCentavos: 390000,
-  numeroParcelas: 20,
-};
-
-console.log(gerarParcelas(contratoFotografo));
