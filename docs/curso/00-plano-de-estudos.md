@@ -53,8 +53,8 @@ alta** o que escreveu, sem olhar o código.
 
 ## Progresso
 
-- [ ] Módulo 0 — Preparação
-- [ ] Módulo 1 — JavaScript essencial
+- [x] Módulo 0 — Preparação
+- [x] Módulo 1 — JavaScript essencial
 - [ ] Módulo 2 — TypeScript
 - [ ] Módulo 3 — Node e HTTP sem framework
 - [ ] Módulo 4 — Postgres e modelagem
