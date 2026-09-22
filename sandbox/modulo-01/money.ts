@@ -64,5 +64,5 @@ export function gerarParcelas(contrato: Contrato): Array<Parcela> {
     valorCentavos: parcela,
   }));
 
-  return arrayObject;
+  return arrayObjectParcelas;
 }
