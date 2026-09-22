@@ -5,13 +5,16 @@ import {
   somar,
 } from "./money.ts";
 
-const contratoFotografo = {
+import type { Contrato } from "./types/contrato.ts";
+import type { Parcela } from "./types/parcela.ts";
+
+const contratoFotografo: Contrato = {
   nome: "Gauss",
   totalCentavos: 390000,
   numeroParcelas: 20,
 };
 
-function verificar(descricao, condicao) {
+function verificar(descricao: string, condicao: boolean) {
   if (condicao) {
     console.log("OK", descricao);
   } else {
@@ -19,12 +22,17 @@ function verificar(descricao, condicao) {
   }
 }
 
-function verificarErro(descricao, fn) {
+function verificarErro(descricao: string, fn: () => void): void {
   try {
     fn();
     console.log("FALHOU", descricao);
   } catch (e) {
-    console.log("OK", e.message);
+    if (e instanceof Error) {
+      console.log("OK", e.message);
+    } else {
+      console.log("OK", String(e))
+    }
+
   }
 }
 
@@ -35,17 +43,24 @@ verificar(
   parcelasGeradas.length === contratoFotografo.numeroParcelas,
 );
 
-verificar("a primeira tem numero igual a 1", parcelasGeradas[0].numero === 1);
+const primeira = parcelasGeradas[0];
+let ultima = parcelasGeradas.at(-1);
 
-verificar(
-  "a última tem numero igual ao número de parcelas",
-  parcelasGeradas[parcelasGeradas.length - 1].numero ===
-    contratoFotografo.numeroParcelas,
-);
+verificar("foram geradas parcelas", primeira !== undefined && ultima !== undefined);
+
+if (primeira && ultima) {
+  verificar("a primeira tem numero igual a 1", primeira.numero === 1);
+  verificar(
+    "a última tem numero igual ao número de parcelas",
+    ultima.numero === contratoFotografo.numeroParcelas,
+  );
+}
+
+verificar("foram geradas parcelas", primeira !== undefined);
 
 let somaValorCentavos = 0;
-for (let i = 0; i < parcelasGeradas.length; i++) {
-  somaValorCentavos += parcelasGeradas[i].valorCentavos;
+for (const parcela of parcelasGeradas) {
+  somaValorCentavos += parcela.valorCentavos;
 }
 
 verificar(
@@ -68,9 +83,6 @@ verificar(
   formatarCentavos(5) === "R$ 0,05",
 );
 
-verificar("Calibração verdadeira: deve imprimir OK", 1 === 1);
-verificar("Calibração falsa: deve imprimir FALHOU", 1 === 2);
-
 verificar(
   "Total de 1750000 dividido em 6 parcelas deve somar 1750000",
   somar(dividirEmParcelas(1750000, 6)) === 1750000,
@@ -79,10 +91,15 @@ verificar(
   "Total de 1750000 dividido em 6 parcelas deve gerar um array com 6 posições",
   dividirEmParcelas(1750000, 6).length === 6,
 );
-verificar(
-  "Total de 1750000 dividido em 6 parcelas: primeira parcela deve ser maior que a última",
-  dividirEmParcelas(1750000, 6)[0] > dividirEmParcelas(1750000, 6)[5],
-);
+const parc = dividirEmParcelas(1750000, 6);
+
+if (parc[0] && parc[5]) {
+  verificar(
+    "Total de 1750000 dividido em 6 parcelas: primeira parcela deve ser maior que a última",
+    parc[0] > parc[5]
+  );
+}
+
 verificar(
   "Total de 1200000 dividido em 6 parcelas deve somar 1200000",
   somar(dividirEmParcelas(1200000, 6)) === 1200000,
