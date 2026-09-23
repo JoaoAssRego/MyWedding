@@ -1,5 +1,6 @@
 import { gerarParcelas, formatarCentavos } from "./money.ts";
-
+import type { Contrato } from "./types/contrato.ts";
+import type { Parcela } from "./types/parcela.ts";
 const contratoSalao = {
   nome: "Casarão do Paraiso",
   totalCentavos: 1750000,
@@ -15,7 +16,7 @@ const contratoFotografo = {
 const parcelasSalao = gerarParcelas(contratoSalao);
 const parcelasFotografo = gerarParcelas(contratoFotografo);
 
-function exibirRelatorio(contrato, parcelas) {
+function exibirRelatorio(contrato: Contrato, parcelas: Array<Parcela>) {
   let somaParcelas = 0;
   for (const parcela of parcelas) {
     somaParcelas += parcela.valorCentavos;
