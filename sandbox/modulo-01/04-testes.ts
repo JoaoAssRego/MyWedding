@@ -47,7 +47,9 @@ verificar(
 );
 
 const primeira = parcelasGeradas[0];
-let ultima = parcelasGeradas.at(-1);
+const ultima = parcelasGeradas.at(-1);
+
+if (primeira === undefined || ultima === undefined) throw new Error(`parcelasGeradas são undefined. Parcelas: ${parcelasGeradas}`)
 
 verificar("foram geradas parcelas", primeira !== undefined && ultima !== undefined);
 

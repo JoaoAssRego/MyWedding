@@ -53,7 +53,6 @@ export function formatarCentavos(centavos: number): string {
   return formatador.format(centavos / 100).replace(/\u00A0/g, " ");
 }
 
-// Receive an object containing TotalCentavos and numeroParcelas
 export function gerarParcelas(contrato: Contrato): Array<Parcela> {
   const parcelas = dividirEmParcelas(
     contrato.totalCentavos,
