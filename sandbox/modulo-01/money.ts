@@ -50,7 +50,7 @@ export function gerarParcelas(contrato: Contrato): Array<Parcela> {
     contrato.numero,
   );
   const arrayObjectParcelas = parcelas.map((parcela, index) => ({
-    numero: Centavos(index + 1),
+    numero: index + 1,
     valorCentavos: parcela,
   }));
 
