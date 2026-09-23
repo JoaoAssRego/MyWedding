@@ -6,7 +6,6 @@ import {
 } from "./money.ts";
 
 import type { Contrato } from "./types/contrato.ts";
-import type { Parcela } from "./types/parcela.ts";
 
 const contratoFotografo: Contrato = {
   nome: "Gauss",
@@ -14,7 +13,7 @@ const contratoFotografo: Contrato = {
   numeroParcelas: 20,
 };
 
-function verificar(descricao: string, condicao: boolean) {
+function verificar(descricao: string, condicao: boolean): void {
   if (condicao) {
     console.log("OK", descricao);
   } else {
@@ -49,19 +48,14 @@ verificar(
 const primeira = parcelasGeradas[0];
 const ultima = parcelasGeradas.at(-1);
 
-if (primeira === undefined || ultima === undefined) throw new Error(`parcelasGeradas são undefined. Parcelas: ${parcelasGeradas}`)
+if (primeira === undefined || ultima === undefined) throw new Error(`parcelasGeradas são undefined. Parcelas: ${JSON.stringify(parcelasGeradas)}`)
 
-verificar("foram geradas parcelas", primeira !== undefined && ultima !== undefined);
+verificar("a primeira tem numero igual a 1", primeira.numero === 1);
+verificar(
+  "a última tem numero igual ao número de parcelas",
+  ultima.numero === contratoFotografo.numeroParcelas,
+);
 
-if (primeira && ultima) {
-  verificar("a primeira tem numero igual a 1", primeira.numero === 1);
-  verificar(
-    "a última tem numero igual ao número de parcelas",
-    ultima.numero === contratoFotografo.numeroParcelas,
-  );
-}
-
-verificar("foram geradas parcelas", primeira !== undefined);
 
 let somaValorCentavos = 0;
 for (const parcela of parcelasGeradas) {
@@ -89,7 +83,7 @@ verificar(
 );
 
 verificar(
-  "Total de 1750000 dividido em 6 parcelas deve somarCentavos 1750000",
+  "Total de 1750000 dividido em 6 parcelas deve somar 1750000",
   somarCentavos(dividirEmParcelas(1750000, 6)) === 1750000,
 );
 verificar(
@@ -106,19 +100,19 @@ if (parc[0] && parc[5]) {
 }
 
 verificar(
-  "Total de 1200000 dividido em 6 parcelas deve somarCentavos 1200000",
+  "Total de 1200000 dividido em 6 parcelas deve somar 1200000",
   somarCentavos(dividirEmParcelas(1200000, 6)) === 1200000,
 );
 verificar(
-  "Total de 100 dividido em 3 parcelas deve somarCentavos 100",
+  "Total de 100 dividido em 3 parcelas deve somar 100",
   somarCentavos(dividirEmParcelas(100, 3)) === 100,
 );
 verificar(
-  "Total de 1 dividido em 1 parcela deve somarCentavos 1",
+  "Total de 1 dividido em 1 parcela deve somar 1",
   somarCentavos(dividirEmParcelas(1, 1)) === 1,
 );
 verificar(
-  "Total de 10 dividido em 10 parcelas deve somarCentavos 10",
+  "Total de 10 dividido em 10 parcelas deve somar 10",
   somarCentavos(dividirEmParcelas(10, 10)) === 10,
 );
 
