@@ -1,7 +1,7 @@
-type centavos = number & { readonly __brand: "Centavos" };
+export type Centavos = number & { readonly __brand: "Centavos" };
 
-export function Centavos(valor: number): centavos {
-    if (valor < 0) throw new Error("Valor deve ser maior que 0");
+export function Centavos(valor: number): Centavos {
+    if (valor < 0 && Number.isInteger(valor)) throw new Error("Valor deve ser maior que 0");
 
-    return valor as centavos;
+    return valor as Centavos;
 }
