@@ -2,7 +2,7 @@ import {
   gerarParcelas,
   dividirEmParcelas,
   formatarCentavos,
-  somar,
+  somarCentavos,
 } from "./money.ts";
 
 import type { Contrato } from "./types/contrato.ts";
@@ -35,6 +35,9 @@ function verificarErro(descricao: string, fn: () => void): void {
 
   }
 }
+const status: number = 1
+verificar("Calibração verdadeira: deve imprimir OK", status === 1);
+verificar("Calibração falsa: deve imprimir FALHOU", status === 2);
 
 const parcelasGeradas = gerarParcelas(contratoFotografo);
 
@@ -84,8 +87,8 @@ verificar(
 );
 
 verificar(
-  "Total de 1750000 dividido em 6 parcelas deve somar 1750000",
-  somar(dividirEmParcelas(1750000, 6)) === 1750000,
+  "Total de 1750000 dividido em 6 parcelas deve somarCentavos 1750000",
+  somarCentavos(dividirEmParcelas(1750000, 6)) === 1750000,
 );
 verificar(
   "Total de 1750000 dividido em 6 parcelas deve gerar um array com 6 posições",
@@ -101,20 +104,20 @@ if (parc[0] && parc[5]) {
 }
 
 verificar(
-  "Total de 1200000 dividido em 6 parcelas deve somar 1200000",
-  somar(dividirEmParcelas(1200000, 6)) === 1200000,
+  "Total de 1200000 dividido em 6 parcelas deve somarCentavos 1200000",
+  somarCentavos(dividirEmParcelas(1200000, 6)) === 1200000,
 );
 verificar(
-  "Total de 100 dividido em 3 parcelas deve somar 100",
-  somar(dividirEmParcelas(100, 3)) === 100,
+  "Total de 100 dividido em 3 parcelas deve somarCentavos 100",
+  somarCentavos(dividirEmParcelas(100, 3)) === 100,
 );
 verificar(
-  "Total de 1 dividido em 1 parcela deve somar 1",
-  somar(dividirEmParcelas(1, 1)) === 1,
+  "Total de 1 dividido em 1 parcela deve somarCentavos 1",
+  somarCentavos(dividirEmParcelas(1, 1)) === 1,
 );
 verificar(
-  "Total de 10 dividido em 10 parcelas deve somar 10",
-  somar(dividirEmParcelas(10, 10)) === 10,
+  "Total de 10 dividido em 10 parcelas deve somarCentavos 10",
+  somarCentavos(dividirEmParcelas(10, 10)) === 10,
 );
 
 verificarErro("parcelas negativas", () => dividirEmParcelas(10, -1));

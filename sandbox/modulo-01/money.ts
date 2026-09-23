@@ -35,8 +35,8 @@ export function dividirEmParcelas(
 
   return arrayParcelas;
 }
-
-export function somar(arrayParcelas: Array<number>): number {
+// Função trocou de nome, pois seu retorno representa a soma dos centavos do array de parcelas
+export function somarCentavos(arrayParcelas: Array<number>): number {
   let soma = 0;
 
   for (const parcela of arrayParcelas) {
