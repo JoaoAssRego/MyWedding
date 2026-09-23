@@ -1,6 +1,6 @@
 # Aula 2.3 — Fazer o módulo 1 inteiro passar pelo compilador
 
-**Status:** em andamento — tarefa passada, verificação ainda não executada.
+**Status:** concluída — verificação passou; a higiene que sobrou virou a [aula 2.4](02-4-higiene-dos-testes.md).
 
 ## Contexto
 
@@ -107,9 +107,21 @@ resolve sozinho.
 
 ### Resultado da tarefa
 
-*(a preencher quando `pnpm typecheck` rodar)*
+Depois do `pnpm install`, o compilador passou limpo (`tsc --noEmit`, saída vazia) e os testes
+rodaram com `node modulo-01/04-testes.ts`. O executável do `typescript@7` **é** `tsc` — a
+pendência sobre o nome do binário está resolvida.
 
-## Pendências
+Entregue corretamente:
 
-- `typescript` está fixado em `^7.0.2`, a versão nativa reescrita em Go. Confirmar, depois do
-  `pnpm install`, qual é o nome do executável em `node_modules/.bin` — pode não ser `tsc`.
+- efeito colateral removido de `money.ts`;
+- tipo de retorno explícito nas quatro funções exportadas;
+- os dois arquivos migrados para `.ts`;
+- `e instanceof Error` no `catch`, com `String(e)` no outro ramo — sem `!` e sem `as`;
+- `.at(-1)` no lugar de `arr[arr.length - 1]`;
+- `for...of` substituindo o `for (let i...)` na soma: a saída número 1 da aula, parar de
+  indexar em vez de checar o índice;
+- fixture anotado com `: Contrato`, o que faz um typo estourar na declaração.
+
+Ficou pendente e virou a [aula 2.4](02-4-higiene-dos-testes.md): os testes de calibração
+apagados, `somar` ainda aceitando `number[]`, o script `typecheck` fora do `package.json`,
+uma linha de verificação duplicada e o `if (primeira && ultima)` que pulava teste em silêncio.

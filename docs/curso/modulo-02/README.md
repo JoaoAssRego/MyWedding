@@ -11,7 +11,8 @@ módulo 5).
 |---|---|---|
 | 2.1 | [Migração para `.ts` e tipos próprios](02-1-migracao-para-ts.md) | concluída |
 | 2.2 | [Revisão do código do módulo 1](02-2-revisao-do-modulo-1.md) | concluída |
-| 2.3 | [Fazer o módulo 1 passar pelo compilador](02-3-tipos-no-modulo-1.md) | em andamento |
+| 2.3 | [Fazer o módulo 1 passar pelo compilador](02-3-tipos-no-modulo-1.md) | concluída |
+| 2.4 | [Higiene dos testes e nomes honestos](02-4-higiene-dos-testes.md) | quase concluída |
 
 Ainda faltam, para fechar o módulo: a aula que dá nome ao entregável — tornar o `Money`
 **impossível de usar errado** — e o build (`tsc` gerando saída de verdade, não só `--noEmit`).
