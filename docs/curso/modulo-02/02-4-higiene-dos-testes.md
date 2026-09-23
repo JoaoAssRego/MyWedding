@@ -1,7 +1,7 @@
 # Aula 2.4 — Higiene dos testes e nomes honestos
 
-**Status:** quase concluída — 4 dos 6 itens entregues; sobrou limpeza, registrada na
-[aula 2.5](02-5-branded-types.md).
+**Status:** concluída — os 6 itens entregues; a limpeza final saiu junto.
+
 
 ## Contexto
 
@@ -84,26 +84,30 @@ Entregues: itens 1, 2, 3 e 6. A escolha no item 2 foi `somarCentavos(arrayParcel
 — o nome passou a descrever o que a função realmente soma, e as chamadas com
 `dividirEmParcelas(...)` continuaram válidas.
 
-Não entregues:
+Numa primeira passada os itens 4 e 5 ficaram pela metade: a guarda `if (... === undefined)
+throw` foi adicionada, mas o `if (primeira && ultima)` e o
+`verificar(..., primeira !== undefined)` antigos continuaram no arquivo. Depois do `throw` o
+compilador já estreitou os dois tipos — as verificações eram sempre verdadeiras e o `if`
+sempre tomado. **Código morto que parece código vivo**, e o tipo de coisa que o compilador não
+aponta sozinho: ele estava certo, só inútil.
 
-- **Item 4** — a linha duplicada continua lá, e o teste "foram geradas parcelas" segue
-  aparecendo duas vezes na saída.
-- **Item 5** — a guarda `if (... === undefined) throw` foi adicionada, mas o
-  `if (primeira && ultima)` e o `verificar(..., primeira !== undefined)` antigos não foram
-  removidos. Depois do `throw`, o compilador já estreitou os dois tipos: as duas verificações
-  são sempre verdadeiras e o `if` é sempre tomado. É código morto que parece código vivo.
+Na segunda passada tudo foi limpo, junto com as pendências menores:
 
-Efeito colateral introduzido: as descrições de teste corrompidas pela substituição de texto
-(ver teoria acima).
+- linha duplicada removida; saída caiu de 22 para 21 linhas, sem repetição;
+- descrições de teste corrigidas de volta para "deve somar";
+- `noUnusedLocals` e `noUnusedParameters` ligados no `tsconfig.json`, e o import de `Parcela`
+  que sobrava em `04-testes.ts` removido — agora é o compilador que cobra isso;
+- `verificar` ganhou `: void`;
+- `JSON.stringify` na mensagem do `throw`.
+
+Verificação final: `tsc --noEmit` limpo, 21 linhas de saída, a única `FALHOU` sendo a
+calibração falsa.
 
 ## Pendências
 
-- Limpar os itens 4 e 5 e corrigir as descrições dos testes.
-- `04-testes.ts` importa `Parcela` sem usar. Ligar `noUnusedLocals` e `noUnusedParameters` no
-  `tsconfig.json` faz o compilador apontar isso sozinho.
-- `verificar` continua sem tipo de retorno, enquanto `verificarErro` tem `: void`.
-- A mensagem do `throw` interpola o array direto — `${parcelasGeradas}` imprime
-  `[object Object],[object Object]`. Usar `JSON.stringify`.
+- `if (parc[0] && parc[5])` continua usando o mesmo padrão de "pular teste em silêncio" que
+  foi corrigido em `primeira`/`ultima` — o teste da primeira parcela maior que a última não
+  roda se o array vier curto, e ninguém fica sabendo.
 - `arrayObjectParcelas`, em `money.ts`, ainda carrega "arrayObject" no nome (pendência desde
   a [aula 2.2](02-2-revisao-do-modulo-1.md)).
 - Continua aberta a decisão sobre o contrato de R$ 0,00.
