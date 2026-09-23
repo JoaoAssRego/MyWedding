@@ -31,7 +31,7 @@ function exibirRelatorio(contrato: Contrato, parcelas: Array<Parcela>) {
 
   console.log(`\n--- Resumo: ${contrato.nome} ---`);
   console.log(`Total do contrato: ${formatarCentavos(contrato.total)}`);
-  console.log(`Soma das parcelas: ${formatarCentavos(somaParcelas)}`);
+  console.log(`Soma das parcelas: ${formatarCentavos(Centavos(somaParcelas))}`);
   console.log(
     `Conferência: A soma ${somaParcelas === contrato.total ? "BATE" : "NÃO BATE"} com o total!\n`,
   );

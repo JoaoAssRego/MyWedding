@@ -26,17 +26,17 @@ export function dividirEmParcelas(
 
   return arrayParcelas;
 }
-// Função trocou de nome, pois seu retorno representa a soma dos centavos do array de parcelas
-export function somarCentavos(arrayParcelas: Array<number>): number {
-  let soma = 0;
+
+export function somarCentavos(arrayParcelas: Array<Centavos>): Centavos {
+  let soma: number = 0;
 
   for (const parcela of arrayParcelas) {
     soma += parcela;
   }
-  return soma;
+  return Centavos(soma);
 }
 
-export function formatarCentavos(centavos: number): string {
+export function formatarCentavos(centavos: Centavos): string {
   const formatador = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -50,7 +50,7 @@ export function gerarParcelas(contrato: Contrato): Array<Parcela> {
     contrato.numero,
   );
   const arrayObjectParcelas = parcelas.map((parcela, index) => ({
-    numero: index + 1,
+    numero: Centavos(index + 1),
     valorCentavos: parcela,
   }));
 
