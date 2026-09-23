@@ -1,36 +1,27 @@
 import type { Contrato } from "./types/contrato.ts";
 import type { Parcela } from "./types/parcela.ts";
+import { QuantidadeParcelas } from "./types/quantidadeParcelas.ts";
+import { Centavos } from "./types/centavos.ts";
 
 export function dividirEmParcelas(
-  totalCentavos: number,
-  numeroParcelas: number,
-): Array<number> {
-  if (!(Number.isInteger(numeroParcelas) && numeroParcelas > 0)) {
-    throw new Error(
-      `Numero de Parcelas deve ser inteiro >= 1, recebido: ${numeroParcelas}`,
-    );
-  }
+  total: Centavos,
+  numero: QuantidadeParcelas,
+): Array<Centavos> {
 
-  if (!(Number.isInteger(totalCentavos) && totalCentavos >= 0)) {
+  if (numero > total) {
     throw new Error(
-      `Total em centavos deve ser inteiro >=0, recebido: ${totalCentavos}`,
-    );
-  }
-
-  if (numeroParcelas > totalCentavos) {
-    throw new Error(
-      `Total em centavos deve ser > numero de Parcelas, recebido: Número de Parcelas =${numeroParcelas} e Total em Centavos=${totalCentavos}`,
+      `Total em centavos deve ser > numero de Parcelas, recebido: Número de Parcelas =${numero} e Total em Centavos=${total}`,
     );
   }
 
   const valorParcelaCentavos: number = Math.floor(
-    totalCentavos / numeroParcelas,
+    total / numero,
   );
-  const centavosRestantes: number = totalCentavos % numeroParcelas;
-  const arrayParcelas: Array<number> = [];
+  const centavosRestantes: number = total % numero;
+  const arrayParcelas: Array<Centavos> = [];
 
-  for (let i = 0; i < numeroParcelas; i++) {
-    arrayParcelas.push(valorParcelaCentavos + (i < centavosRestantes ? 1 : 0));
+  for (let i = 0; i < numero; i++) {
+    arrayParcelas.push(Centavos(valorParcelaCentavos + (i < centavosRestantes ? 1 : 0)));
   }
 
   return arrayParcelas;
@@ -55,8 +46,8 @@ export function formatarCentavos(centavos: number): string {
 
 export function gerarParcelas(contrato: Contrato): Array<Parcela> {
   const parcelas = dividirEmParcelas(
-    contrato.totalCentavos,
-    contrato.numeroParcelas,
+    contrato.total,
+    contrato.numero,
   );
   const arrayObjectParcelas = parcelas.map((parcela, index) => ({
     numero: index + 1,
