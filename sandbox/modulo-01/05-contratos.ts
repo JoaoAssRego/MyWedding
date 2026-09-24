@@ -1,4 +1,4 @@
-import { gerarParcelas, formatarCentavos } from "./money.ts";
+import { gerarParcelas, formatarCentavos, somarCentavos } from "./money.ts";
 import { Centavos } from "./types/centavos.ts";
 import { QuantidadeParcelas } from "./types/quantidadeParcelas.ts";
 
@@ -17,8 +17,8 @@ const contratoFotografo = {
 };
 
 function exibirRelatorio(contrato: Contrato) {
-  const parcelas = gerarParcelas(contrato)
-  const somaParcelas = parcelas.reduce((acumulador, parcela) => acumulador + parcela.valorCentavos, 0)
+  const parcelas = gerarParcelas(contrato);
+  const somaParcelas = somarCentavos(parcelas.map((parcela) => parcela.valorCentavos));
   for (const parcela of parcelas) {
     console.log(
       `${contrato.nome} - parcela ${parcela.numero}/${parcelas.length}: ${formatarCentavos(parcela.valorCentavos)}`,
