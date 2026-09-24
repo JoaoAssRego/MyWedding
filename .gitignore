@@ -6,3 +6,5 @@ coverage
 .env*
 
 *.log
+# Obsidian: layout da janela muda a cada clique, não é config do vault
+.obsidian/workspace*.json

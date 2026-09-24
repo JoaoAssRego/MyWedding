@@ -1,3 +1,16 @@
+---
+tipo: aula
+modulo: 2
+aula: "2.4"
+status: concluida
+conceitos:
+  - testes-que-falham-em-silencio
+  - nomes-honestos
+tags:
+  - curso/aula
+  - curso/modulo-02
+---
+
 # Aula 2.4 — Higiene dos testes e nomes honestos
 
 **Status:** concluída — os 6 itens entregues; a limpeza final saiu junto.

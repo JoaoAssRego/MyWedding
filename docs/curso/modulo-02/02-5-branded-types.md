@@ -1,3 +1,18 @@
+---
+tipo: aula
+modulo: 2
+aula: "2.5"
+status: em-andamento
+conceitos:
+  - tipagem-estrutural
+  - branded-types
+  - smart-constructor
+  - ts-expect-error
+tags:
+  - curso/aula
+  - curso/modulo-02
+---
+
 # Aula 2.5 — Tipos marcados: um número que sabe o que é
 
 **Status:** em andamento — tarefa passada.

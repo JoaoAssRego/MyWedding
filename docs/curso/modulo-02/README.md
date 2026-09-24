@@ -1,3 +1,12 @@
+---
+tipo: modulo
+modulo: 2
+status: em-andamento
+tags:
+  - curso/modulo
+  - curso/modulo-02
+---
+
 # Módulo 2 — TypeScript
 
 **Entregável:** o mesmo `Money` do módulo 1, agora tipado e impossível de usar errado.

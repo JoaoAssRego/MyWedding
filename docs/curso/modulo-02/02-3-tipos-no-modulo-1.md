@@ -1,3 +1,18 @@
+---
+tipo: aula
+modulo: 2
+aula: "2.3"
+status: concluida
+conceitos:
+  - strict
+  - noUncheckedIndexedAccess
+  - pnpm-exec
+  - scripts-package-json
+tags:
+  - curso/aula
+  - curso/modulo-02
+---
+
 # Aula 2.3 — Fazer o módulo 1 inteiro passar pelo compilador
 
 **Status:** concluída — verificação passou; a higiene que sobrou virou a [aula 2.4](02-4-higiene-dos-testes.md).

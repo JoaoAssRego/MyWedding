@@ -1,3 +1,17 @@
+---
+tipo: aula
+modulo: 2
+aula: "2.2"
+status: concluida
+conceitos:
+  - code-review
+  - guard-clause
+  - nomes-honestos
+tags:
+  - curso/aula
+  - curso/modulo-02
+---
+
 # Aula 2.2 — Revisão do código do módulo 1
 
 **Status:** concluída.

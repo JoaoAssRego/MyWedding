@@ -1,4 +1,19 @@
+---
+tipo: mapa
+aliases:
+  - Plano de estudos
+  - Início
+tags:
+  - curso
+---
+
 # Plano de estudos — MyWedding
+
+> [!tip] Por onde começar
+> - [Onde estou](onde-estou.md) — o ponto atual da trilha, próximos passos e pendências
+> - [Como as aulas são dadas](como-ensinar.md) — o método
+> - [Aulas](aulas.base) — todas as aulas com status
+> - [Convenções](convencoes.md) · [Como registrar as aulas](como-registrar-as-aulas.md)
 
 Este arquivo é o mapa do curso. O plano técnico (arquitetura, modelo de dados, decisões) vive
 separado; aqui só interessa **a ordem em que você aprende as coisas** e o que você entrega em

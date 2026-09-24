@@ -1,3 +1,17 @@
+---
+tipo: aula
+modulo: 2
+aula: "2.1"
+status: concluida
+conceitos:
+  - interface
+  - import-type
+  - verbatimModuleSyntax
+tags:
+  - curso/aula
+  - curso/modulo-02
+---
+
 # Aula 2.1 — Migração para `.ts` e tipos próprios
 
 **Status:** concluída.

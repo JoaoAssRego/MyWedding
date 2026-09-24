@@ -1,3 +1,11 @@
+---
+tipo: referencia
+aliases:
+  - Convenções
+tags:
+  - curso
+---
+
 # Convenções do projeto
 
 Regras que valem para o projeto inteiro, independentemente do módulo. Cada uma aponta para a
