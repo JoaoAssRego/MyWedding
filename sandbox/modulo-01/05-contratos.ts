@@ -1,9 +1,8 @@
-import { gerarParcelas, formatarCentavos, somarCentavos } from "./money.ts";
+import { gerarParcelas, formatarCentavos } from "./money.ts";
 import { Centavos } from "./types/centavos.ts";
 import { QuantidadeParcelas } from "./types/quantidadeParcelas.ts";
 
 import type { Contrato } from "./types/contrato.ts";
-import type { Parcela } from "./types/parcela.ts";
 
 const contratoSalao = {
   nome: "Casarão do Paraiso",
