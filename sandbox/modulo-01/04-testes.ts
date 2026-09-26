@@ -29,7 +29,7 @@ function verificarErro(descricao: string, fn: () => void): void {
     console.log("FALHOU", descricao);
   } catch (e) {
     if (e instanceof Error) {
-      console.log("OK", e.message);
+      console.log("OK", e.message, "com descrição de:", descricao);
     } else {
       console.log("OK", String(e))
     }
