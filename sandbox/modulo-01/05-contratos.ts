@@ -1,19 +1,19 @@
 import { gerarParcelas, formatarCentavos, somarCentavos } from "./money.ts";
-import { Centavos } from "./types/centavos.ts";
-import { QuantidadeParcelas } from "./types/quantidadeParcelas.ts";
+import { centavos } from "./types/centavos.ts";
+import { quantidadeParcelas } from "./types/quantidadeParcelas.ts";
 
 import type { Contrato } from "./types/contrato.ts";
 
 const contratoSalao = {
   nome: "Casarão do Paraiso",
-  total: Centavos(1750000),
-  numero: QuantidadeParcelas(27),
+  total: centavos(1750000),
+  quantidadeParcelas: quantidadeParcelas(27),
 };
 
 const contratoFotografo = {
   nome: "Gauss",
-  total: Centavos(390000),
-  numero: QuantidadeParcelas(20),
+  total: centavos(390000),
+  quantidadeParcelas: quantidadeParcelas(20),
 };
 
 function exibirRelatorio(contrato: Contrato) {
@@ -27,7 +27,7 @@ function exibirRelatorio(contrato: Contrato) {
 
   console.log(`\n--- Resumo: ${contrato.nome} ---`);
   console.log(`Total do contrato: ${formatarCentavos(contrato.total)}`);
-  console.log(`Soma das parcelas: ${formatarCentavos(Centavos(somaParcelas))}`);
+  console.log(`Soma das parcelas: ${formatarCentavos(centavos(somaParcelas))}`);
   console.log(
     `Conferência: A soma ${somaParcelas === contrato.total ? "BATE" : "NÃO BATE"} com o total!\n`,
   );

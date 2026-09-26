@@ -4,5 +4,5 @@ import type { Centavos } from "./centavos.ts";
 export interface Contrato {
   nome: string;
   total: Centavos;
-  numero: QuantidadeParcelas;
+  quantidadeParcelas: QuantidadeParcelas;
 }
