@@ -1,8 +1,7 @@
 filters:
   and:
-    - 'tipo == "aula"'
-    - 'file.ext == "md"'
-
+    - tipo == "aula"
+    - file.ext == "md"
 properties:
   aula:
     displayName: Aula
@@ -11,11 +10,10 @@ properties:
   conceitos:
     displayName: Conceitos
   file.mtime:
-    displayName: "Última edição"
-
+    displayName: Última edição
 views:
   - type: table
-    name: "Todas as aulas"
+    name: Todas as aulas
     groupBy:
       property: modulo
       direction: ASC
@@ -25,12 +23,13 @@ views:
       - status
       - conceitos
       - file.mtime
-
+    columnSize:
+      note.conceitos: 102
   - type: table
-    name: "Em andamento"
+    name: Em andamento
     filters:
       and:
-        - 'status != "concluida"'
+        - status != "concluida"
     order:
       - aula
       - file.name

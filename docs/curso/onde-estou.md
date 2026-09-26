@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-09-24
+atualizado: 2026-09-25
 modulo_atual: 2
-aula_atual: "2.5"
+aula_atual: "2.6"
 aliases:
   - Onde estou
 tags:
@@ -15,41 +15,40 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 2 — TypeScript**, [aula 2.5 — Tipos marcados](modulo-02/02-5-branded-types.md).
-> Tarefas 1 a 3 entregues em commits; tarefa 4 em andamento.
+> **Módulo 2 — TypeScript**. A [aula 2.5 — Tipos marcados](modulo-02/02-5-branded-types.md)
+> fechou; a [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md) acaba de
+> ser passada e ainda não começou.
 
-## Estado da aula atual
+## Estado
 
-Situação em 24/09/2026, pelo repositório (último commit `9171852`):
+Situação em 25/09/2026, pelo repositório (último commit `73b8077`), tudo verificado:
 
-| Item da tarefa | Situação |
-|---|---|
-| 1. `Centavos` + construtor | feito — `types/centavos.ts` |
-| 2. `QuantidadeParcelas` + construtor | feito — `types/quantidadeParcelas.ts` |
-| 3. Assinaturas de `dividirEmParcelas`, `somarCentavos`, `formatarCentavos`, `Contrato`, `Parcela` | feito |
-| 4. Resto do código compilando | **em andamento** — `pnpm typecheck` falha em `04-testes.ts` (fixtures ainda com `number` cru) |
-| 5. Apagar guardas impossíveis | não começado |
-| 6. `verificarErro` → `@ts-expect-error` | não começado |
-| 7. Os dois casos da abertura com `@ts-expect-error` | não começado |
+- `tsc --noEmit` limpo;
+- `node modulo-01/04-testes.ts` roda até o fim, única `FALHOU` é a calibração;
+- `node modulo-01/05-contratos.ts` fecha com "A soma BATE com o total".
 
-> [!warning] Observado ao rodar os testes, ainda não investigado
-> `node modulo-01/04-testes.ts` para no teste de `gerarParcelas`: a função devolve `[]`. Pode ser
-> efeito da migração de tipos ainda incompleta — é para olhar na entrega da tarefa 4, junto com
-> o João, não para consertar por ele.
+O módulo passou a ter **dois tipos de teste, com dois comandos**:
+
+| Arquivo | Como roda | O que prova |
+|---|---|---|
+| `04-testes.ts` | `node modulo-01/04-testes.ts` | o que o programa faz com valores válidos e inválidos |
+| `06-testes-de-tipos.ts` | `pnpm typecheck` | o que o programa **não deixa nem escrever** |
 
 ## Próximos passos
 
-1. Terminar a aula 2.5 e responder em voz alta: *quais guardas de runtime sobraram, e por quê?*
-2. `Money` como value object imutável.
-3. Build: `tsc` gerando saída de verdade, não só `--noEmit`.
-4. Fechar o [módulo 2](modulo-02/README.md) e resolver as pendências dele.
-5. Módulo 3 — Node e HTTP sem framework.
+1. Aula 2.6 — as três limpezas pendentes e depois a classe `Money`.
+2. Build: `tsc` gerando saída de verdade, não só `--noEmit`.
+3. Fechar o [módulo 2](modulo-02/README.md).
+4. Módulo 3 — Node e HTTP sem framework.
 
 ## Pendências abertas
 
-Coletadas das aulas; cada uma aponta para onde nasceu.
+Cada uma aponta para onde nasceu. As três primeiras são a largada da aula 2.6.
 
-- [ ] Contrato de R$ 0,00: recusa intencional ou efeito colateral da guarda? — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
+- [ ] Construtores em PascalCase (`Centavos(...)`) parecem `new`; convenção é camelCase — [aula 2.5](modulo-02/02-5-branded-types.md)
+- [ ] `Contrato.numero` é ambíguo com `Parcela.numero` — quantidade × ordinal — [aula 2.5](modulo-02/02-5-branded-types.md)
+- [ ] Mensagem de `centavos` diz "maior que 0" enquanto a guarda aceita 0 — [aula 2.5](modulo-02/02-5-branded-types.md)
+- [ ] Contrato de R$ 0,00: recusa intencional ou efeito colateral da guarda? Decidir junto com o item acima — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
 - [ ] `if (parc[0] && parc[5])` pula o teste em silêncio se o array vier curto — [aula 2.4](modulo-02/02-4-higiene-dos-testes.md)
 - [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
 
@@ -60,9 +59,13 @@ O que foi entregue **e** verificado — não o que foi só lido.
 - **JavaScript:** variáveis, funções, arrays, objetos, erros, módulos; divisão de parcelas sem
   perder centavo (módulo 1).
 - **TypeScript:** anotação de tipos, `interface`, `import type`, `tsconfig` rigoroso
-  (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) — aulas 2.1 a 2.4.
-- **Tipagem estrutural:** respondeu sozinho que a saída para "reais no lugar de centavos" era
-  um tipo próprio, diferente de `number` (abertura da 2.5).
+  (`strict`, `noUncheckedIndexedAccess`, `noUnusedLocals`, `exactOptionalPropertyTypes`).
+- **Tipagem estrutural e tipos marcados:** entendeu por que o apelido não protege, escreveu
+  marca e construtor a partir de um exemplo em outro domínio, e acertou o que **não** marcar.
+- **Compilação × runtime:** sabe dizer qual erro cada uma pega, e separou os testes em dois
+  arquivos por causa disso. Respondeu sozinho por que a guarda `numero > total` sobrevive —
+  invariante relacional.
+- **Depuração:** achou o bug do `&&` a partir da saída dos testes e corrigiu a causa.
 - **Ferramentas:** Git e Conventional Commits no dia a dia, pnpm, script de `typecheck`.
 
 ## Ver também
