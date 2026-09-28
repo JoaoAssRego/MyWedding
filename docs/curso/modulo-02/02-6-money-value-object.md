@@ -22,15 +22,15 @@ tags:
 
 A [aula 2.5](02-5-branded-types.md) fechou: `Centavos` e `QuantidadeParcelas` são tipos
 marcados, e os erros de unidade e de ordem de argumento não compilam mais. Falta o que o
-[README do projeto](../../../README.md) promete: *"handled by an immutable `Money` value
-object"*.
+[README do projeto](../../../README.md) promete: _"handled by an immutable `Money` value
+object"_.
 
 O que ainda é possível hoje, e não deveria ser:
 
 ```ts
 const total = Centavos(390000);
-const errado = total * 2;        // number cru, a marca se perde no caminho
-const pior   = total + 0.5;      // vira 390000.5 e nada reclama
+const errado = total * 2; // number cru, a marca se perde no caminho
+const pior = total + 0.5; // vira 390000.5 e nada reclama
 ```
 
 A marca protege a **entrada** das funções. Ela não protege a **aritmética**: assim que um
@@ -50,8 +50,8 @@ consequências práticas:
 - **Carrega as operações que fazem sentido para ele.** Somar dois `Money` faz sentido;
   multiplicar `Money` por `Money` não (R$ × R$ não é uma unidade que exista).
 
-Comparado ao tipo marcado: a marca diz *o que o número é*; o value object diz, além disso,
-*o que se pode fazer com ele*. `total * 2` deixa de existir como possibilidade, porque `Money`
+Comparado ao tipo marcado: a marca diz _o que o número é_; o value object diz, além disso,
+_o que se pode fazer com ele_. `total * 2` deixa de existir como possibilidade, porque `Money`
 não é um número — ele **contém** um.
 
 ### Imutabilidade não é decoração
@@ -59,18 +59,22 @@ não é um número — ele **contém** um.
 ```ts
 const parcela = Money.deCentavos(100);
 parcela.somar(Money.deCentavos(50));
-console.log(parcela.formatar());   // R$ 1,00 — e tem que ser R$ 1,00
+console.log(parcela.formatar()); // R$ 1,00 — e tem que ser R$ 1,00
 ```
 
 Se `somar` mudasse o objeto, qualquer outro lugar que tivesse uma referência para aquela
 parcela veria o valor mudar sozinho. Em finanças isso é o bug que ninguém consegue reproduzir.
-Método que muda o objeto se chama *mutação*; aqui não existe nenhum.
+Método que muda o objeto se chama _mutação_; aqui não existe nenhum.
 
 ### `private` do TypeScript × `#` do JavaScript
 
 ```ts
-class A { private x = 1 }      // some na compilação: em runtime, a.x funciona
-class B { #x = 1 }             // privado de verdade: b.#x fora da classe é erro de sintaxe
+class A {
+  private x = 1;
+} // some na compilação: em runtime, a.x funciona
+class B {
+  #x = 1;
+} // privado de verdade: b.#x fora da classe é erro de sintaxe
 ```
 
 `private` é uma regra do compilador; `#` é uma regra da linguagem. Como o objetivo aqui é que
@@ -105,7 +109,7 @@ inteligente da aula 2.5, agora com um nome na porta.
 3. A mensagem de erro de `centavos` diz "maior que 0" enquanto a guarda aceita `0`. Corrija a
    mensagem **ou** a guarda — e a escolha depende da decisão pendente desde a
    [aula 2.2](02-2-revisao-do-modulo-1.md): R$ 0,00 é um valor monetário válido? (Dica: é
-   diferente de perguntar se um *contrato* de R$ 0,00 é válido. Separar as duas perguntas é
+   diferente de perguntar se um _contrato_ de R$ 0,00 é válido. Separar as duas perguntas é
    metade da resposta.)
 
 ### A aula
@@ -143,4 +147,4 @@ que tenha um motivo, e há um.)
 
 ## O que aconteceu
 
-*(a preencher)*
+_(a preencher)_
