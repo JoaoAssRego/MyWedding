@@ -1,6 +1,6 @@
-import { gerarParcelas } from "./money.ts";
 import { quantidadeParcelas } from "./types/quantidadeParcelas.ts";
 import { Money } from "./money/money.ts";
+import { type Parcela } from "./types/parcela.ts";
 
 import type { Contrato } from "./types/contrato.ts";
 
@@ -34,6 +34,18 @@ function exibirRelatorio(contrato: Contrato) {
   console.log(
     `Conferência: A soma ${somaParcelas.igualA(contrato.total) ? "BATE" : "NÃO BATE"} com o total!\n`,
   );
+}
+
+export function gerarParcelas(contrato: Contrato): Array<Parcela> {
+  const parcelas = contrato.total.dividirEmParcelas(
+    contrato.quantidadeParcelas,
+  );
+  const arrayObjectParcelas = parcelas.map((parcela, index) => ({
+    numero: index + 1,
+    valorCentavos: parcela,
+  }));
+
+  return arrayObjectParcelas;
 }
 
 exibirRelatorio(contratoSalao);

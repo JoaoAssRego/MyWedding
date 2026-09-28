@@ -1,4 +1,3 @@
-import { dividirEmParcelas } from "./money.ts";
 import { quantidadeParcelas } from "./types/quantidadeParcelas.ts";
 import { centavos } from "./types/centavos.ts";
 import { Money } from "./money/money.ts";
