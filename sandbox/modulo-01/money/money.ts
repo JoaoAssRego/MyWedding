@@ -17,11 +17,11 @@ export class Money {
   }
 
   public somar(outro: Money): Money {
-    return new Money(centavos(outro.centavos + this.centavos));
+    return new Money(centavos(this.centavos + outro.centavos));
   }
 
   public subtrair(outro: Money): Money {
-    return new Money(centavos(outro.centavos - this.centavos));
+    return new Money(centavos(this.centavos - outro.centavos));
   }
 
   public dividirEmParcelas(quantidade: QuantidadeParcelas): Array<Money> {
