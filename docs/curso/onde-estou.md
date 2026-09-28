@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-09-25
+atualizado: 2026-09-28
 modulo_atual: 2
 aula_atual: "2.6"
 aliases:
@@ -15,17 +15,22 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 2 — TypeScript**. A [aula 2.5 — Tipos marcados](modulo-02/02-5-branded-types.md)
-> fechou; a [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md) acaba de
-> ser passada e ainda não começou.
+> **Módulo 2 — TypeScript**, [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md):
+> a classe existe e a migração começou, mas **o repositório não compila** — o `money.ts` antigo
+> ficou para trás. Detalhes e correções na nota da aula.
 
 ## Estado
 
-Situação em 25/09/2026, pelo repositório (último commit `73b8077`), tudo verificado:
+Situação em 28/09/2026, pelo repositório (último commit `52ec420`), tudo verificado:
 
-- `tsc --noEmit` limpo;
-- `node modulo-01/04-testes.ts` roda até o fim, única `FALHOU` é a calibração;
-- `node modulo-01/05-contratos.ts` fecha com "A soma BATE com o total".
+- `tsc --noEmit` → **7 erros**, todos em `modulo-01/money.ts` (o módulo de funções soltas, que
+  não acompanhou a migração para `Money`);
+- `node modulo-01/04-testes.ts` e `node modulo-01/05-contratos.ts` → nem executam, morrem no
+  import de `Centavos` que não existe mais.
+
+A classe `Money` em si está de pé e com API completa. O que falta é terminar a migração e
+corrigir quatro testes que afirmam a coisa errada — a lista está na
+[aula 2.6](modulo-02/02-6-money-value-object.md).
 
 O módulo passou a ter **dois tipos de teste, com dois comandos**:
 
@@ -36,19 +41,17 @@ O módulo passou a ter **dois tipos de teste, com dois comandos**:
 
 ## Próximos passos
 
-1. Aula 2.6 — as três limpezas pendentes e depois a classe `Money`.
+1. Terminar a aula 2.6: resolver `money.ts`, corrigir os testes, `#centavos`.
 2. Build: `tsc` gerando saída de verdade, não só `--noEmit`.
 3. Fechar o [módulo 2](modulo-02/README.md).
 4. Módulo 3 — Node e HTTP sem framework.
 
 ## Pendências abertas
 
-Cada uma aponta para onde nasceu. As três primeiras são a largada da aula 2.6.
+Cada uma aponta para onde nasceu. As da aula 2.6 em curso estão na própria nota da aula.
 
-- [ ] Construtores em PascalCase (`Centavos(...)`) parecem `new`; convenção é camelCase — [aula 2.5](modulo-02/02-5-branded-types.md)
-- [ ] `Contrato.numero` é ambíguo com `Parcela.numero` — quantidade × ordinal — [aula 2.5](modulo-02/02-5-branded-types.md)
-- [ ] Mensagem de `centavos` diz "maior que 0" enquanto a guarda aceita 0 — [aula 2.5](modulo-02/02-5-branded-types.md)
-- [ ] Contrato de R$ 0,00: recusa intencional ou efeito colateral da guarda? Decidir junto com o item acima — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
+- [x] Construtores em camelCase, `Contrato.quantidadeParcelas` e mensagem de `centavos` — feitos na largada da [aula 2.6](modulo-02/02-6-money-value-object.md)
+- [x] R$ 0,00 **é** valor monetário válido (`Money.deCentavos(0)` é o neutro do `reduce`); contrato sem valor continua recusado — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
 - [ ] `if (parc[0] && parc[5])` pula o teste em silêncio se o array vier curto — [aula 2.4](modulo-02/02-4-higiene-dos-testes.md)
 - [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
 

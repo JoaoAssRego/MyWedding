@@ -147,4 +147,90 @@ que tenha um motivo, e há um.)
 
 ## O que aconteceu
 
-_(a preencher)_
+### Primeira entrega — a classe nasceu, o módulo antigo não morreu
+
+`money/money.ts` existe, com construtor privado, `deCentavos`, `somar`, `subtrair`,
+`dividirEmParcelas`, `formatar`, `igualA` e `maiorQue`. `Contrato` e `Parcela` passaram a
+guardar `Money`, e `05-contratos.ts` ficou bonito: a soma virou um `reduce` de `somar`, e a
+conferência final virou `somaParcelas.igualA(contrato.total)`.
+
+Decisões certas, sem eu pedir:
+
+- **Não existe `valor()`.** A porta de saída não foi reaberta.
+- **`Money.deCentavos(0)` como elemento neutro do `reduce`.** Isso responde, na prática, a
+  pergunta aberta desde a [aula 2.2](02-2-revisao-do-modulo-1.md): R$ 0,00 **é** um valor
+  monetário válido. O que continua inválido é um *contrato* sem valor — e a separação entre
+  as duas perguntas é justamente a lição.
+- A mensagem de `centavos` foi corrigida para "maior ou igual a 0", coerente com a guarda.
+
+> [!caution] Estado: nada compila e nada roda
+> `tsc --noEmit` acusa 7 erros e `node modulo-01/04-testes.ts` nem chega a executar. A causa é
+> uma só: `modulo-01/money.ts` — o módulo de funções soltas — ficou para trás, ainda chamando
+> `Centavos(...)` em PascalCase e lendo `contrato.numero`, que não existem mais.
+
+A raiz do problema não é o esquecimento: é que a lógica da divisão foi **copiada** para dentro
+de `Money.dividirEmParcelas` em vez de ter sido *movida*. Com duas cópias da mesma regra, uma
+delas apodrece — e apodreceu. Toda migração tem esse momento; o que a resolve é decidir, para
+cada função do arquivo antigo, se ela **vira método**, **muda de casa** ou **morre**:
+
+| Função antiga | Destino |
+|---|---|
+| `dividirEmParcelas` | já é método de `Money` — a versão solta morre |
+| `somarCentavos` | morreu: `reduce` + `somar` faz o mesmo |
+| `formatarCentavos` | morreu: virou `Money.formatar()` |
+| `gerarParcelas(contrato)` | não é sobre dinheiro, é sobre contrato — muda de casa |
+
+### Os testes que mentem
+
+Com o arquivo antigo consertado, a suíte ainda vai acusar falhas — e todas elas são o teste
+errado, não o código errado:
+
+1. `somarMoney(1750000 ÷ 6).igualA(Money.deCentavos(150000))` — o esperado certo é 1750000.
+2. "Total de 10 dividido em 10 parcelas" executa `Money.deCentavos(1).dividirEmParcelas(1)`:
+   é uma cópia do teste anterior, com a descrição do caso que não está sendo testado.
+3. `verificarErro("total em centavos negativo", () => Money.deCentavos(100)...(5))` — 100
+   centavos em 5 parcelas é perfeitamente válido. O caso pretendido é `deCentavos(-100)`.
+4. O teste de imutabilidade (item 8 da tarefa) está invertido:
+   `verificar("...", inicial.igualA(depois))` compara 10 com 30. O que prova imutabilidade é
+   `inicial.igualA(Money.deCentavos(10))` — o original continuar valendo o que valia.
+
+> [!warning] Descrição renomeada por substituição de texto, de novo
+> "a primeira tem **quantidadeParcelas** igual a 1" — o mesmo localizar-e-substituir que
+> corrompeu as descrições na [aula 2.4](02-4-higiene-dos-testes.md), repetido. Além disso, o
+> teste de imutabilidade fala em "marcar não altera o **placar**", vocabulário de outro
+> domínio. Texto dentro de string não é protegido por compilador nenhum.
+
+### `@ts-expect-error` engole qualquer erro
+
+Em `06-testes-de-tipos.ts`:
+
+```ts
+// @ts-expect-error reais crus não entram onde se espera Centavos
+dividirEmParcelas(2000, QuantidadeParcelas(20));
+```
+
+`QuantidadeParcelas` em PascalCase não existe mais — o erro real dessa linha é
+*"Cannot find name"*, não o erro de tipo que o comentário afirma. A diretiva aceita **qualquer**
+erro na linha seguinte, então o teste continua "passando" pelo motivo errado.
+
+A lição: `@ts-expect-error` é um instrumento grosso. A linha abaixo dele precisa estar correta
+em tudo, menos no erro que se quer provar — senão o teste vira decoração.
+
+## Pendências
+
+- **`modulo-01/money.ts` precisa ser resolvido** — cada função vira método, muda de casa ou
+  morre (tabela acima). Enquanto ele existir, nada compila.
+- Corrigir os quatro testes que mentem, incluindo o de imutabilidade.
+- `06-testes-de-tipos.ts` apontando para nomes que não existem mais; depois da limpeza, os
+  testes de tipo passam a ser sobre `Money`.
+- `// @ts-expect-error` sem descrição na linha de `Money.deCentavos(100) * 2`.
+- **`private centavos` em vez de `#centavos`** (item 4 da tarefa). `private` é regra só do
+  compilador: em runtime, `(m as any).centavos = -5` funciona e quebra a invariante da classe.
+  Com `#`, o próprio JavaScript recusa.
+- `Parcela.valorCentavos` agora guarda um `Money`, não centavos — o nome voltou a mentir.
+- Linha solta `("");` em `04-testes.ts`.
+- `subtrair` lança quando o resultado é negativo, porque `centavos` recusa negativos. É uma
+  decisão de domínio que ninguém tomou explicitamente: **`Money` pode ser negativo?** Estornos
+  e descontos dependem da resposta.
+- Herdadas: `if (parc[0] && parc[5])` pula teste em silêncio; `arrayObjectParcelas` (morre
+  junto com o `money.ts` antigo).
