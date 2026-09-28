@@ -1,35 +1,38 @@
-import { gerarParcelas, formatarCentavos, somarCentavos } from "./money.ts";
-import { centavos } from "./types/centavos.ts";
+import { gerarParcelas } from "./money.ts";
 import { quantidadeParcelas } from "./types/quantidadeParcelas.ts";
+import { Money } from "./money/money.ts";
 
 import type { Contrato } from "./types/contrato.ts";
 
 const contratoSalao = {
   nome: "Casarão do Paraiso",
-  total: centavos(1750000),
+  total: Money.deCentavos(1750000),
   quantidadeParcelas: quantidadeParcelas(27),
 };
 
 const contratoFotografo = {
   nome: "Gauss",
-  total: centavos(390000),
+  total: Money.deCentavos(390000),
   quantidadeParcelas: quantidadeParcelas(20),
 };
 
 function exibirRelatorio(contrato: Contrato) {
   const parcelas = gerarParcelas(contrato);
-  const somaParcelas = somarCentavos(parcelas.map((parcela) => parcela.valorCentavos));
+  const somaParcelas = parcelas.reduce(
+    (acc, parcela) => acc.somar(parcela.valorCentavos),
+    Money.deCentavos(0),
+  );
   for (const parcela of parcelas) {
     console.log(
-      `${contrato.nome} - parcela ${parcela.numero}/${parcelas.length}: ${formatarCentavos(parcela.valorCentavos)}`,
+      `${contrato.nome} - parcela ${parcela.numero}/${parcelas.length}: ${parcela.valorCentavos.formatar()}`,
     );
   }
 
   console.log(`\n--- Resumo: ${contrato.nome} ---`);
-  console.log(`Total do contrato: ${formatarCentavos(contrato.total)}`);
-  console.log(`Soma das parcelas: ${formatarCentavos(centavos(somaParcelas))}`);
+  console.log(`Total do contrato: ${contrato.total.formatar()}`);
+  console.log(`Soma das parcelas: ${somaParcelas.formatar()}`);
   console.log(
-    `Conferência: A soma ${somaParcelas === contrato.total ? "BATE" : "NÃO BATE"} com o total!\n`,
+    `Conferência: A soma ${somaParcelas.igualA(contrato.total) ? "BATE" : "NÃO BATE"} com o total!\n`,
   );
 }
 
