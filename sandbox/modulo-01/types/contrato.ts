@@ -1,8 +1,8 @@
 import type { QuantidadeParcelas } from "./quantidadeParcelas.ts";
-import type { Centavos } from "./centavos.ts";
+import { Money } from "../money/money.ts";
 
 export interface Contrato {
   nome: string;
-  total: Centavos;
+  total: Money;
   quantidadeParcelas: QuantidadeParcelas;
 }
