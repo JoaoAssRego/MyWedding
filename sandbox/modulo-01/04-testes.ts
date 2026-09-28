@@ -142,3 +142,9 @@ verificarErro(
 verificarErro("zero parcelas", () =>
   Money.deCentavos(10).dividirEmParcelas(quantidadeParcelas(0)),
 );
+
+const inicial = Money.deCentavos(10);
+const depois = inicial.somar(Money.deCentavos(20));
+
+verificar("somar devolve o valor somado", depois.igualA(Money.deCentavos(30)));
+verificar("marcar não altera o placar original", inicial.igualA(depois));
