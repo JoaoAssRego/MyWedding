@@ -216,21 +216,61 @@ erro na linha seguinte, então o teste continua "passando" pelo motivo errado.
 A lição: `@ts-expect-error` é um instrumento grosso. A linha abaixo dele precisa estar correta
 em tudo, menos no erro que se quer provar — senão o teste vira decoração.
 
+### Segunda rodada — `#` revelou um bug que `private` escondia
+
+Entregues: `#centavos` no lugar de `private centavos`, `Parcela.valor`, os quatro testes
+corrigidos (inclusive o de imutabilidade, agora comparando `inicial` com
+`Money.deCentavos(10)`), a linha solta apagada e `gerarParcelas` tirada do `money.ts`, que
+deixou de existir.
+
+E a troca para `#` pagou na hora:
+
+```
+money/money.ts(30,130): error TS2551: Property 'centavos' does not exist on type 'Money'.
+                                      Did you mean '#centavos'?
+```
+
+Dentro da mensagem de erro de `dividirEmParcelas` sobrou um `this.centavos`. Com `private
+centavos`, aquilo compilava e imprimia o valor; com `#`, não existe propriedade `centavos`
+nenhuma e o compilador acusa. É a demonstração mais concreta possível da diferença entre uma
+regra do compilador e uma regra da linguagem — o campo mudou de natureza, e um resto de código
+antigo ficou visível.
+
+### O módulo que executa ao ser importado, de novo
+
+`gerarParcelas` mudou de casa — certo — mas foi parar em `05-contratos.ts`, que é um **script**:
+as duas últimas linhas dele chamam `exibirRelatorio`. Como `04-testes.ts` agora importa
+`gerarParcelas` de lá, rodar os testes executa os relatórios antes, e o stack trace da falha
+aparece dentro de `05-contratos.ts` — um arquivo que ninguém pediu para rodar.
+
+É exatamente o problema da [aula 2.2](02-2-revisao-do-modulo-1.md), item 1, de volta em outro
+lugar: **módulo exporta; quem executa é o arquivo de entrada.** `gerarParcelas` pertence ao
+domínio do contrato e precisa de um módulo só dele — algo como `contrato/contrato.ts` —, com
+`05-contratos.ts` voltando a ser apenas o script que imprime.
+
 ## Pendências
 
-- **`modulo-01/money.ts` precisa ser resolvido** — cada função vira método, muda de casa ou
-  morre (tabela acima). Enquanto ele existir, nada compila.
-- Corrigir os quatro testes que mentem, incluindo o de imutabilidade.
-- `06-testes-de-tipos.ts` apontando para nomes que não existem mais; depois da limpeza, os
-  testes de tipo passam a ser sobre `Money`.
+Três erros de compilação separam a aula do fim:
+
+- `money/money.ts:30` — `this.centavos` dentro da mensagem de erro deveria ser `this.#centavos`.
+- `05-contratos.ts:48` — `gerarParcelas` ainda monta `{ numero, valorCentavos }`, mas `Parcela`
+  agora tem `valor`. Renomeação incompleta.
+- `gerarParcelas` precisa sair de `05-contratos.ts` para um módulo próprio que não execute nada
+  ao ser importado.
+
+E os testes de tipo:
+
+- `06-testes-de-tipos.ts` chama `dividirEmParcelas`, que **não existe mais em lugar nenhum**.
+  As duas primeiras linhas agora "passam" provando *"Cannot find name"* em vez do erro de
+  tipo que os comentários afirmam. Precisam ser reescritas sobre `Money` — por exemplo, passar
+  `Money` onde se espera `QuantidadeParcelas`.
 - `// @ts-expect-error` sem descrição na linha de `Money.deCentavos(100) * 2`.
-- **`private centavos` em vez de `#centavos`** (item 4 da tarefa). `private` é regra só do
-  compilador: em runtime, `(m as any).centavos = -5` funciona e quebra a invariante da classe.
-  Com `#`, o próprio JavaScript recusa.
-- `Parcela.valorCentavos` agora guarda um `Money`, não centavos — o nome voltou a mentir.
-- Linha solta `("");` em `04-testes.ts`.
-- `subtrair` lança quando o resultado é negativo, porque `centavos` recusa negativos. É uma
-  decisão de domínio que ninguém tomou explicitamente: **`Money` pode ser negativo?** Estornos
-  e descontos dependem da resposta.
-- Herdadas: `if (parc[0] && parc[5])` pula teste em silêncio; `arrayObjectParcelas` (morre
-  junto com o `money.ts` antigo).
+
+Decisões e pendências que continuam abertas:
+
+- **`Money` pode ser negativo?** `subtrair` lança quando o resultado fica negativo, porque
+  `centavos` recusa negativos. Ninguém tomou essa decisão explicitamente, e estorno e desconto
+  dependem dela.
+- `somaValorCentavos`, em `04-testes.ts`, é um `let` reaproveitado cinco vezes para guardar
+  coisas diferentes — o nome só descreve o primeiro uso.
+- Herdada: `if (parc[0] && parc[5])` ainda pula teste em silêncio.

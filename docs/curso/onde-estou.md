@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-09-28
+atualizado: 2026-09-29
 modulo_atual: 2
 aula_atual: "2.6"
 aliases:
@@ -16,20 +16,20 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 
 > [!abstract] Agora
 > **Módulo 2 — TypeScript**, [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md):
-> a classe existe e a migração começou, mas **o repositório não compila** — o `money.ts` antigo
-> ficou para trás. Detalhes e correções na nota da aula.
+> o `money.ts` antigo morreu e os testes foram corrigidos; faltam **dois erros de compilação**
+> e tirar `gerarParcelas` de dentro de um script.
 
 ## Estado
 
-Situação em 28/09/2026, pelo repositório (último commit `52ec420`), tudo verificado:
+Situação em 29/09/2026, pelo repositório (último commit `8d43eb0` + alterações não commitadas):
 
-- `tsc --noEmit` → **7 erros**, todos em `modulo-01/money.ts` (o módulo de funções soltas, que
-  não acompanhou a migração para `Money`);
-- `node modulo-01/04-testes.ts` e `node modulo-01/05-contratos.ts` → nem executam, morrem no
-  import de `Centavos` que não existe mais.
+- `tsc --noEmit` → **2 erros** (eram 7): um `this.centavos` que virou `this.#centavos` pela
+  metade, e `gerarParcelas` ainda montando `valorCentavos` em vez de `valor`;
+- `node modulo-01/04-testes.ts` → quebra em runtime pelo mesmo motivo, e ainda dispara os
+  relatórios de `05-contratos.ts`, que virou módulo e script ao mesmo tempo.
 
-A classe `Money` em si está de pé e com API completa. O que falta é terminar a migração e
-corrigir quatro testes que afirmam a coisa errada — a lista está na
+A classe `Money` está completa e com `#centavos`; os quatro testes que mentiam foram
+corrigidos, inclusive o de imutabilidade. A lista do que falta está na
 [aula 2.6](modulo-02/02-6-money-value-object.md).
 
 O módulo passou a ter **dois tipos de teste, com dois comandos**:
