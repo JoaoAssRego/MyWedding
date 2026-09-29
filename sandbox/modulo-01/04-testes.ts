@@ -1,15 +1,12 @@
-import { gerarParcelas } from "./money.ts";
-
-import type { Contrato } from "./types/contrato.ts";
+import { Contrato } from "./contrato/contrato.ts";
 import { Money } from "./money/money.ts";
 import { quantidadeParcelas } from "./types/quantidadeParcelas.ts";
 
-const contratoFotografo: Contrato = {
-  nome: "Gauss",
-  total: Money.deCentavos(390000),
-  quantidadeParcelas: quantidadeParcelas(20),
-};
-("");
+const contratoFotografo: Contrato = new Contrato(
+  "Gauss",
+  Money.deCentavos(390000),
+  quantidadeParcelas(20),
+);
 
 function verificar(descricao: string, condicao: boolean): void {
   if (condicao) {
@@ -35,11 +32,11 @@ const status: number = 1;
 verificar("Calibração verdadeira: deve imprimir OK", status === 1);
 verificar("Calibração falsa: deve imprimir FALHOU", status === 2);
 
-const parcelasGeradas = gerarParcelas(contratoFotografo);
+const parcelasGeradas = contratoFotografo.gerarParcelas();
 
 verificar(
   "gerarParcelas devolve a quantidade certa de objetos",
-  parcelasGeradas.length === contratoFotografo.quantidadeParcelas,
+  parcelasGeradas.length === contratoFotografo.getQuantidadeParcelas(),
 );
 
 const primeira = parcelasGeradas[0];
@@ -50,21 +47,24 @@ if (primeira === undefined || ultima === undefined)
     `parcelasGeradas são undefined. Parcelas: ${JSON.stringify(parcelasGeradas)}`,
   );
 
-verificar("a primeira tem quantidadeParcelas igual a 1", primeira.numero === 1);
+verificar(
+  "A primeira parcela deve possuir a numeração 1, pois representa a primeira.",
+  primeira.numero === 1,
+);
 verificar(
   "a última tem quantidadeParcelas igual ao número de parcelas",
-  ultima.numero === contratoFotografo.quantidadeParcelas,
+  ultima.numero === contratoFotografo.getQuantidadeParcelas(),
 );
 
 let somaValorCentavos = Money.deCentavos(0);
 
 for (const parcela of parcelasGeradas) {
-  somaValorCentavos = somaValorCentavos.somar(parcela.valorCentavos);
+  somaValorCentavos = somaValorCentavos.somar(parcela.valor);
 }
 
 verificar(
   "a soma dos valorCentavos bate com o total",
-  somaValorCentavos.igualA(contratoFotografo.total),
+  somaValorCentavos.igualA(contratoFotografo.getTotal()),
 );
 somaValorCentavos = Money.deCentavos(1750000);
 verificar(
@@ -90,7 +90,7 @@ function somarMoney(parcelas: Money[]): Money {
 verificar(
   "Total de 1750000 dividido em 6 parcelas deve somar 1750000",
   somarMoney(somaValorCentavos.dividirEmParcelas(quantidadeParcelas(6))).igualA(
-    Money.deCentavos(150000),
+    Money.deCentavos(1750000),
   ),
 );
 
@@ -122,15 +122,15 @@ verificar(
 verificar(
   "Total de 10 dividido em 10 parcelas deve somar 10",
   somarMoney(
-    Money.deCentavos(1).dividirEmParcelas(quantidadeParcelas(1)),
-  ).igualA(Money.deCentavos(1)),
+    Money.deCentavos(10).dividirEmParcelas(quantidadeParcelas(10)),
+  ).igualA(Money.deCentavos(10)),
 );
 
 verificarErro("parcelas negativas", () =>
   Money.deCentavos(10).dividirEmParcelas(quantidadeParcelas(-1)),
 );
 verificarErro("total em centavos negativo", () =>
-  Money.deCentavos(100).dividirEmParcelas(quantidadeParcelas(5)),
+  Money.deCentavos(-100).dividirEmParcelas(quantidadeParcelas(5)),
 );
 verificarErro("valor não inteiro para parcelas", () =>
   Money.deCentavos(10).dividirEmParcelas(quantidadeParcelas(2.5)),
@@ -147,4 +147,7 @@ const inicial = Money.deCentavos(10);
 const depois = inicial.somar(Money.deCentavos(20));
 
 verificar("somar devolve o valor somado", depois.igualA(Money.deCentavos(30)));
-verificar("marcar não altera o placar original", inicial.igualA(depois));
+verificar(
+  "Somar não altera valor da váriavel anterior",
+  inicial.igualA(Money.deCentavos(10)),
+);
