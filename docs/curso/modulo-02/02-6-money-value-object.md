@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 2
 aula: "2.6"
-status: em-andamento
+status: concluida
 conceitos:
   - value-object
   - imutabilidade
@@ -16,7 +16,7 @@ tags:
 
 # Aula 2.6 — `Money` como value object imutável
 
-**Status:** em andamento — tarefa passada.
+**Status:** concluída — typecheck limpo, testes verdes, relatórios imprimindo.
 
 ## Contexto
 
@@ -248,23 +248,96 @@ lugar: **módulo exporta; quem executa é o arquivo de entrada.** `gerarParcelas
 domínio do contrato e precisa de um módulo só dele — algo como `contrato/contrato.ts` —, com
 `05-contratos.ts` voltando a ser apenas o script que imprime.
 
+### Terceira rodada — verde, e uma decisão de arquitetura sem querer
+
+`tsc --noEmit` limpo e os 22 testes rodando: única `FALHOU` é a calibração, e nenhum relatório
+é impresso no meio. `Contrato` virou classe com campos `#`, `gerarParcelas` mudou de casa para
+`contrato/contrato.ts`, e `Parcela.valor` ficou coerente em todos os lugares.
+
+O ponto interessante é o que veio junto sem estar na tarefa: `Contrato` ganhou um método
+`exibirRelatorio()` que dá `console.log`. Isso é **I/O dentro do domínio**, e o
+[README do projeto](../../../README.md) já decidiu o contrário: *"the `domain` folder imports
+neither NestJS nor Prisma"* — regras de negócio que podem ser testadas com uma chamada de
+função continuam assim.
+
+A pergunta que separa as duas coisas: **quem mais vai chamar isso?** A API vai responder JSON,
+a tela vai renderizar componentes, um relatório em PDF vai desenhar. Nenhum deles quer
+`console.log`. O que todos querem é a **lista de parcelas e os totais** — dados. O `console.log`
+pertence ao programa que imprime, não à classe.
+
+Como `05-contratos.ts` foi apagado, ninguém chama `exibirRelatorio()`: ele é, hoje, código
+morto. E o programa de demonstração — o único lugar onde o projeto "roda" como produto — sumiu
+junto.
+
+### Quarta rodada — testes de tipo de verdade, e a cópia que virou hábito
+
+`06-testes-de-tipos.ts` foi reescrito e agora prova três coisas reais, cada uma de uma
+natureza diferente:
+
+| Linha | O que prova |
+|---|---|
+| `dividirEmParcelas(Money.deCentavos(90000))` | `Money` não é `QuantidadeParcelas` — dois tipos do domínio não se confundem |
+| `dividirEmParcelas(6)` | `number` cru não entra onde se espera tipo marcado |
+| `new Money(100)` | o construtor é privado: só se cria `Money` pela fábrica |
+
+O caso do valor negativo saiu daqui, que é onde ele não podia estar. Esse é o arquivo fazendo
+o trabalho que ele existe para fazer.
+
+> [!warning] A cópia em vez da mudança, pela terceira vez
+> `exibirRelatorio` foi **copiada** para `05-contrato.ts` e continua também dentro de
+> `Contrato`. É o mesmo movimento que deixou o `money.ts` antigo apodrecendo e que espalhou o
+> bug do `&&` entre `centavos.ts` e `quantidadeParcelas.ts`: ao mover código, a versão antiga
+> tem que morrer no mesmo commit. Duas cópias da mesma regra significam que uma delas vai
+> ficar para trás — a única dúvida é quando.
+
+E o script novo ainda não é um script: `05-contrato.ts` **exporta** `exibirRelatorio` e não
+chama nada. `node modulo-01/05-contrato.ts` roda, sai com código 0 e não imprime uma linha. Um
+arquivo de entrada precisa montar os contratos e executar.
+
+### Quinta rodada — o compilador cobrando o que falta
+
+`exibirRelatorio` saiu de `Contrato`: a classe agora só devolve dados, e o `console.log` vive
+no script. A duplicata acabou e a separação domínio × apresentação está feita.
+
+O script monta os dois contratos — e para por aí, sem chamar `exibirRelatorio`. Dessa vez não
+foi preciso ninguém perceber:
+
+```
+modulo-01/05-contrato.ts(25,7): error TS6133: 'contratoSalao' is declared but its value is never read.
+modulo-01/05-contrato.ts(31,7): error TS6133: 'contratoFotografo' is declared but its value is never read.
+```
+
+É o `noUnusedLocals`, ligado na [aula 2.4](02-4-higiene-dos-testes.md), dizendo em bom som que
+a tarefa ficou pela metade. Uma flag ligada há duas semanas pagando dividendo sozinha.
+
+> [!caution] Quarta vez: nome não importado dentro de `@ts-expect-error`
+> `new Money(centavos(100))` — `centavos` não está nos imports do arquivo (que importa só
+> `Money`). O erro engolido pela diretiva é *"Cannot find name 'centavos'"*, de novo, e não o
+> construtor privado que o comentário promete.
+
+Daí nasce um ritual de verificação para testes de tipo, que vale tanto quanto o teste:
+
+1. comente todas as linhas `@ts-expect-error`;
+2. rode `pnpm typecheck`;
+3. leia cada erro e confirme que é **o erro que você queria provar**;
+4. descomente.
+
+Sem isso, um arquivo de teste de tipos pode estar inteiro verde provando erros de digitação.
+
 ## Pendências
 
-Três erros de compilação separam a aula do fim:
+Para fechar a aula:
 
-- `money/money.ts:30` — `this.centavos` dentro da mensagem de erro deveria ser `this.#centavos`.
-- `05-contratos.ts:48` — `gerarParcelas` ainda monta `{ numero, valorCentavos }`, mas `Parcela`
-  agora tem `valor`. Renomeação incompleta.
-- `gerarParcelas` precisa sair de `05-contratos.ts` para um módulo próprio que não execute nada
-  ao ser importado.
+- `05-contrato.ts`: chamar `exibirRelatorio` para os dois contratos.
+- `06-testes-de-tipos.ts`: importar `centavos`, e rodar o ritual das quatro etapas acima para
+  conferir os quatro casos de uma vez.
 
-E os testes de tipo:
+Menores:
 
-- `06-testes-de-tipos.ts` chama `dividirEmParcelas`, que **não existe mais em lugar nenhum**.
-  As duas primeiras linhas agora "passam" provando *"Cannot find name"* em vez do erro de
-  tipo que os comentários afirmam. Precisam ser reescritas sobre `Money` — por exemplo, passar
-  `Money` onde se espera `QuantidadeParcelas`.
-- `// @ts-expect-error` sem descrição na linha de `Money.deCentavos(100) * 2`.
+- Getters no estilo Java (`getNome()`, `getTotal()`). Em TypeScript idiomático seriam campos
+  `readonly` públicos ou acessores `get nome()`, que se leem como propriedade.
+- Descrições de teste ainda corrompidas pelo localizar-e-substituir: "a última tem
+  **quantidadeParcelas** igual ao número de parcelas".
 
 Decisões e pendências que continuam abertas:
 
@@ -274,3 +347,25 @@ Decisões e pendências que continuam abertas:
 - `somaValorCentavos`, em `04-testes.ts`, é um `let` reaproveitado cinco vezes para guardar
   coisas diferentes — o nome só descreve o primeiro uso.
 - Herdada: `if (parc[0] && parc[5])` ainda pula teste em silêncio.
+
+## Fechamento
+
+Verificação final, tudo verde:
+
+- `tsc --noEmit` limpo;
+- `node modulo-01/04-testes.ts` → 22 linhas, única `FALHOU` é a calibração;
+- `node modulo-01/05-contrato.ts` → os dois relatórios, fechando com "A soma BATE com o total".
+
+E o ritual das quatro etapas, rodado numa cópia do `06-testes-de-tipos.ts` com as diretivas
+comentadas, confirma que cada linha prova exatamente o que o comentário dela afirma:
+
+| Linha | Erro real do compilador |
+|---|---|
+| `dividirEmParcelas(Money.deCentavos(90000))` | TS2345: `Money` não é `QuantidadeParcelas` |
+| `dividirEmParcelas(6)` | TS2345: `number` não é `{ __brand: "QuantidadeParcelas" }` |
+| `new Money(centavos(100))` | TS2673: construtor privado |
+| `Money.deCentavos(100) * 2` | TS2362: operando de aritmética precisa ser número |
+
+Quatro proteções diferentes, cada uma com um mecanismo diferente por trás — tipo nominal
+simulado, marca, visibilidade e ausência de conversão numérica. O entregável do módulo 2
+("impossível de usar errado") tem, agora, prova executável.

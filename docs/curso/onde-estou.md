@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-09-29
+atualizado: 2026-09-30
 modulo_atual: 2
 aula_atual: "2.6"
 aliases:
@@ -15,22 +15,22 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 2 — TypeScript**, [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md):
-> o `money.ts` antigo morreu e os testes foram corrigidos; faltam **dois erros de compilação**
-> e tirar `gerarParcelas` de dentro de um script.
+> **Módulo 2 — TypeScript**. A [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md)
+> fechou com tudo verde; a [aula 2.7 — o build](modulo-02/02-7-build.md), última do módulo,
+> acaba de ser passada.
 
 ## Estado
 
-Situação em 29/09/2026, pelo repositório (último commit `8d43eb0` + alterações não commitadas):
+Situação em 30/09/2026, verificado:
 
-- `tsc --noEmit` → **2 erros** (eram 7): um `this.centavos` que virou `this.#centavos` pela
-  metade, e `gerarParcelas` ainda montando `valorCentavos` em vez de `valor`;
-- `node modulo-01/04-testes.ts` → quebra em runtime pelo mesmo motivo, e ainda dispara os
-  relatórios de `05-contratos.ts`, que virou módulo e script ao mesmo tempo.
+- `tsc --noEmit` limpo;
+- `node modulo-01/04-testes.ts` → 22 linhas, única `FALHOU` é a calibração;
+- `node modulo-01/05-contrato.ts` → os dois relatórios, "A soma BATE com o total";
+- os quatro `@ts-expect-error` de `06-testes-de-tipos.ts` provam, cada um, o erro que o
+  comentário promete (conferido com as diretivas comentadas).
 
-A classe `Money` está completa e com `#centavos`; os quatro testes que mentiam foram
-corrigidos, inclusive o de imutabilidade. A lista do que falta está na
-[aula 2.6](modulo-02/02-6-money-value-object.md).
+`Money` e `Contrato` são classes com campos `#`; o domínio devolve dados e quem imprime é o
+script `05-contrato.ts`.
 
 O módulo passou a ter **dois tipos de teste, com dois comandos**:
 
@@ -41,10 +41,9 @@ O módulo passou a ter **dois tipos de teste, com dois comandos**:
 
 ## Próximos passos
 
-1. Terminar a aula 2.6: resolver `money.ts`, corrigir os testes, `#centavos`.
-2. Build: `tsc` gerando saída de verdade, não só `--noEmit`.
-3. Fechar o [módulo 2](modulo-02/README.md).
-4. Módulo 3 — Node e HTTP sem framework.
+1. Aula 2.7 — o build: `dist/`, scripts `build`/`clean`, e ler o JavaScript gerado.
+2. Fechar o [módulo 2](modulo-02/README.md) e marcar no [plano](00-plano-de-estudos.md#progresso).
+3. Módulo 3 — Node e HTTP sem framework.
 
 ## Pendências abertas
 

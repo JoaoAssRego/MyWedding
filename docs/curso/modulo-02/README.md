@@ -23,9 +23,10 @@ módulo 5).
 | 2.3 | [Fazer o módulo 1 passar pelo compilador](02-3-tipos-no-modulo-1.md) | concluída |
 | 2.4 | [Higiene dos testes e nomes honestos](02-4-higiene-dos-testes.md) | concluída |
 | 2.5 | [Tipos marcados: um número que sabe o que é](02-5-branded-types.md) | concluída |
-| 2.6 | [`Money` como value object imutável](02-6-money-value-object.md) | em andamento |
+| 2.6 | [`Money` como value object imutável](02-6-money-value-object.md) | concluída |
+| 2.7 | [O build: `tsc` emitindo JavaScript](02-7-build.md) | em andamento |
 
-Depois da 2.6, falta para fechar o módulo o build
+A 2.7 é a última do módulo: o build
 (`tsc` gerando saída de verdade, não só `--noEmit`).
 
 ## Configuração do TypeScript
