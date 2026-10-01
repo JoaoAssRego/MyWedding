@@ -29,26 +29,6 @@ export class Contrato {
     return this.#quantidadeParcelas;
   }
 
-  public exibirRelatorio() {
-    const parcelas = this.gerarParcelas();
-    const somaParcelas = parcelas.reduce(
-      (acc, parcela) => acc.somar(parcela.valor),
-      Money.deCentavos(0),
-    );
-    for (const parcela of parcelas) {
-      console.log(
-        `${this.#nome} - parcela ${parcela.numero}/${parcelas.length}: ${parcela.valor.formatar()}`,
-      );
-    }
-
-    console.log(`\n--- Resumo: ${this.#nome} ---`);
-    console.log(`Total do contrato: ${this.#total.formatar()}`);
-    console.log(`Soma das parcelas: ${somaParcelas.formatar()}`);
-    console.log(
-      `Conferência: A soma ${somaParcelas.igualA(this.#total) ? "BATE" : "NÃO BATE"} com o total!\n`,
-    );
-  }
-
   public gerarParcelas(): Array<Parcela> {
     const parcelas = this.#total.dividirEmParcelas(this.#quantidadeParcelas);
     const arrayObjectParcelas = parcelas.map((parcela, index) => ({
