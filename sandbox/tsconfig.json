@@ -2,8 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./modulo-01",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "rewriteRelativeImportExtensions": true,
     "module": "nodenext",
     "target": "esnext", // Com essa configuração, a compilação do typescript utiliza a mais moderno
     "types": [],
