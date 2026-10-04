@@ -40,8 +40,40 @@ Origem: [aula 2.3](modulo-02/02-3-tipos-no-modulo-1.md).
 
 ## O que é versionado
 
-`pnpm-lock.yaml` entra no git; `node_modules` não (está no `.gitignore`). O lockfile é o que
-garante que a máquina de hoje e a CI de amanhã instalem exatamente as mesmas versões.
+`pnpm-lock.yaml` entra no git; `node_modules` e `dist` não (estão no `.gitignore`). O lockfile
+é o que garante que a máquina de hoje e a CI de amanhã instalem exatamente as mesmas versões;
+`dist` é derivado do código-fonte e se reconstrói a qualquer momento.
+
+## Verificar e construir são trabalhos diferentes
+
+- **`tsconfig.json`** enxerga tudo, inclusive os testes, e é o que o `typecheck` e o editor
+  usam.
+- **`tsconfig.build.json`** faz `extends` do primeiro, exclui a pasta de testes e emite para
+  `dist/`. É o que o `build` usa.
+
+`exclude` no `tsconfig.json` principal tiraria os testes do compilador inteiro — e os testes de
+tipo deixariam de ser testados.
+
+Testes moram numa pasta própria (`test/`), para o `exclude` do build ser uma linha só. Script
+que **usa** o domínio (como `05-contrato.ts`) não é teste e fica fora dela.
+
+O `tsc` **nunca apaga** nada de `dist/`: arquivo que deixou de ser compilado continua lá, velho.
+Antes de confiar num `dist/`, `pnpm clean`.
+
+Origem: [aula 2.7](modulo-02/02-7-build.md).
+
+## Testes de tipo: ver o erro antes de confiar nele
+
+`@ts-expect-error` aceita **qualquer** erro na linha seguinte — inclusive um nome não importado.
+Toda vez que um arquivo de teste de tipos mudar:
+
+1. comentar todas as diretivas;
+2. rodar `pnpm typecheck`;
+3. conferir que cada erro é **o erro que a linha quer provar**;
+4. descomentar.
+
+Origem: [aula 2.6](modulo-02/02-6-money-value-object.md), depois de quatro testes passando por
+*"Cannot find name"*.
 
 ## Idiomas
 

@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 2
 aula: "2.7"
-status: em-andamento
+status: concluida
 conceitos:
   - build
   - outDir
@@ -16,7 +16,7 @@ tags:
 
 # Aula 2.7 — O build: `tsc` emitindo JavaScript
 
-**Status:** em andamento — tarefa passada.
+**Status:** concluída — `dist/` só com o produto, `typecheck` enxergando tudo. Fecha o módulo 2.
 
 ## Contexto
 
@@ -221,10 +221,59 @@ Arquivo de teste novo entra na pasta e já fica fora do `dist/` sem ninguém edi
 
 Pontos levantados na revisão:
 
-- [ ] `05-contrato.ts` foi junto para `test/`, mas ele não verifica nada — ele **usa** o domínio
+- [x] `05-contrato.ts` foi junto para `test/`, mas ele não verifica nada — ele **usa** o domínio
   e imprime o relatório. Com o `exclude` na pasta, ele sumiria do `dist/`, e a tarefa pede
   "o domínio e os scripts, sem testes". Pergunta para o João: o que separa um teste de um script?
-- [ ] O Git está vendo os três arquivos como *apagado + novo*. Fazer `git add` das duas pontas
+- [x] O Git está vendo os três arquivos como *apagado + novo*. Fazer `git add` das duas pontas
   para ele detectar a renomeação e o `git log --follow` continuar enxergando o histórico.
-- [ ] `contrato.ts` ficou com imports misturados: dois com `.ts` e um com `.js`
+- [x] `contrato.ts` ficou com imports misturados: dois com `.ts` e um com `.js`
   (`quantidadeParcelas.js`). Os dois funcionam com `rewriteRelativeImportExtensions`; escolher um.
+
+Os três resolvidos: `05-contrato.ts` voltou para a raiz de `modulo-01/` (um script **usa** o
+domínio, um teste **verifica** — e só o segundo fica fora do produto); o histórico de
+`test/04-testes.ts` atravessa a mudança de pasta até o primeiro commit de teste
+(`git log --follow`, 22 commits); e todos os imports do fonte usam `.ts`.
+
+## Fechamento
+
+### Verificação final
+
+```
+pnpm clean && pnpm build   →  dist/ com 05-contrato.js, contrato/, money/, types/ — sem testes
+pnpm typecheck             →  limpo
+node dist/05-contrato.js   →  os dois relatórios, "A soma BATE com o total"
+node modulo-01/test/04-testes.ts → 22 linhas, única FALHOU é a calibração
+```
+
+### Duas configurações, provado
+
+O ritual das quatro etapas, rodado numa cópia com as diretivas comentadas, contra cada uma das
+duas configurações:
+
+| Configuração | Resultado |
+|---|---|
+| `tsconfig.json` (a do `typecheck`) | os quatro erros esperados, um por linha |
+| `tsconfig.build.json` (a do `build`) | exit 0 — **nem olha** para `test/` |
+
+É a separação funcionando: quem verifica enxerga tudo, quem publica só enxerga o produto.
+
+### O `dist/` que mentia
+
+Antes do `clean`, o `dist/` ainda continha `04-testes.js` e `06-testes-de-tipos.js` de builds
+anteriores. O `tsc` **nunca apaga** nada da pasta de saída: ele só escreve por cima do que
+emite. Um arquivo que deixou de ser compilado continua lá, velho, até alguém apagar — e um
+`dist/` com sobras é um `dist/` que não corresponde ao código-fonte.
+
+Por isso o `clean` existe, e por isso costuma vir encadeado no `build`. Ficou como regra em
+[`convencoes.md`](../convencoes.md).
+
+## Pendências que atravessam para o próximo módulo
+
+- **`Money` pode ser negativo?** `subtrair` lança abaixo de zero. A pergunta volta,
+  obrigatoriamente, no módulo 4: a coluna do banco vai ter ou não um `CHECK (valor >= 0)`, e
+  estorno de fornecedor precisa de uma resposta.
+- `"**/*.spec.ts"` no `exclude` do build cobre um padrão que não existe no projeto. Inofensivo,
+  mas é configuração especulativa — some ou ganha uso quando o módulo 10 trouxer um test runner.
+- `"jsx": "react-jsx"` no `tsconfig.json` de um sandbox sem JSX: herança do template.
+- Herdadas: `if (parc[0] && parc[5])` pula teste em silêncio; `arrayObjectParcelas` em
+  `contrato.ts`; getters no estilo Java.

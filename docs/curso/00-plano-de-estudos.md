@@ -74,8 +74,8 @@ alta** o que escreveu, sem olhar o código.
 
 - [x] Módulo 0 — Preparação
 - [x] Módulo 1 — JavaScript essencial
-- [ ] [Módulo 2 — TypeScript](modulo-02/README.md)
-- [ ] Módulo 3 — Node e HTTP sem framework
+- [x] [Módulo 2 — TypeScript](modulo-02/README.md)
+- [ ] [Módulo 3 — Node e HTTP sem framework](modulo-03/README.md)
 - [ ] Módulo 4 — Postgres e modelagem
 - [ ] Módulo 5 — Monorepo e NestJS
 - [ ] Módulo 6 — Prisma, migrations e multi-tenant
