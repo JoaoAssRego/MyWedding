@@ -1,5 +1,5 @@
-import { Money } from "./money/money.js";
-import { centavos } from "./types/centavos.js";
+import { Money } from "../money/money.ts";
+import { centavos } from "../types/centavos.ts";
 
 // @ts-expect-error passando money onde se espera quantidadeParcelas
 Money.deCentavos(20).dividirEmParcelas(Money.deCentavos(90000));
