@@ -1,5 +1,5 @@
-import { type Centavos, centavos } from "../types/centavos.ts";
-import type { QuantidadeParcelas } from "../types/quantidadeParcelas.ts";
+import { type Centavos, centavos } from "../types/centavos.js";
+import type { QuantidadeParcelas } from "../types/quantidadeParcelas.js";
 
 export class Money {
   #centavos: Centavos;

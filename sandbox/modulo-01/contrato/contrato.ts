@@ -1,6 +1,6 @@
-import type { QuantidadeParcelas } from "../types/quantidadeParcelas.ts";
-import { Money } from "../money/money.ts";
-import { type Parcela } from "../types/parcela.ts";
+import type { QuantidadeParcelas } from "../types/quantidadeParcelas.js";
+import { Money } from "../money/money.js";
+import { type Parcela } from "../types/parcela.js";
 
 export class Contrato {
   #nome: string;

@@ -1,6 +1,6 @@
-import { Contrato } from "./contrato/contrato.ts";
-import { Money } from "./money/money.ts";
-import { quantidadeParcelas } from "./types/quantidadeParcelas.ts";
+import { Contrato } from "./contrato/contrato.js";
+import { Money } from "./money/money.js";
+import { quantidadeParcelas } from "./types/quantidadeParcelas.js";
 
 const contratoFotografo: Contrato = new Contrato(
   "Gauss",

@@ -1,4 +1,4 @@
-import { Money } from "../money/money.ts";
+import { Money } from "../money/money.js";
 
 export interface Parcela {
   numero: number;
