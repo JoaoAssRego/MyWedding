@@ -113,4 +113,118 @@ vazio. Por quê, e o que isso diz sobre a diferença entre `Centavos` e `Money`?
 
 ## O que aconteceu
 
-_(a preencher)_
+### O build
+
+Saída escolhida para o conflito do `allowImportingTsExtensions`:
+**`rewriteRelativeImportExtensions`** — o código-fonte continua importando `./money.ts` e o
+compilador reescreve para `./money.js` na emissão. Confere no gerado:
+
+```js
+// dist/money/money.js
+import { centavos } from "../types/centavos.js";
+```
+
+`outDir: ./dist`, `rootDir: ./modulo-01` (a árvore gerada começa direto em `dist/04-testes.js`,
+sem repetir o nome da pasta), `rimraf` para o `clean`, e `dist` já estava no `.gitignore`.
+
+Verificação: `pnpm typecheck` limpo, `node dist/05-contrato.js` e `node dist/04-testes.js`
+imprimindo exatamente o mesmo que as versões `.ts`.
+
+### O que sobrou de cada coisa
+
+**`types/centavos.ts` → quatro linhas de JavaScript.** Sumiram o `type Centavos`, a marca
+`__brand` e o `as Centavos`. Sobrou só a validação:
+
+```js
+export function centavos(valor) {
+    if (valor < 0 || !Number.isInteger(valor))
+        throw new Error("Valor deve ser maior ou igual a 0 e Inteiro");
+    return valor;
+}
+```
+
+E o `.d.ts` guarda o outro lado — o tipo e a marca — para quem **consome** o pacote compilado.
+O build separou em dois arquivos o que no `.ts` era um só: a metade que executa e a metade que
+garante.
+
+> [!tip] A resposta da pergunta final
+> `centavos.js` é quase vazio porque `Centavos` **é só um tipo**: existe no compilador e em
+> lugar nenhum depois dele. `Money` é uma **classe** — uma entidade de runtime, com métodos
+> que o JavaScript executa. A marca é uma promessa verificada antes de rodar; o value object é
+> um objeto que continua existindo enquanto o programa roda. Os dois protegem o mesmo dado por
+> meios completamente diferentes.
+>
+> `types/parcela.js` é ainda mais extremo: sobrou **um import e nada mais** — a interface
+> inteira evaporou.
+
+**`#centavos` continuou; `private` e `public` sumiram.** Exatamente. E o construtor também
+perdeu o `private`:
+
+```js
+export class Money {
+    #centavos;
+    constructor(centavos) { this.#centavos = centavos; }
+```
+
+Ou seja: no JavaScript gerado, `new Money(...)` **funciona**. A proteção do construtor privado
+existe só enquanto o TypeScript está olhando — enquanto o campo `#` continua intransponível
+para sempre, porque é regra da linguagem. É a aula 2.6 provada em disco.
+
+**As quatro linhas de `06-testes-de-tipos.ts`: nada aconteceu.** Correto — e é aí que mora o
+problema. As diretivas viraram comentários inofensivos e o restante virou JavaScript
+executável, que foi parar em `dist/06-testes-de-tipos.js`. Rodando o arquivo gerado:
+
+```
+node dist/06-testes-de-tipos.js   →   exit 0, nenhuma saída
+```
+
+Silêncio. Nenhum dos quatro erros existe em runtime: `new Money(...)` passa,
+`Money.deCentavos(100) * 2` devolve `NaN` sem reclamar, e
+`dividirEmParcelas(Money.deCentavos(90000))` compara objeto com número, o laço não roda
+nenhuma vez e a função devolve `[]` — um contrato sem parcela nenhuma.
+
+> [!important] O resumo do módulo inteiro em uma linha
+> `NaN` e `[]` em silêncio: é exatamente isso que o JavaScript faz com os quatro erros, e
+> exatamente isso que o TypeScript recusou. A camada de tipos não deixou o programa mais
+> seguro em runtime — ela impediu que esse código fosse **escrito**.
+
+## Pendências — o último ajuste do módulo
+
+O `dist/` de hoje contém `04-testes.js` e `06-testes-de-tipos.js`. Nenhum dos dois é o
+produto: um é a suíte de testes, o outro é um arquivo que **nunca deveria rodar**. Um build
+publica o que o consumidor usa, não o que o desenvolvedor usou para chegar lá.
+
+A tentação é pôr os dois no `exclude` do `tsconfig.json` — e aí se perde a verificação, porque
+`exclude` tira o arquivo do compilador inteiro, não só da emissão. Os testes de tipo deixariam
+de ser testados, que é o oposto do objetivo.
+
+O padrão que resolve: **duas configurações, dois trabalhos.**
+
+- `tsconfig.json` — vê tudo, não emite nada. É o que o `typecheck` e o editor usam.
+- `tsconfig.build.json` — `extends` o primeiro, acrescenta `exclude` dos testes, e emite.
+  É o que o `build` usa.
+
+Tarefa final da aula:
+
+1. Criar `tsconfig.build.json` com `extends`, `exclude` dos dois arquivos de teste, e apontar
+   o script `build` para ele (`tsc -p tsconfig.build.json`).
+2. `pnpm clean && pnpm build` e conferir que `dist/` tem o domínio e os scripts, sem testes.
+3. `pnpm typecheck` continua enxergando **todos** os arquivos, inclusive os testes de tipo —
+   confirme rodando o ritual das quatro etapas uma última vez.
+
+## Decisão — uma pasta `test/` (04/10/2026)
+
+O João moveu os arquivos de teste para `modulo-01/test/` antes de escrever o
+`tsconfig.build.json`. Boa ordem: com uma pasta, o `exclude` do build vira **uma linha**
+(`"modulo-01/test"`) em vez de uma lista de arquivos que precisa ser lembrada a cada teste novo.
+Arquivo de teste novo entra na pasta e já fica fora do `dist/` sem ninguém editar configuração.
+
+Pontos levantados na revisão:
+
+- [ ] `05-contrato.ts` foi junto para `test/`, mas ele não verifica nada — ele **usa** o domínio
+  e imprime o relatório. Com o `exclude` na pasta, ele sumiria do `dist/`, e a tarefa pede
+  "o domínio e os scripts, sem testes". Pergunta para o João: o que separa um teste de um script?
+- [ ] O Git está vendo os três arquivos como *apagado + novo*. Fazer `git add` das duas pontas
+  para ele detectar a renomeação e o `git log --follow` continuar enxergando o histórico.
+- [ ] `contrato.ts` ficou com imports misturados: dois com `.ts` e um com `.js`
+  (`quantidadeParcelas.js`). Os dois funcionam com `rewriteRelativeImportExtensions`; escolher um.

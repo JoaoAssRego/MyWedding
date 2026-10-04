@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-09-30
+atualizado: 2026-10-04
 modulo_atual: 2
-aula_atual: "2.6"
+aula_atual: "2.7"
 aliases:
   - Onde estou
 tags:
@@ -16,14 +16,16 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 
 > [!abstract] Agora
 > **Módulo 2 — TypeScript**. A [aula 2.6 — `Money` value object](modulo-02/02-6-money-value-object.md)
-> fechou com tudo verde; a [aula 2.7 — o build](modulo-02/02-7-build.md), última do módulo,
-> acaba de ser passada.
+> fechou; a [aula 2.7 — o build](modulo-02/02-7-build.md) está quase lá: `dist/` sai, roda e
+> bate com a versão `.ts`. Falta separar o build dos testes com um `tsconfig.build.json`.
 
 ## Estado
 
-Situação em 30/09/2026, verificado:
+Situação em 04/10/2026, verificado:
 
-- `tsc --noEmit` limpo;
+- `pnpm typecheck` limpo e `pnpm build` gerando `dist/` (com `rewriteRelativeImportExtensions`,
+  os imports do JS gerado apontam para `.js`);
+- `node dist/05-contrato.js` e `node dist/04-testes.js` imprimem o mesmo que os `.ts`;
 - `node modulo-01/04-testes.ts` → 22 linhas, única `FALHOU` é a calibração;
 - `node modulo-01/05-contrato.ts` → os dois relatórios, "A soma BATE com o total";
 - os quatro `@ts-expect-error` de `06-testes-de-tipos.ts` provam, cada um, o erro que o
@@ -41,7 +43,7 @@ O módulo passou a ter **dois tipos de teste, com dois comandos**:
 
 ## Próximos passos
 
-1. Aula 2.7 — o build: `dist/`, scripts `build`/`clean`, e ler o JavaScript gerado.
+1. Fechar a aula 2.7: `tsconfig.build.json` separando verificação de emissão.
 2. Fechar o [módulo 2](modulo-02/README.md) e marcar no [plano](00-plano-de-estudos.md#progresso).
 3. Módulo 3 — Node e HTTP sem framework.
 
