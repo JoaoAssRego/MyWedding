@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./modulo-01",
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "module": "nodenext",
