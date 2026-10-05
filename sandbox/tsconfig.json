@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./modulo-01",
+    "rootDir": "./",
     "rewriteRelativeImportExtensions": true,
     "module": "nodenext",
     "target": "esnext", // Com essa configuração, a compilação do typescript utiliza a mais moderno
-    "types": [],
+    "types": ["node"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
