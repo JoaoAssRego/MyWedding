@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-10-04
+atualizado: 2026-10-07
 modulo_atual: 3
-aula_atual: "3.1"
+aula_atual: "3.2"
 aliases:
   - Onde estou
 tags:
@@ -15,18 +15,21 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 3 — Node e HTTP sem framework**,
-> [aula 3.1 — o primeiro servidor](modulo-03/03-1-primeiro-servidor.md): acaba de ser passada,
-> nenhum código ainda. O [módulo 2](modulo-02/README.md) fechou em 04/10/2026, com a revisão
-> oral concluída na terceira tentativa.
+> **Módulo 3 — Node e HTTP sem framework**. A [aula 3.1](modulo-03/03-1-primeiro-servidor.md)
+> fechou em 07/10: `responderJson` com cabeçalhos extras e `StatusHttp` como união de literais —
+> status inválido não compila. A [aula 3.2 — rotas e serialização](modulo-03/03-2-rotas-e-serializacao.md)
+> acaba de ser passada: `/contratos`, `/contratos/:id`, e o domínio virando JSON.
 
 ## Estado
 
-Situação em 04/10/2026, pelo repositório (último commit `02fcf21`), verificado:
+Situação em 07/10/2026, pelo repositório (último commit `7870c87` + alterações não commitadas), verificado:
 
 - `pnpm typecheck` limpo, enxergando `modulo-01/test/`;
 - `pnpm clean && pnpm build` → `dist/` só com o domínio e o script, sem testes;
-- `node dist/05-contrato.js` → os dois relatórios, "A soma BATE com o total";
+- `node dist/modulo-01/05-contrato.js` → os dois relatórios (o caminho mudou com `rootDir: ./`);
+- `modulo-03/servidor.ts` → `200` / `404` / `405` (com `Allow: GET`) e corpos JSON válidos;
+  `/saude?origem=monitor` ainda responde `404` (compara `req.url` inteira) — tratado na 3.2;
+- `JSON.stringify` de `Money` e de `Contrato` devolve `{}` — ponto de partida da 3.2;
 - `node modulo-01/test/04-testes.ts` → 22 linhas, única `FALHOU` é a calibração.
 
 Estrutura do `sandbox/`:
@@ -36,17 +39,16 @@ Estrutura do `sandbox/`:
 | `modulo-01/money/`, `contrato/`, `types/` | o domínio |
 | `modulo-01/05-contrato.ts` | script que imprime os relatórios |
 | `modulo-01/test/` | testes de runtime (`04`) e de compilação (`06`) |
-| `modulo-03/` | **ainda não existe** — nasce na aula 3.1 |
+| `modulo-03/servidor.ts` | servidor `node:http`, porta 3000 |
 | `tsconfig.json` / `tsconfig.build.json` | verificar × emitir |
 
-Atritos já previstos na 3.1, de propósito: `"types": []` vai barrar o `import` de `node:http`
-até entrar `@types/node`, e `rootDir: ./modulo-01` vai recusar a pasta nova.
+Os dois atritos previstos na 3.1 (`"types": []` e `rootDir`) foram resolvidos sem ajuda.
 
 ## Próximos passos
 
-1. Aula 3.1 — servidor em `node:http`, `/saude`, `404`, `405`, conferido com `curl -i`.
-2. Seguir o [módulo 3](modulo-03/README.md): rotas, serializar `Money`, `POST` com `async`,
-   validação, erros como respostas HTTP.
+1. Aula 3.2 — `URL` e `pathname`, `/contratos` e `/contratos/:id`, dinheiro em centavos no JSON.
+2. Seguir o [módulo 3](modulo-03/README.md): `POST` com `async`, validação, erros como
+   respostas HTTP.
 
 ## Pendências abertas
 
