@@ -28,11 +28,11 @@ vez com as próprias mãos.
 
 | # | Aula | Status |
 |---|---|---|
-| 3.1 | [O primeiro servidor: processo, porta, requisição e resposta](03-1-primeiro-servidor.md) | em andamento |
+| 3.1 | [O primeiro servidor: processo, porta, requisição e resposta](03-1-primeiro-servidor.md) | concluída |
+| 3.2 | [Rotas e serialização: o domínio atravessando a rede](03-2-rotas-e-serializacao.md) | em andamento |
 
-Previstas, na ordem: rotas e status codes a sério; serializar o domínio (`Money` em JSON — e a
-pergunta do `valor()` volta); ler o corpo de um `POST` (e com ele, `async`); validação de
-entrada; erros como respostas HTTP.
+Previstas, na ordem: ler o corpo de um `POST` (e com ele, `async`); validação de entrada; erros
+como respostas HTTP.
 
 ## Pendências herdadas do módulo 2
 
