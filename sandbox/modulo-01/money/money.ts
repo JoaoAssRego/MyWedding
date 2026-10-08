@@ -62,4 +62,10 @@ export class Money {
   public maiorQue(outro: Money): boolean {
     return this.#centavos > outro.#centavos;
   }
+
+  public toJSON() {
+    return {
+      centavos: this.#centavos,
+    };
+  }
 }
