@@ -3,6 +3,7 @@ import { Money } from "../money/money.ts";
 import { quantidadeParcelas } from "../types/quantidadeParcelas.ts";
 
 const contratoFotografo: Contrato = new Contrato(
+  "1",
   "Gauss",
   Money.deCentavos(390000),
   quantidadeParcelas(20),

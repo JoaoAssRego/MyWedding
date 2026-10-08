@@ -23,12 +23,14 @@ export function exibirRelatorio(contrato: Contrato) {
 }
 
 const contratoSalao = new Contrato(
+  "1",
   "Casarão do Paraiso",
   Money.deCentavos(1750000),
   quantidadeParcelas(27),
 );
 
 const contratoFotografo = new Contrato(
+  "2",
   "Gauss",
   Money.deCentavos(390000),
   quantidadeParcelas(20),

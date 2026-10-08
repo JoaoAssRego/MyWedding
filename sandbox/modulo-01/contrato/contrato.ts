@@ -3,18 +3,25 @@ import { Money } from "../money/money.ts";
 import { type Parcela } from "../types/parcela.ts";
 
 export class Contrato {
+  #id: string;
   #nome: string;
   #total: Money;
   #quantidadeParcelas: QuantidadeParcelas;
 
   public constructor(
+    id: string,
     nome: string,
     total: Money,
     quantidadeParcelas: QuantidadeParcelas,
   ) {
+    this.#id = id;
     this.#nome = nome;
     this.#total = total;
     this.#quantidadeParcelas = quantidadeParcelas;
+  }
+
+  public getId(): string {
+    return this.#id;
   }
 
   public getNome(): string {
@@ -37,5 +44,14 @@ export class Contrato {
     }));
 
     return arrayObjectParcelas;
+  }
+
+  public toJSON() {
+    return {
+      id: this.#id,
+      nome: this.#nome,
+      total: this.#total,
+      quantidadeParcelas: this.#quantidadeParcelas,
+    };
   }
 }
