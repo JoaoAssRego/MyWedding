@@ -15,10 +15,10 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 3 — Node e HTTP sem framework**. A [aula 3.1](modulo-03/03-1-primeiro-servidor.md)
-> fechou em 07/10: `responderJson` com cabeçalhos extras e `StatusHttp` como união de literais —
-> status inválido não compila. A [aula 3.2 — rotas e serialização](modulo-03/03-2-rotas-e-serializacao.md)
-> acaba de ser passada: `/contratos`, `/contratos/:id`, e o domínio virando JSON.
+> **Módulo 3 — Node e HTTP sem framework**, [aula 3.2 — rotas e serialização](modulo-03/03-2-rotas-e-serializacao.md):
+> código verificado — `/saude` de volta, `/contratos` e `/contratos/:id` certos, id como string
+> exata. Faltam duas meias-respostas: por que não reais como número, e por que o `{}` do
+> `JSON.stringify(Money)` é uma boa notícia.
 
 ## Estado
 
@@ -27,9 +27,9 @@ Situação em 07/10/2026, pelo repositório (último commit `7870c87` + alteraç
 - `pnpm typecheck` limpo, enxergando `modulo-01/test/`;
 - `pnpm clean && pnpm build` → `dist/` só com o domínio e o script, sem testes;
 - `node dist/modulo-01/05-contrato.js` → os dois relatórios (o caminho mudou com `rootDir: ./`);
-- `modulo-03/servidor.ts` → `200` / `404` / `405` (com `Allow: GET`) e corpos JSON válidos;
-  `/saude?origem=monitor` ainda responde `404` (compara `req.url` inteira) — tratado na 3.2;
-- `JSON.stringify` de `Money` e de `Contrato` devolve `{}` — ponto de partida da 3.2;
+- `modulo-03/servidor.ts` → `/contratos` e `/contratos/:id` certos (27 parcelas somando 1750000),
+  `405` com `Allow`, `/saude` com e sem query string; id de contrato é `string` e só `"1"` acha o 1;
+- `Money` e `Contrato` com `toJSON`; `Contrato` com `#id` (entidade);
 - `node modulo-01/test/04-testes.ts` → 22 linhas, única `FALHOU` é a calibração.
 
 Estrutura do `sandbox/`:
@@ -46,7 +46,7 @@ Os dois atritos previstos na 3.1 (`"types": []` e `rootDir`) foram resolvidos se
 
 ## Próximos passos
 
-1. Aula 3.2 — `URL` e `pathname`, `/contratos` e `/contratos/:id`, dinheiro em centavos no JSON.
+1. Fechar a aula 3.2 — as duas meias-respostas.
 2. Seguir o [módulo 3](modulo-03/README.md): `POST` com `async`, validação, erros como
    respostas HTTP.
 
