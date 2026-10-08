@@ -2,7 +2,7 @@
 tipo: progresso
 atualizado: 2026-10-07
 modulo_atual: 3
-aula_atual: "3.2"
+aula_atual: "3.3"
 aliases:
   - Onde estou
 tags:
@@ -15,10 +15,10 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 3 — Node e HTTP sem framework**, [aula 3.2 — rotas e serialização](modulo-03/03-2-rotas-e-serializacao.md):
-> código verificado — `/saude` de volta, `/contratos` e `/contratos/:id` certos, id como string
-> exata. Faltam duas meias-respostas: por que não reais como número, e por que o `{}` do
-> `JSON.stringify(Money)` é uma boa notícia.
+> **Módulo 3 — Node e HTTP sem framework**. A [aula 3.2](modulo-03/03-2-rotas-e-serializacao.md)
+> fechou em 07/10: `/contratos`, `/contratos/:id`, `toJSON` no domínio, id como string. A
+> [aula 3.3 — `async` e teste do servidor](modulo-03/03-3-async-e-teste-do-servidor.md) acaba de
+> ser passada, motivada por duas regressões seguidas que nenhum teste pegou.
 
 ## Estado
 
@@ -46,8 +46,8 @@ Os dois atritos previstos na 3.1 (`"types": []` e `rootDir`) foram resolvidos se
 
 ## Próximos passos
 
-1. Fechar a aula 3.2 — as duas meias-respostas.
-2. Seguir o [módulo 3](modulo-03/README.md): `POST` com `async`, validação, erros como
+1. Aula 3.3 — separar criar × ligar o servidor, `fetch` com `await`, teste com porta `0`.
+2. Seguir o [módulo 3](modulo-03/README.md): corpo de `POST`, validação, erros como
    respostas HTTP.
 
 ## Pendências abertas
