@@ -1,6 +1,58 @@
 import { createServer, type ServerResponse } from "node:http";
+import { Contrato } from "../modulo-01/contrato/contrato.ts";
+import { Money } from "../modulo-01/money/money.ts";
+import { quantidadeParcelas } from "../modulo-01/types/quantidadeParcelas.ts";
+
+const contratoSalao = new Contrato(
+  "1",
+  "Casarão do Paraiso",
+  Money.deCentavos(1750000),
+  quantidadeParcelas(27),
+);
+
+const contratoFotografo = new Contrato(
+  "2",
+  "Gauss",
+  Money.deCentavos(390000),
+  quantidadeParcelas(20),
+);
+
+const contratos = [contratoSalao, contratoFotografo];
+
 const servidor = createServer((req, res) => {
-  if (req.url === "/saude") {
+  const url = new URL(req.url ?? "/", "http://localhost");
+  const partes = url.pathname.split("/");
+
+  if (partes[1] === "contratos") {
+    const id = partes[2];
+    const contrato = contratos.find((c) => c.getId() === id);
+    if (req.method === "GET") {
+      if (partes[3]) {
+        return responderJson(res, 404, { erro: "Contrato não encontrado" });
+      }
+      if (partes[2]) {
+        if (!contrato) {
+          return responderJson(res, 404, { erro: "Contrato não encontrado" });
+        }
+        return responderJson(res, 200, {
+          ...contrato.toJSON(),
+          parcelas: contrato.gerarParcelas(),
+        });
+      }
+      return responderJson(res, 200, contratos);
+    }
+    return responderJson(
+      res,
+      405,
+      {
+        erro: "Método não permitido. Métodos suportados: GET",
+      },
+      { allow: "GET" },
+    );
+  } else if (partes[1] === "saude") {
+    if (partes[2]) {
+      return responderJson(res, 404, { erro: "Contrato não encontrado" });
+    }
     if (req.method === "GET") {
       return responderJson(res, 200, { status: "ok" });
     }
@@ -14,7 +66,7 @@ const servidor = createServer((req, res) => {
     );
   }
   return responderJson(res, 404, {
-    erro: "Endpoint não encontrado. Endpoint suportado: /saude",
+    erro: "Endpoint não encontrado. Endpoint suportado: /saude e /contratos",
   });
 });
 
