@@ -1,25 +1,7 @@
 import { createServer, type ServerResponse } from "node:http";
-import { Contrato } from "../modulo-01/contrato/contrato.ts";
-import { Money } from "../modulo-01/money/money.ts";
-import { quantidadeParcelas } from "../modulo-01/types/quantidadeParcelas.ts";
+import { contratos } from "./index.ts";
 
-const contratoSalao = new Contrato(
-  "1",
-  "Casarão do Paraiso",
-  Money.deCentavos(1750000),
-  quantidadeParcelas(27),
-);
-
-const contratoFotografo = new Contrato(
-  "2",
-  "Gauss",
-  Money.deCentavos(390000),
-  quantidadeParcelas(20),
-);
-
-const contratos = [contratoSalao, contratoFotografo];
-
-const servidor = createServer((req, res) => {
+export const servidor = createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
   const partes = url.pathname.split("/");
 
@@ -97,5 +79,3 @@ function responderJson(
   res.end(JSON.stringify(corpo));
   return res;
 }
-
-servidor.listen(3000, () => console.log("ouvindo na 3000"));
