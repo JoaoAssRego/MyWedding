@@ -1,2 +1,2 @@
-const r = fetch("http://localhost:3000/saude");
+const r = await fetch("http://localhost:3000/saude");
 console.log(r);
