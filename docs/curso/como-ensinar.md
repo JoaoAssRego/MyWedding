@@ -26,6 +26,10 @@ método mudar, muda aqui — não só no chat.
 2. **Exemplo em outro domínio, de propósito.** A 2.5 ensinou marca com `Email`, não com
    `Centavos`: o João vê o padrão e faz a transposição sozinho. Mostrar a resposta no domínio
    dele seria entregar a tarefa.
+   - **Nos módulos de Ruby e Rails (4 em diante), comparar com o que ele já sabe em JS/TS.** O
+     João não é iniciante em programação, só na linguagem: `attr_reader` se explica a partir
+     do getter que ele escreveu, um controller do Rails a partir do handler do `node:http`. A
+     comparação é a ponte; o exemplo continua em outro domínio.
 3. **Tarefa numerada**, para ser conferida item a item.
 4. **Verificação por comando**, com a saída esperada escrita. "Parece certo" não fecha aula.
 5. **Pergunta para responder em voz alta** ao final. Se ele não consegue explicar sem olhar o
@@ -59,8 +63,8 @@ inglês — ver [convencoes.md](convencoes.md#idiomas).
 
 1. Lê [onde-estou.md](onde-estou.md).
 2. Abre a aula atual e as pendências dela.
-3. Confere o estado real do repositório (`git log`, `pnpm typecheck`) — a nota pode estar
-   atrasada em relação ao código.
+3. Confere o estado real do repositório (`git log`, `pnpm typecheck` no sandbox TS, os testes
+   no container a partir do módulo 4) — a nota pode estar atrasada em relação ao código.
 
 ## Ao final de cada sessão, o Claude
 

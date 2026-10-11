@@ -30,6 +30,39 @@ projeto e falha se não achar, que é o comportamento desejável.
 
 Origem: [aula 2.3](modulo-02/02-3-tipos-no-modulo-1.md).
 
+## Ruby: Bundler e `bundle exec`
+
+O mesmo raciocínio do `npx`, na linguagem nova. Gem de projeto se declara no `Gemfile`, a versão
+exata fica no `Gemfile.lock` (versionado, como o `pnpm-lock.yaml`), e se executa pelo Bundler:
+
+```bash
+bundle install          # instala o que está no Gemfile / Gemfile.lock
+bundle exec <binario>   # roda o binário na versão travada no lockfile
+```
+
+**Nada de `gem install` para ferramenta de projeto.** A gem instalada solta não entra no
+lockfile, roda na versão que estiver na máquina, e o RubyGems tem o mesmo problema de
+typosquatting que o npm. `bin/rails` e os outros arquivos de `bin/` de um app Rails já passam
+pelo Bundler.
+
+Origem: [troca para Rails, 10/10/2026](00-plano-de-estudos.md#mudança-de-rota-10102026); a regra
+é exercitada na aula 4.5.
+
+## Ruby roda no container
+
+Não há Ruby instalado no Windows. Todo comando Ruby ou Rails roda pelo Docker Compose, a partir
+do `compose.yaml` da raiz:
+
+```bash
+docker compose run --rm <servico> <comando>
+```
+
+O container é descartável de propósito: o que não está no `Gemfile`, no `Dockerfile` ou no
+repositório não existe. Arquivo versionado que o container executa usa fim de linha `LF`.
+
+Origem: [troca para Rails, 10/10/2026](00-plano-de-estudos.md#mudança-de-rota-10102026); o
+ambiente é montado na aula 4.1.
+
 ## Comando repetido vira script
 
 Comando de build, teste ou verificação não se decora nem se copia do histórico do terminal —
@@ -78,9 +111,13 @@ Origem: [aula 2.6](modulo-02/02-6-money-value-object.md), depois de quatro teste
 ## Idiomas
 
 Aulas, documentação de curso e interface do produto em português. Código, nomes de arquivo,
-commits e documentação técnica (`docs/adr/`, README) em inglês. Os nomes do domínio no código
-do sandbox estão em português (`Contrato`, `Parcela`, `dividirEmParcelas`) — decisão a revisar
-no módulo 5, quando o código migrar para `apps/api`.
+commits e documentação técnica (`docs/adr/`, README) em inglês.
+
+Nomes do domínio: o sandbox TypeScript (módulos 1–3) ficou em português (`Contrato`, `Parcela`,
+`dividirEmParcelas`) e fica assim, como histórico. **Do módulo 4 em diante, o domínio é escrito
+em inglês** (`Money`, `Contract`, `Installment`, `Payment`): o *inflector* do Rails, que liga
+`Contract` à tabela `contracts`, é inglês, e o modelo do README já está em inglês. Mensagens que
+o usuário lê (erros da API, telas) continuam em português.
 
 ## Commits
 

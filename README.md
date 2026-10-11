@@ -45,42 +45,45 @@ quietly disagree with the actual statement, and a number you cannot trust is wor
 number.
 
 **Tenant isolation is defence in depth.** Every business row belongs to a `wedding_id`, enforced
-at three layers: a guard that reads the tenant from the JWT only, a Prisma extension that
-injects the filter into every query, and row level security in Postgres as the last barrier.
-A test proves that one tenant cannot read another's data.
+at three layers: the tenant is read from the authenticated session only, never from request
+parameters; every query is scoped to it at the application layer; and row level security in
+Postgres is the last barrier. A test proves that one tenant cannot read another's data.
 
 The reasoning behind each choice is recorded as an ADR in [`docs/adr/`](docs/adr).
 
 ## Stack
 
-| Layer      | Choice                                                                                                           |
-| ---------- | ---------------------------------------------------------------------------------------------------------------- |
-| API        | Node, NestJS, TypeScript                                                                                         |
-| Database   | PostgreSQL, Prisma for CRUD, hand-written SQL for reports                                                        |
-| Web        | React, Vite, TanStack Query, React Router, Tailwind, shadcn/ui                                                   |
-| Validation | Zod schemas shared between API and web                                                                           |
-| Files      | S3-compatible storage, presigned uploads (MinIO locally, R2 in production)                                       |
-| Tests      | Unit tests on the domain, integration tests on a real Postgres via Testcontainers, Playwright for critical flows |
-| Ops        | Docker Compose for local development, GitHub Actions for CI, structured logs with pino                           |
+| Layer      | Choice                                                                                         |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| API        | Ruby on Rails in API mode                                                                      |
+| Database   | PostgreSQL, ActiveRecord for CRUD, hand-written SQL for reports                                |
+| Web        | React, Vite, TypeScript, TanStack Query, React Router, Tailwind, shadcn/ui                     |
+| Validation | Database constraints first, ActiveRecord validations and strong parameters on top              |
+| Files      | S3-compatible storage, presigned uploads (MinIO locally, R2 in production)                     |
+| Tests      | Minitest on the domain and on the API against a real Postgres, Playwright for critical flows   |
+| Ops        | Docker Compose for local development, GitHub Actions for CI, containerised deploy              |
+
+The API was first planned in NestJS; [ADR 0001](docs/adr/0001-use-rails-for-the-api.md) records
+why it moved to Rails.
 
 ## Repository layout
 
 ```
 apps/
-  api/     NestJS application
-    src/domain/    pure business rules, no framework and no I/O
-    src/modules/   contracts, payments, accounts, reports, auth, ...
-    prisma/        schema and migrations
+  api/     Rails API application
+    app/domain/    pure business rules, no ActiveRecord and no I/O
+    app/models/    persistence: contracts, installments, payments, accounts, ...
+    app/controllers/
+    db/            migrations and schema
   web/     React + Vite application
-packages/
-  shared/  Zod schemas and API contract types
+sandbox/   learning exercises (JavaScript, TypeScript, Ruby), one folder per module
 docs/
   adr/     architecture decision records
   curso/   study plan (in Portuguese)
 ```
 
-The `domain` folder imports neither NestJS nor Prisma. Business rules that can be tested with a
-plain function call stay that way.
+The `domain` folder depends on neither Rails nor the database. Business rules that can be
+tested with a plain method call stay that way.
 
 ## Domain model
 

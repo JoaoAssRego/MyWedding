@@ -19,4 +19,8 @@ Ao final de cada sessão, reescrever `docs/curso/onde-estou.md`.
 ## Regras rápidas
 
 - pnpm, nunca `npx` — ver `docs/curso/convencoes.md`.
+- Ruby e Rails rodam no container (`docker compose run`), gems via `bundle exec`, nunca
+  `gem install` para ferramenta de projeto — ver `docs/curso/convencoes.md`.
+- O backend é Ruby on Rails (API) desde 10/10/2026; NestJS e Prisma saíram da trilha — ver
+  `docs/curso/00-plano-de-estudos.md`.
 - Conversa e aulas em português; código, commits e documentação técnica em inglês.

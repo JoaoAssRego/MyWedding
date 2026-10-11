@@ -18,6 +18,10 @@ tags:
 
 **Status:** em andamento — tarefa passada.
 
+> [!note] Última aula do módulo 3
+> Desde a troca do backend para Rails (10/10/2026), esta aula fecha o módulo. Os casos de teste
+> escritos aqui viram a lista de testes de integração da API Rails no módulo 5 — vale caprichar.
+
 ## Contexto
 
 Duas regressões seguidas em código que já funcionava: o `Allow: GET` sumiu na
