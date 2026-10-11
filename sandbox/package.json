@@ -11,6 +11,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "test:servidor": "node ./modulo-03/test/servidor.ts"
   }
 }
