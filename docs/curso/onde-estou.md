@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-10-10
+atualizado: 2026-10-11
 modulo_atual: 3
 aula_atual: "3.3"
 aliases:
@@ -23,23 +23,20 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 
 ## Estado
 
-Situação em 10/10/2026, pelo repositório (último commit `5ea1a7d`, árvore limpa), verificado:
+Situação em 11/10/2026, pelo repositório (último commit `0c4f83d`; `test/servidor.ts` e
+`package.json` modificados, não commitados), verificado:
 
 - `pnpm typecheck` limpo;
-- servidor separado em `modulo-03/server.ts` (cria) e `modulo-03/index.ts` (liga na 3000) —
-  item 2 da 3.3;
-- `modulo-03/experimento.ts` com o `fetch` do item 1;
-- `modulo-03/test/servidor.ts` existe, sobe na porta `0`, faz as requisições e fecha o servidor.
+- servidor separado em `server.ts` (cria) e `index.ts` (liga na 3000); experimento do item 1
+  feito; script `test:servidor` existe;
+- o teste já **importa** o `server.ts` — a cópia do handler saiu;
+- **`pnpm test:servidor` quebra** antes da primeira requisição: `ReferenceError: Cannot access
+  'servidor' before initialization`, por importação circular entre `server.ts` e `index.ts`;
+- o teste não confere nada (sem `verificar`, `try/catch` que não pega `404`/`405`), faltam
+  casos, e `pnpm build` põe `modulo-03/test/` no `dist/`.
 
-Observado no código e ainda **não revisado com o João** — é a revisão da entrega da 3.3:
-
-- o teste **imprime** as respostas com `console.log` em vez de conferi-las com `verificar`
-  (itens 4 e 5) — nenhum caso dá `OK` ou `FALHOU`;
-- o teste tem **uma cópia** do handler do servidor em vez de importar o `server.ts` — o
-  [padrão a vigiar](#padrão-a-vigiar) apareceu;
-- `server.ts` importa `contratos` de `index.ts`, que é quem chama `listen(3000)`: importar o
-  servidor ainda liga a porta, que era o que o item 2 queria evitar;
-- falta o script `test:servidor` (item 6).
+Detalhe e perguntas para cada ponto na
+[revisão 1 da aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#revisão-1--11102026-não-fecha).
 
 Estrutura do `sandbox/`:
 
@@ -54,7 +51,7 @@ Estrutura do `sandbox/`:
 
 ## Próximos passos
 
-1. Revisar a entrega da 3.3 pelos pontos acima e fechar a aula: verificação com `OK`/`FALHOU`,
+1. Resolver os cinco pontos da revisão 1 da 3.3 e fechar a aula: verificação com `OK`/`FALHOU`,
    o teste visto falhando de propósito, pergunta em voz alta.
 2. Fechar o [módulo 3](modulo-03/README.md) — sem as aulas de `POST`, validação e erros, que
    foram para o módulo 5.
@@ -100,7 +97,8 @@ O que foi entregue **e** verificado — não o que foi só lido.
 ## Padrão a vigiar
 
 Três vezes no módulo 2 uma mudança foi feita **copiando** em vez de **mover**, e nas três a
-cópia antiga apodreceu. Na 3.3 voltou: o teste carrega uma cópia do servidor.
+cópia antiga apodreceu. Na 3.3 voltou (o teste carregava uma cópia do servidor) e foi corrigido
+na própria aula: o teste passou a importar o `server.ts`.
 
 No port para Ruby o risco muda de forma: é **traduzir linha a linha** o TypeScript em vez de
 escrever Ruby. Getter vira `def get_id`, `for` vira `for`, e o resultado é TypeScript com

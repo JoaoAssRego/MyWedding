@@ -128,4 +128,49 @@ Pergunta para responder em voz alta: **o que o `console.log(r)` do experimento m
 
 ## O que aconteceu
 
-_(a preencher)_
+### Revisão 1 — 11/10/2026: não fecha
+
+Entregue até aqui: o experimento do item 1 (`experimento.ts`), o servidor separado em
+`server.ts` (cria) e `index.ts` (liga), o teste importando o `server.ts` em vez de carregar uma
+cópia do handler (a cópia da primeira versão foi removida) e o script `test:servidor`.
+`pnpm typecheck` limpo.
+
+A verificação da aula, rodada como está escrita:
+
+```text
+$ pnpm test:servidor
+file:///…/sandbox/modulo-03/index.ts:22
+servidor.listen(3000, () => console.log("ouvindo na 3000"));
+^
+ReferenceError: Cannot access 'servidor' before initialization
+```
+
+O teste **não chega a fazer nenhuma requisição**. O que bloqueia, por ordem:
+
+1. **Importação circular.** `server.ts` importa `contratos` de `index.ts`, e `index.ts` importa
+   `servidor` de `server.ts`. Quando o ponto de entrada é o `index.ts` (`node
+   modulo-03/index.ts`), a ordem de avaliação faz funcionar por sorte; quando o ponto de
+   entrada é o teste, o `index.ts` roda **antes** de o `servidor` existir e tenta ligá-lo na
+   3000. É a terceira aparição do "módulo que executa ao ser importado" — o item 2 separou o
+   arquivo, mas os contratos ficaram morando no arquivo que liga a porta.
+   *Pergunta:* qual dos dois arquivos deveria ser dono dos contratos — ou nenhum dos dois?
+2. **Nada é conferido.** Os `try/catch` só pegam erro de rede: `fetch` **não lança** em `404`
+   nem em `405` — uma resposta de erro HTTP ainda é uma resposta. Por isso o caso do `POST`
+   imprime `OK` sem olhar nada, e um `404` onde se esperava `200` passaria em silêncio. Os
+   itens 4 e 5 pedem status, cabeçalho e corpo conferidos com `verificar`.
+   *Pergunta:* onde, na resposta do `fetch`, mora o status — e o cabeçalho `Allow`?
+3. **`verificar` não é importável.** Ele mora dentro de `modulo-01/test/04-testes.ts`, que é um
+   script. O padrão registrado no módulo 2 é o mesmo do problema 1: módulo exporta, quem
+   executa é o arquivo de entrada.
+4. **Casos faltando.** `GET /saude/qualquer-coisa` (a pendência da 3.2, que deveria aparecer
+   como `FALHOU` antes do conserto) foi trocado por `/qualquer-coisa`, que é outro caso. A soma
+   das parcelas do contrato 1 (`1750000`) e a contagem de dois contratos não são conferidas.
+5. **Build com teste dentro.** `pnpm build` gerou `dist/modulo-03/test/servidor.js`: o
+   `tsconfig.build.json` exclui `modulo-01/test`, não `modulo-03/test`. A regra de
+   [convencoes.md](../convencoes.md#verificar-e-construir-são-trabalhos-diferentes) previa uma
+   linha só no `exclude` — com testes em duas pastas, ela precisa de um padrão.
+
+Detalhe menor: `${resultado}` dentro de template string imprime `[object Object]`.
+
+Nada disso está commitado ainda — `test/servidor.ts` e `package.json` estão modificados na
+árvore de trabalho.
