@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-10-11
+atualizado: 2026-10-12
 modulo_atual: 4
 aula_atual: "4.1"
 aliases:
@@ -22,7 +22,7 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 
 ## Estado
 
-Situação em 11/10/2026 (último commit `a1f385e`, árvore limpa, sem push desde `0c4f83d`),
+Situação em 12/10/2026 (último commit `df61375`, árvore limpa, sincronizado com o GitHub),
 verificado:
 
 - `pnpm test:servidor` → onze casos `OK`; `pnpm typecheck` limpo; `pnpm build` sem testes no
