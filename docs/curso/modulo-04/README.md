@@ -12,8 +12,8 @@ tags:
 **Entregável:** `Money` e `Contract` portados para Ruby — soma, divisão em parcelas sem perder
 centavo, imutabilidade —, com testes em Minitest, tudo rodando dentro de um container Docker.
 **Onde vive o código:** `sandbox/modulo-04/`, com o `compose.yaml` na raiz do repositório.
-**Status:** não iniciado. Começa quando a [aula 3.3](../modulo-03/03-3-async-e-teste-do-servidor.md)
-fechar.
+**Status:** não iniciado. A [aula 3.3](../modulo-03/03-3-async-e-teste-do-servidor.md) fechou em
+11/10/2026; começa depois da [revisão oral do módulo 3](../modulo-03/README.md#revisão-oral-de-fechamento).
 
 ## Por que Ruby antes de Rails
 

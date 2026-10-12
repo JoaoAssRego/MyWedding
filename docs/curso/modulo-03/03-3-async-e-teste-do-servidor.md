@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 3
 aula: "3.3"
-status: em-andamento
+status: concluida
 conceitos:
   - async-await
   - promise
@@ -16,7 +16,7 @@ tags:
 
 # Aula 3.3 — `async`: o servidor testado por um programa
 
-**Status:** em andamento — tarefa passada.
+**Status:** concluída em 11/10/2026, na quarta revisão.
 
 > [!note] Última aula do módulo 3
 > Desde a troca do backend para Rails (10/10/2026), esta aula fecha o módulo. Os casos de teste
@@ -174,3 +174,182 @@ Detalhe menor: `${resultado}` dentro de template string imprime `[object Object]
 
 Nada disso está commitado ainda — `test/servidor.ts` e `package.json` estão modificados na
 árvore de trabalho.
+
+### Revisão 2 — 11/10/2026: não fecha, mas avançou muito
+
+Commits `805f7df`, `7e4d753` e `b706bd0`, mais uma reorganização ainda não commitada (o
+`Contrato` saiu de `modulo-01/contrato/` para `sandbox/contrato/`, os dados para
+`sandbox/contratos/`, o `verificar` para `sandbox/test/`).
+
+Resolvido desde a revisão 1:
+
+- **Importação circular** — os contratos ganharam um módulo próprio
+  (`contratos/contratos.ts`), importado tanto pelo servidor quanto pelos testes. O
+  `index.ts` ficou com duas linhas: importa e liga. `pnpm test:servidor` roda até o fim e o
+  processo termina sozinho (o `close()` funciona).
+- **`verificar` importável** — e foi **movido**, não copiado: o `04-testes.ts` passou a
+  importá-lo de `test/verificar.ts`, e os 21 casos do domínio continuam `OK`. O padrão a vigiar
+  não voltou.
+- **`/saude/qualquer-coisa`** é o caso testado agora, e `test/` do módulo 3 saiu do build.
+
+A verificação, como está hoje:
+
+```text
+OK Resultado da saúde do servidor
+OK Resultado da saúde do servidor com '?'
+FALHOU Esperando Erro, pois /saude não aceita método POST
+OK Resultado do endpoint de lista de contratos
+OK Resultado do endpoint de contrato 1
+FALHOU Resultado do endpoint de contratos/01
+FALHOU Resultado do endpoint de rota inexistente
+FALHOU Resultado do endpoint de Qualquer Coisa
+Não foi possível fazer a requisição
+OK Devem existir 2 contratos
+```
+
+O que ainda impede de fechar:
+
+1. **Os quatro `FALHOU` são do teste, não do servidor.** `requisicaoGet` e `requisicaoPost`
+   conferem `status === 200` para **todo** caso, inclusive os que deveriam dar `404` e `405`.
+   O servidor responde certo e o teste reprova; se o servidor quebrasse e devolvesse `200`
+   nesses casos, o teste aprovaria. É o inverso de proteger.
+   *Pergunta:* o que a função precisa receber, além da URL e da descrição, para saber o que é
+   uma resposta certa?
+2. **O cabeçalho `Allow: GET` não é conferido** — e é uma das duas regressões que motivaram a
+   aula. (O `Allow` enviado **na requisição** do `POST` não faz nada: é o servidor quem o manda
+   na resposta.)
+3. **O teste do valor nunca roda.** A URL está entre aspas duplas, `"http://localhost:${endereco}/…"`,
+   então o `${endereco}` não é substituído e o `fetch` lança. O `catch` engole o erro e imprime
+   uma mensagem genérica — o mesmo problema da revisão 1, num lugar novo. E mesmo com a URL
+   certa, compara `centavos` (um número) com `getTotal()` (um `Money`): seria `FALHOU` sempre.
+   O caso pedido pela tarefa também é outro: a **soma das parcelas** devolvidas pela API
+   bater `1750000`.
+4. **"Devem existir 2 contratos" confere o array local**, não a resposta do `GET /contratos`.
+   Passaria com o servidor desligado.
+5. **`test/verificar.ts` está no `dist/`.** Com o `verificar` numa terceira pasta de teste
+   (`sandbox/test/`), o `exclude` por caminho fixo ficou para trás de novo. É o que a revisão 1
+   chamou de "precisa de um padrão".
+
+Fora da tarefa, mas vale a conversa: `experimento.ts` declara `const rJson: Contrato = await
+r.json()` e imprime `rJson.getTotal`. O `json()` devolve um objeto comum, sem métodos — o
+`Contrato` só existe do lado do servidor. O TypeScript aceitou porque `json()` devolve `any`,
+que desliga a checagem: a mentira de tipo do módulo 2, agora atravessando a rede.
+*Pergunta:* o que o `console.log` imprime, e por quê?
+
+Também falta a prova de que o teste protege (estragar o servidor e ver o `FALHOU`), que só faz
+sentido depois do ponto 1.
+
+### Revisão 3 — 11/10/2026: falta pouco
+
+Ainda sem commit novo; tudo na árvore de trabalho.
+
+```text
+OK Resultado da saúde do servidor
+OK Resultado da saúde do servidor com '?'
+OK Esperando Erro, pois /saude não aceita método POST
+OK Resultado do endpoint de lista de contratos
+OK Resultado do endpoint de contrato 1
+OK Resultado do endpoint de contratos/01
+OK Resultado do endpoint de rota inexistente
+OK Resultado do endpoint de Qualquer Coisa
+OK Valor total do contrato deve corresponder ao valor exato
+OK Devem existir 2 contratos
+```
+
+Resolvido desde a revisão 2:
+
+- **Status esperado por caso** — as funções de requisição recebem `statusEsperado`, tipado com o
+  `StatusHttp` exportado pelo servidor. Os `404` e o `405` agora são conferidos de verdade.
+- **Soma das parcelas** — o teste lê as parcelas da resposta, reconstrói cada valor com
+  `Money.deJSON` e soma com `somar`, em vez de comparar número com objeto. O `Money` ganhou
+  `MoneyJson` e `deJSON`: o caminho de volta do `toJSON`, passando pela validação do
+  `deCentavos`. Boa decisão de domínio — o teste usa o domínio, não reimplementa a soma.
+- **Contagem pela API** — "2 contratos" agora vem do `GET /contratos`.
+- **Build** — `./test` no `exclude`; o `dist/` saiu sem nenhum arquivo de teste.
+- **`experimento.ts`** reescrito com `deJSON`: a mentira de tipo da revisão 2 foi entendida e
+  consertada ali.
+
+`pnpm typecheck` limpo; os 21 casos do domínio continuam `OK`.
+
+O que ainda impede de fechar:
+
+1. **O `Allow: GET` continua sem conferência.** É um dos itens explícitos da tarefa e a primeira
+   das duas regressões que motivaram a aula. Hoje, apagar o `{ allow: "GET" }` do servidor
+   deixaria os dez casos `OK` — a regressão da 3.1 voltaria sem ninguém ver. Para conferir, a
+   função precisa devolver a resposta (ou receber o que conferir nela), não só o status.
+2. **A prova de que o teste protege** — estragar o servidor de propósito, ver o `FALHOU`,
+   desfazer. Começar justamente pelo `Allow`, depois do ponto 1.
+3. **A pergunta em voz alta** da aula: o que o `console.log(r)` mostrou sem o `await`, e por
+   que o programa não esperou a resposta.
+
+Pequenos, viram pendência se não forem resolvidos agora:
+
+- `listaContratosApi: Contrato[]` repete a mentira de tipo que o `experimento.ts` corrigiu: o
+  que vem do `json()` não é um `Contrato`, não tem `getId()` nem `gerarParcelas()`.
+- O `catch` do caso do valor imprime "Não foi possível fazer a requisição", sem `FALHOU` e sem
+  o erro. Se o `deJSON` lançar porque a API mandou um valor inválido, o teste não reprova — só
+  avisa.
+
+### Revisão 4 — 11/10/2026: fecha
+
+O `requisicaoPost` passou a **devolver a resposta**, e o teste confere
+`headers.get("allow") === "GET"` no `405`. O `Allow` enviado na requisição saiu.
+
+```text
+OK Resultado da saúde do servidor
+OK Resultado da saúde do servidor com '?'
+OK Esperando Erro, pois /saude não aceita método POST
+OK Resposta 405 de /saude deve informar o cabeçalho Allow: GET
+OK Resultado do endpoint de lista de contratos
+OK Resultado do endpoint de contrato 1
+OK Resultado do endpoint de contratos/01
+OK Resultado do endpoint de rota inexistente
+OK Resultado do endpoint de Qualquer Coisa
+OK Valor total do contrato deve corresponder ao valor exato
+OK Devem existir 2 contratos
+```
+
+`pnpm typecheck` limpo, `pnpm build` sem nenhum arquivo de teste no `dist/`, os 21 casos do
+domínio `OK` (só a calibração em `FALHOU`), e o processo do teste termina sozinho.
+
+**A prova de que o teste protege**, feita pelo Claude numa cópia do sandbox fora do
+repositório, com três estragos — cada um pego pelo caso certo, e só por ele:
+
+| Estrago no servidor | O que o teste disse |
+|---|---|
+| tirar o `{ allow: "GET" }` (a regressão da 3.1) | `FALHOU Resposta 405 de /saude deve informar o cabeçalho Allow: GET` |
+| `/saude/qualquer-coisa` voltar a responder `200` (a regressão da 3.2) | `FALHOU Resultado do endpoint de Qualquer Coisa` |
+| a API perder uma parcela do contrato 1 | `FALHOU Valor total do contrato deve corresponder ao valor exato` |
+
+> [!tip] Vale repetir com as próprias mãos
+> O estrago foi feito pelo Claude, não pelo João. Repetir um deles (tirar o `Allow`, rodar,
+> ver o `FALHOU`, desfazer) leva um minuto — e é a diferença entre ler que o teste protege e
+> ter visto.
+
+**Pergunta em voz alta** — o que o `console.log(r)` mostrou sem o `await`, e por que o
+programa não esperou:
+
+> Mostrou `Promise { <pending> }`. O `fetch` não devolve o resultado direto: devolve na hora
+> uma `Promise`, a promessa de que o valor chega depois. Sem `await` o JavaScript não espera;
+> registra a `Promise` como ela está naquele instante, e naquele instante o pedido ainda não
+> terminou — por isso `<pending>`.
+
+Fecha. O complemento: a requisição **terminou** logo depois e a `Promise` foi cumprida — só
+que ninguém estava olhando. É o `await` que diz "esta função espera aqui"; sem ele, a linha
+seguinte roda e o resultado chega para ninguém.
+
+O que a aula deixou:
+
+- o primeiro teste do curso escrito **antes** do conserto (o `/saude/qualquer-coisa`);
+- `Money.deJSON` e `MoneyJson` — o caminho de volta do `toJSON`, validado;
+- a reorganização do sandbox: `Contrato` em `contrato/`, os dados de exemplo em `contratos/`,
+  `verificar` em `test/`, usados pelos dois testes.
+
+## Pendências
+
+- `listaContratosApi: Contrato[]` — o que vem do `json()` não é um `Contrato`. Mesma mentira
+  de tipo que o `experimento.ts` corrigiu.
+- O `catch` do caso do valor imprime "Não foi possível fazer a requisição", sem `FALHOU` e sem o
+  erro: se o `deJSON` lançar, o teste avisa em vez de reprovar.
+- O `exclude` do `tsconfig.build.json` lista três pastas de teste uma a uma; a quarta vai
+  entrar no `dist/` sem ninguém ver.

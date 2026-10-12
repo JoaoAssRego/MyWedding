@@ -15,53 +15,57 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 3 — Node e HTTP sem framework**, na [aula 3.3 — `async` e teste do servidor](modulo-03/03-3-async-e-teste-do-servidor.md),
-> que agora é a **última do módulo**. Em 10/10 o backend do projeto trocou de NestJS para
-> **Ruby on Rails** (API), por causa de um projeto voluntário em Rails — ver a
-> [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026). Fechada a 3.3, entra o
-> [módulo 4 — Ruby essencial](modulo-04/README.md).
+> **Módulo 3 — Node e HTTP sem framework**: as três aulas estão concluídas — a
+> [3.3](modulo-03/03-3-async-e-teste-do-servidor.md) fechou em 11/10, na quarta revisão. Falta só
+> a [revisão oral de fechamento](modulo-03/README.md#revisão-oral-de-fechamento) do módulo. Depois
+> entra o [módulo 4 — Ruby essencial](modulo-04/README.md): desde 10/10 o backend é **Ruby on
+> Rails** (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 11/10/2026, pelo repositório (último commit `0c4f83d`; `test/servidor.ts` e
-`package.json` modificados, não commitados), verificado:
+Situação em 11/10/2026 (último commit `50046c9`; todo o trabalho da 3.3 desde então e a
+reorganização de pastas ainda **não commitados**), verificado:
 
-- `pnpm typecheck` limpo;
-- servidor separado em `server.ts` (cria) e `index.ts` (liga na 3000); experimento do item 1
-  feito; script `test:servidor` existe;
-- o teste já **importa** o `server.ts` — a cópia do handler saiu;
-- **`pnpm test:servidor` quebra** antes da primeira requisição: `ReferenceError: Cannot access
-  'servidor' before initialization`, por importação circular entre `server.ts` e `index.ts`;
-- o teste não confere nada (sem `verificar`, `try/catch` que não pega `404`/`405`), faltam
-  casos, e `pnpm build` põe `modulo-03/test/` no `dist/`.
-
-Detalhe e perguntas para cada ponto na
-[revisão 1 da aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#revisão-1--11102026-não-fecha).
+- `pnpm test:servidor` → **onze casos, todos `OK`**, incluindo o `Allow: GET` no `405`; o
+  processo termina sozinho;
+- o teste pega as duas regressões que motivaram a aula e uma parcela perdida — provado com
+  três estragos numa cópia do sandbox (feitos pelo Claude, ver a
+  [revisão 4](modulo-03/03-3-async-e-teste-do-servidor.md#revisão-4--11102026-fecha));
+- `pnpm typecheck` limpo; `pnpm build` sem nenhum arquivo de teste no `dist/`; os 21 casos do
+  domínio `OK`;
+- `Money` ganhou `MoneyJson` e `deJSON`.
 
 Estrutura do `sandbox/`:
 
 | Onde | O quê |
 |---|---|
-| `modulo-01/money/`, `contrato/`, `types/` | o domínio em TypeScript |
+| `modulo-01/money/`, `types/` | `Money` e os tipos marcados |
+| `contrato/contrato.ts` | `Contrato` (saiu de `modulo-01/contrato/`) |
+| `contratos/contratos.ts` | os dois contratos de exemplo, usados pelo servidor e pelos testes |
+| `test/verificar.ts` | `verificar` e `verificarErro`, compartilhados |
 | `modulo-01/05-contrato.ts` | script que imprime os relatórios |
 | `modulo-01/test/` | testes de runtime (`04`) e de compilação (`06`) |
 | `modulo-03/server.ts` / `index.ts` | servidor `node:http` (cria / liga na 3000) |
-| `modulo-03/test/servidor.ts` | teste do servidor, em andamento |
+| `modulo-03/test/servidor.ts` | teste do servidor (`pnpm test:servidor`) |
 | `tsconfig.json` / `tsconfig.build.json` | verificar × emitir |
 
 ## Próximos passos
 
-1. Resolver os cinco pontos da revisão 1 da 3.3 e fechar a aula: verificação com `OK`/`FALHOU`,
-   o teste visto falhando de propósito, pergunta em voz alta.
-2. Fechar o [módulo 3](modulo-03/README.md) — sem as aulas de `POST`, validação e erros, que
-   foram para o módulo 5.
-3. [Módulo 4 — Ruby essencial](modulo-04/README.md), aula 4.1: Ruby em Docker. Ruby não está
+1. Commitar o trabalho da 3.3, separado por assunto (reorganização de pastas; `deJSON` no
+   `Money`; teste do servidor; notas do vault).
+2. Repetir um dos estragos com as próprias mãos — tirar o `Allow`, ver o `FALHOU`, desfazer.
+3. [Revisão oral de fechamento do módulo 3](modulo-03/README.md#revisão-oral-de-fechamento) —
+   cinco perguntas, sem olhar o código.
+4. [Módulo 4 — Ruby essencial](modulo-04/README.md), aula 4.1: Ruby em Docker. Ruby não está
    instalado no Windows; Docker 29.8 está.
 
 ## Pendências abertas
 
 Cada uma aponta para onde nasceu.
 
+- [ ] `listaContratosApi: Contrato[]` tipa como `Contrato` o que vem do `json()` — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
+- [ ] `catch` do caso do valor avisa em vez de reprovar — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
+- [ ] `exclude` do build lista as pastas de teste uma a uma — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
 - [ ] **`Money` pode ser negativo?** `subtrair` lança abaixo de zero. O port para Ruby mantém o
   comportamento; vence no módulo 6, com o `CHECK` da coluna — [aula 2.6](modulo-02/02-6-money-value-object.md)
 
@@ -88,8 +92,11 @@ O que foi entregue **e** verificado — não o que foi só lido.
   runtime; `Money` como value object imutável com `#campo` e fábrica; testes de tipo com
   `@ts-expect-error` e o ritual de conferência; build com dois `tsconfig`, e leitura do
   JavaScript gerado.
-- **Node e HTTP (módulo 3, aulas 3.1 e 3.2):** processo e porta, event loop, `node:http`,
-  roteamento à mão, status code, `405` com `Allow`, serialização com `toJSON`.
+- **Node e HTTP (módulo 3, aulas concluídas; falta a revisão oral):** processo e porta, event
+  loop, `node:http`, roteamento à mão, status code, `405` com `Allow`, serialização com
+  `toJSON` e o caminho de volta com `deJSON`; `Promise`, `async`/`await` e `fetch`; separar
+  criar × ligar o servidor; teste de integração na porta `0`, com o teste escrito antes do
+  conserto.
 - **Depuração:** achou o bug do `&&` a partir da saída dos testes e corrigiu a causa.
 - **Ferramentas:** Git e Conventional Commits, pnpm, scripts `typecheck`, `build` e `clean`.
 - **Ruby e Rails:** nada ainda — começa do zero no módulo 4.
@@ -98,7 +105,8 @@ O que foi entregue **e** verificado — não o que foi só lido.
 
 Três vezes no módulo 2 uma mudança foi feita **copiando** em vez de **mover**, e nas três a
 cópia antiga apodreceu. Na 3.3 voltou (o teste carregava uma cópia do servidor) e foi corrigido
-na própria aula: o teste passou a importar o `server.ts`.
+na própria aula: o teste passou a importar o `server.ts`, e o `verificar` foi **movido** para
+`test/`, não copiado.
 
 No port para Ruby o risco muda de forma: é **traduzir linha a linha** o TypeScript em vez de
 escrever Ruby. Getter vira `def get_id`, `for` vira `for`, e o resultado é TypeScript com
