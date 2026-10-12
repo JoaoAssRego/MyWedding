@@ -1,5 +1,5 @@
 import { createServer, type ServerResponse } from "node:http";
-import { contratos } from "./contratos.ts";
+import { contratos } from "../contratos/contratos.ts";
 
 export const servidor = createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");

@@ -1,43 +1,23 @@
-import { Contrato } from "../contrato/contrato.ts";
+import { contratos } from "../../contratos/contratos.ts";
 import { Money } from "../money/money.ts";
 import { quantidadeParcelas } from "../types/quantidadeParcelas.ts";
+import { verificar, verificarErro } from "../../test/verificar.ts";
 
-const contratoFotografo: Contrato = new Contrato(
-  "1",
-  "Gauss",
-  Money.deCentavos(390000),
-  quantidadeParcelas(20),
-);
-
-function verificar(descricao: string, condicao: boolean): void {
-  if (condicao) {
-    console.log("OK", descricao);
-  } else {
-    console.log("FALHOU", descricao);
-  }
-}
-
-function verificarErro(descricao: string, fn: () => void): void {
-  try {
-    fn();
-    console.log("FALHOU", descricao);
-  } catch (e) {
-    if (e instanceof Error) {
-      console.log("OK", e.message, "com descrição de:", descricao);
-    } else {
-      console.log("OK", String(e));
-    }
-  }
-}
 const status: number = 1;
 verificar("Calibração verdadeira: deve imprimir OK", status === 1);
 verificar("Calibração falsa: deve imprimir FALHOU", status === 2);
 
-const parcelasGeradas = contratoFotografo.gerarParcelas();
+const contrato = contratos[1];
+
+if (contrato === undefined) {
+  throw new Error("Contrato não encontrado no índice 1");
+}
+
+const parcelasGeradas = contrato.gerarParcelas();
 
 verificar(
   "gerarParcelas devolve a quantidade certa de objetos",
-  parcelasGeradas.length === contratoFotografo.getQuantidadeParcelas(),
+  parcelasGeradas.length === contrato.getQuantidadeParcelas(),
 );
 
 const primeira = parcelasGeradas[0];
@@ -54,7 +34,7 @@ verificar(
 );
 verificar(
   "a última tem quantidadeParcelas igual ao número de parcelas",
-  ultima.numero === contratoFotografo.getQuantidadeParcelas(),
+  ultima.numero === contrato.getQuantidadeParcelas(),
 );
 
 let somaValorCentavos = Money.deCentavos(0);
@@ -65,7 +45,7 @@ for (const parcela of parcelasGeradas) {
 
 verificar(
   "a soma dos valorCentavos bate com o total",
-  somaValorCentavos.igualA(contratoFotografo.getTotal()),
+  somaValorCentavos.igualA(contrato.getTotal()),
 );
 somaValorCentavos = Money.deCentavos(1750000);
 verificar(
@@ -101,12 +81,17 @@ verificar(
 );
 const parc = somaValorCentavos.dividirEmParcelas(quantidadeParcelas(6));
 
-if (parc[0] && parc[5]) {
-  verificar(
-    "Total de 1750000 dividido em 6 parcelas: primeira parcela deve ser maior que a última",
-    parc[0].maiorQue(parc[5]),
-  );
+const primeiraParc = parc[0];
+const ultimaParc = parc[5];
+
+if (primeiraParc === undefined || ultimaParc === undefined) {
+  throw new Error("Parcelas geradas são undefined");
 }
+
+verificar(
+  "Total de 1750000 dividido em 6 parcelas: primeira parcela deve ser maior que a última",
+  primeiraParc.maiorQue(ultimaParc),
+);
 
 verificar(
   "Total de 100 dividido em 3 parcelas deve somar 100",

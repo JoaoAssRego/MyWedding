@@ -5,6 +5,7 @@
     "dist",
     "modulo-01/test",
     "modulo-03/test",
+    "./test",
     "**/*.spec.ts"
   ]
 }

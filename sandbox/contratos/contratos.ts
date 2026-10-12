@@ -1,4 +1,4 @@
-import { Contrato } from "../modulo-01/contrato/contrato.ts";
+import { Contrato } from "../contrato/contrato.ts";
 import { Money } from "../modulo-01/money/money.ts";
 import { quantidadeParcelas } from "../modulo-01/types/quantidadeParcelas.ts";
 
