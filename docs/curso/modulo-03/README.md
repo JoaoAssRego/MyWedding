@@ -1,7 +1,7 @@
 ---
 tipo: modulo
 modulo: 3
-status: em-andamento
+status: concluido
 tags:
   - curso/modulo
   - curso/modulo-03
@@ -13,7 +13,7 @@ tags:
 módulo 2 (`Money`, `Contrato`).
 **Onde vive o código:** `sandbox/modulo-03/`, importando `Money` de `sandbox/modulo-01/`, o
 `Contrato` de `sandbox/contrato/` e os dados de exemplo de `sandbox/contratos/`.
-**Status:** todas as aulas concluídas em 11/10/2026; falta a [revisão oral de fechamento](#revisão-oral-de-fechamento).
+**Status:** concluído em 11/10/2026, com a [revisão oral](#revisão-oral-de-fechamento) fechada na primeira tentativa.
 
 ## Por que sem framework
 
@@ -71,3 +71,25 @@ alta, **sem olhar o código**.
 
 Respondidas, o módulo 3 fecha no [checklist do plano](../00-plano-de-estudos.md#progresso) e o
 [módulo 4](../modulo-04/README.md) começa.
+
+### Primeira tentativa — 11/10/2026: fecha
+
+| # | Resposta do João (resumo) | Avaliação |
+|---|---|---|
+| 1 | `listen` abre a porta e registra o servidor no event loop; a cada requisição o Node chama o handler com `(req, res)`; `res.end` envia — sem ele o cliente espera até o timeout. O servidor escutando é um *handle* ativo, e o Node só sai quando não sobra nada pendente: por isso o `close()` | **fecha** |
+| 2 | `fetch` só rejeita em falha de rede (conexão recusada, DNS, abort); `404` é resposta válida. Por isso o teste compara `status` com o esperado — e é preciso olhar `ok`/`status` antes de confiar no `.json()` | **fecha** — e foi além: o `.json()` de um `404` devolve o corpo de erro, não um contrato |
+| 3 | `index` ↔ `server`. Rodando o `index`, o `server` recebe um `index` incompleto, mas só usa `contratos` dentro do handler, que roda depois. Rodando o teste, a ordem inverte: o `index` executa o `listen(3000)` antes de `servidor` existir. Correção: contratos num módulo próprio | **fecha**, com uma ressalva abaixo |
+| 4 | Só dados atravessam a rede; `JSON.stringify` chama o `toJSON`; classe, métodos, protótipo, `#campos` e invariantes ficam no servidor; `deJSON` reconstrói. `r.json()` é `Promise<any>`, `any` cabe em qualquer tipo, a anotação é promessa sem checagem; `c.getId()` dá `TypeError: c.getId is not a function` | **fecha** |
+| 5 | Porta `0`: o sistema operacional escolhe uma livre; evita `EADDRINUSE` com o servidor de desenvolvimento ou testes em paralelo; `servidor.address().port` diz qual foi | **fecha** |
+
+**Ressalva na 3.** A resposta descreve "o padrão típico" e diz que o erro é "um
+`ReferenceError` **ou** um valor `undefined`". No caso dele não houve "ou": foi
+`ReferenceError: Cannot access 'servidor' before initialization`, registrado na
+[revisão 1 da 3.3](03-3-async-e-teste-do-servidor.md#revisão-1--11102026-não-fecha). A
+diferença tem nome: `servidor` é um `const` de módulo ESM, e antes de a linha que o declara
+rodar ele está na *zona morta temporal* — ler dá erro, não `undefined`. O `undefined` é o que
+aconteceria com `var` ou com `require` (CommonJS). Fica como pergunta de aprofundamento, não
+como condição: *por que no seu caso foi `ReferenceError` e não `undefined`?*
+
+Módulo fechado: a API de contratos roda sem framework, é testada por um programa que pega as
+duas regressões que aconteceram, e o João explica o caminho de uma requisição de ponta a ponta.

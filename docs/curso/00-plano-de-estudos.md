@@ -100,7 +100,7 @@ alta** o que escreveu, sem olhar o código.
 - [x] Módulo 0 — Preparação
 - [x] Módulo 1 — JavaScript essencial
 - [x] [Módulo 2 — TypeScript](modulo-02/README.md)
-- [ ] [Módulo 3 — Node e HTTP sem framework](modulo-03/README.md)
+- [x] [Módulo 3 — Node e HTTP sem framework](modulo-03/README.md)
 - [ ] [Módulo 4 — Ruby essencial](modulo-04/README.md)
 - [ ] Módulo 5 — Rails API e Postgres
 - [ ] Módulo 6 — Modelagem financeira no ActiveRecord

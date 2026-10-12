@@ -1,8 +1,8 @@
 ---
 tipo: progresso
 atualizado: 2026-10-11
-modulo_atual: 3
-aula_atual: "3.3"
+modulo_atual: 4
+aula_atual: "4.1"
 aliases:
   - Onde estou
 tags:
@@ -15,32 +15,26 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 3 — Node e HTTP sem framework**: as três aulas estão concluídas — a
-> [3.3](modulo-03/03-3-async-e-teste-do-servidor.md) fechou em 11/10, na quarta revisão. Falta só
-> a [revisão oral de fechamento](modulo-03/README.md#revisão-oral-de-fechamento) do módulo. Depois
-> entra o [módulo 4 — Ruby essencial](modulo-04/README.md): desde 10/10 o backend é **Ruby on
-> Rails** (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 3 fechado** em 11/10, com a [revisão oral](modulo-03/README.md#revisão-oral-de-fechamento)
+> na primeira tentativa. Próximo: [módulo 4 — Ruby essencial](modulo-04/README.md), começando
+> pela aula 4.1 (Ruby em Docker), ainda não passada. Desde 10/10 o backend é **Ruby on Rails**
+> (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 11/10/2026 (último commit `50046c9`; todo o trabalho da 3.3 desde então e a
-reorganização de pastas ainda **não commitados**), verificado:
+Situação em 11/10/2026 (último commit `a1f385e`, árvore limpa, sem push desde `0c4f83d`),
+verificado:
 
-- `pnpm test:servidor` → **onze casos, todos `OK`**, incluindo o `Allow: GET` no `405`; o
-  processo termina sozinho;
-- o teste pega as duas regressões que motivaram a aula e uma parcela perdida — provado com
-  três estragos numa cópia do sandbox (feitos pelo Claude, ver a
-  [revisão 4](modulo-03/03-3-async-e-teste-do-servidor.md#revisão-4--11102026-fecha));
-- `pnpm typecheck` limpo; `pnpm build` sem nenhum arquivo de teste no `dist/`; os 21 casos do
-  domínio `OK`;
-- `Money` ganhou `MoneyJson` e `deJSON`.
+- `pnpm test:servidor` → onze casos `OK`; `pnpm typecheck` limpo; `pnpm build` sem testes no
+  `dist/`; os 21 casos do domínio `OK`;
+- Ruby **não** está instalado no Windows; Docker 29.8 está. Ainda não existe `compose.yaml`.
 
 Estrutura do `sandbox/`:
 
 | Onde | O quê |
 |---|---|
-| `modulo-01/money/`, `types/` | `Money` e os tipos marcados |
-| `contrato/contrato.ts` | `Contrato` (saiu de `modulo-01/contrato/`) |
+| `modulo-01/money/`, `types/` | `Money` (com `toJSON`/`deJSON`) e os tipos marcados |
+| `contrato/contrato.ts` | `Contrato` |
 | `contratos/contratos.ts` | os dois contratos de exemplo, usados pelo servidor e pelos testes |
 | `test/verificar.ts` | `verificar` e `verificarErro`, compartilhados |
 | `modulo-01/05-contrato.ts` | script que imprime os relatórios |
@@ -49,15 +43,16 @@ Estrutura do `sandbox/`:
 | `modulo-03/test/servidor.ts` | teste do servidor (`pnpm test:servidor`) |
 | `tsconfig.json` / `tsconfig.build.json` | verificar × emitir |
 
+O sandbox TypeScript está completo: é a **especificação** do port para Ruby no módulo 4 — os
+testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
+
 ## Próximos passos
 
-1. Commitar o trabalho da 3.3, separado por assunto (reorganização de pastas; `deJSON` no
-   `Money`; teste do servidor; notas do vault).
-2. Repetir um dos estragos com as próprias mãos — tirar o `Allow`, ver o `FALHOU`, desfazer.
-3. [Revisão oral de fechamento do módulo 3](modulo-03/README.md#revisão-oral-de-fechamento) —
-   cinco perguntas, sem olhar o código.
-4. [Módulo 4 — Ruby essencial](modulo-04/README.md), aula 4.1: Ruby em Docker. Ruby não está
-   instalado no Windows; Docker 29.8 está.
+1. Passar a aula 4.1 — Ruby em Docker: imagem oficial com tag exata, `compose.yaml` na raiz,
+   `docker compose run --rm`, `irb`. Atritos previstos no [README do módulo 4](modulo-04/README.md#ambiente-ruby-em-docker).
+2. Opcional, antes: repetir um dos estragos da 3.3 com as próprias mãos, e responder a pergunta
+   de aprofundamento da [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha)
+   (`ReferenceError` × `undefined`).
 
 ## Pendências abertas
 
@@ -92,7 +87,7 @@ O que foi entregue **e** verificado — não o que foi só lido.
   runtime; `Money` como value object imutável com `#campo` e fábrica; testes de tipo com
   `@ts-expect-error` e o ritual de conferência; build com dois `tsconfig`, e leitura do
   JavaScript gerado.
-- **Node e HTTP (módulo 3, aulas concluídas; falta a revisão oral):** processo e porta, event
+- **Node e HTTP (módulo 3, fechado com revisão oral):** processo e porta, event
   loop, `node:http`, roteamento à mão, status code, `405` com `Allow`, serialização com
   `toJSON` e o caminho de volta com `deJSON`; `Promise`, `async`/`await` e `fetch`; separar
   criar × ligar o servidor; teste de integração na porta `0`, com o teste escrito antes do
