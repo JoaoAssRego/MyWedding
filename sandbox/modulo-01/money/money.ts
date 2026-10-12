@@ -1,6 +1,9 @@
 import { type Centavos, centavos } from "../types/centavos.ts";
 import type { QuantidadeParcelas } from "../types/quantidadeParcelas.ts";
 
+export interface MoneyJson {
+  centavos: Centavos;
+}
 export class Money {
   #centavos: Centavos;
 
@@ -63,7 +66,11 @@ export class Money {
     return this.#centavos > outro.#centavos;
   }
 
-  public toJSON() {
+  public static deJSON(json: MoneyJson): Money {
+    return Money.deCentavos(json.centavos);
+  }
+
+  public toJSON(): MoneyJson {
     return {
       centavos: this.#centavos,
     };
