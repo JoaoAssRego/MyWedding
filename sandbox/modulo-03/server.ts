@@ -52,7 +52,7 @@ export const servidor = createServer((req, res) => {
   });
 });
 
-type StatusHttp =
+export type StatusHttp =
   | 200
   | 201
   | 204
