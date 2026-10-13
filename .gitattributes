@@ -1,0 +1,18 @@
+# Configuração para ler quebra de linha padrão linux '\n'
+
+## Arquivos Ruby
+*.rb text eol=lf
+
+## Arquivos Docker
+*.yaml text eol=lf
+*.yml text eol=lf
+
+## Scripts Shell
+*.sh text eol=lf
+
+## Gems
+*Gemfile text eol=lf
+*Gemfile.lock text eol=lf
+
+## bin/*
+bin/* text eol=lf
