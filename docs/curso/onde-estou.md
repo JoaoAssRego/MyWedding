@@ -15,9 +15,10 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 3 fechado** em 11/10, com a [revisão oral](modulo-03/README.md#revisão-oral-de-fechamento)
-> na primeira tentativa. Próximo: [módulo 4 — Ruby essencial](modulo-04/README.md), começando
-> pela aula 4.1 (Ruby em Docker), ainda não passada. Desde 10/10 o backend é **Ruby on Rails**
+> **Módulo 4 — Ruby essencial**, na [aula 4.1 — Ruby em Docker](modulo-04/04-1-ruby-em-docker.md),
+> passada em 12/10: ligar o Docker Desktop, escolher a tag da imagem `ruby`, `compose.yaml`,
+> `.gitattributes`, experimentos no `irb` e o primeiro `.rb`. O
+> [módulo 3](modulo-03/README.md) fechou em 11/10. Desde 10/10 o backend é **Ruby on Rails**
 > (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
@@ -27,7 +28,9 @@ verificado:
 
 - `pnpm test:servidor` → onze casos `OK`; `pnpm typecheck` limpo; `pnpm build` sem testes no
   `dist/`; os 21 casos do domínio `OK`;
-- Ruby **não** está instalado no Windows; Docker 29.8 está. Ainda não existe `compose.yaml`.
+- Ruby **não** está instalado no Windows; Docker 29.8 e Compose 5.5 estão, mas o **Docker
+  Desktop estava desligado** em 12/10. Ainda não existe `compose.yaml` nem `.gitattributes`;
+  o Git está com `core.autocrlf=true`.
 
 Estrutura do `sandbox/`:
 
@@ -48,11 +51,12 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Passar a aula 4.1 — Ruby em Docker: imagem oficial com tag exata, `compose.yaml` na raiz,
-   `docker compose run --rm`, `irb`. Atritos previstos no [README do módulo 4](modulo-04/README.md#ambiente-ruby-em-docker).
-2. Opcional, antes: repetir um dos estragos da 3.3 com as próprias mãos, e responder a pergunta
-   de aprofundamento da [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha)
-   (`ReferenceError` × `undefined`).
+1. Fazer a [aula 4.1](modulo-04/04-1-ruby-em-docker.md) — verificação com `ruby -v` da tag
+   escolhida, `01-divisao.rb` imprimindo `64814`, `22` e `true`, e `git ls-files --eol`.
+2. Seguir o [módulo 4](modulo-04/README.md): 4.2, tudo é objeto.
+3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+   pergunta de aprofundamento `ReferenceError` × `undefined` da
+   [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
 ## Pendências abertas
 

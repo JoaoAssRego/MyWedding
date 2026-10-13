@@ -1,7 +1,7 @@
 ---
 tipo: modulo
 modulo: 4
-status: nao-iniciado
+status: em-andamento
 tags:
   - curso/modulo
   - curso/modulo-04
@@ -12,7 +12,7 @@ tags:
 **Entregável:** `Money` e `Contract` portados para Ruby — soma, divisão em parcelas sem perder
 centavo, imutabilidade —, com testes em Minitest, tudo rodando dentro de um container Docker.
 **Onde vive o código:** `sandbox/modulo-04/`, com o `compose.yaml` na raiz do repositório.
-**Status:** pronto para começar — o [módulo 3](../modulo-03/README.md) fechou em 11/10/2026.
+**Status:** em andamento — [aula 4.1](04-1-ruby-em-docker.md) passada em 12/10/2026.
 
 ## Por que Ruby antes de Rails
 
@@ -50,13 +50,13 @@ ele ganha o serviço do Postgres e o da API.
 > - **Container que some.** `docker compose run --rm` apaga o container no fim; o que foi
 >   instalado dentro dele sem estar no `Gemfile` some junto. É de propósito.
 
-## Aulas previstas
+## Aulas
 
 Cada arquivo nasce quando a aula for passada.
 
 | # | Aula | Status |
 |---|---|---|
-| 4.1 | Ruby em Docker: imagem, `compose.yaml`, `docker compose run`, `irb` | prevista |
+| 4.1 | [Ruby em Docker: imagem, `compose.yaml` e `irb`](04-1-ruby-em-docker.md) | em andamento |
 | 4.2 | Tudo é objeto: tipos, símbolos, `nil`, *truthiness*, métodos com `?` e `!` | prevista |
 | 4.3 | Coleções, blocos e `Enumerable` — dividir em parcelas sem perder centavo | prevista |
 | 4.4 | Classes, módulos, `Comparable` e `freeze` — `Money` como value object em Ruby | prevista |
