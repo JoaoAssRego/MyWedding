@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 4
 aula: "4.1"
-status: em-andamento
+status: concluida
 conceitos:
   - docker-imagem-e-container
   - tag-de-imagem
@@ -17,7 +17,7 @@ tags:
 
 # Aula 4.1 — Ruby em Docker: imagem, `compose.yaml` e `irb`
 
-**Status:** em andamento — tarefa passada.
+**Status:** concluída em 14/10/2026, na sexta revisão.
 
 ## Contexto
 
@@ -254,3 +254,208 @@ Segunda revisão:
 - `main.rb` existe em dois lugares (`apps/` e `sandbox/modulo-04/`) — cópia em vez de mover,
   o [padrão a vigiar](../onde-estou.md#padrão-a-vigiar).
 - Comentários do `.gitattributes` em português; a convenção pede inglês.
+
+### Terceira revisão — 13/10/2026: não fecha
+
+Commits `a67e9e4` (`.gitattributes`) e `54315b7` (`compose.yaml`); `sandbox/modulo-04/01-divisao.rb`
+ainda fora do Git.
+
+Resolvido desde a segunda revisão:
+
+- **O volume monta o repositório inteiro** (`.:/MyWedding`, `working_dir: /MyWedding`) — o
+  container enxerga tudo, e o comando da verificação acha o arquivo.
+- **`*Gemfile` e `*Gemfile.lock` sem âncora** — `git check-attr` dá `eol: lf` para
+  `apps/api/Gemfile` e `apps/api/Gemfile.lock`.
+- **`apps/main.rb` apagado** — só sobrou o script em `sandbox/modulo-04/`.
+
+Verificação:
+
+```text
+$ docker compose run --rm ruby ruby -v
+ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [x86_64-linux]
+
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/01-divisao.rb
+64814
+22
+true
+
+$ git ls-files --eol compose.yaml .gitattributes
+i/lf    w/lf    attr/text eol=lf        compose.yaml
+i/lf    w/crlf  attr/                   .gitattributes
+$ git ls-files --eol -o sandbox/modulo-04
+i/      w/crlf  attr/text eol=lf        sandbox/modulo-04/01-divisao.rb
+
+$ git check-attr eol -- apps/api/bin/rails bin/rails
+apps/api/bin/rails: eol: unspecified
+bin/rails: eol: lf
+```
+
+Ambiente e script certos: tag exata e `slim`, versão batendo, saída esperada, sem aviso nem com
+`-w`. O que impede de fechar:
+
+1. **`bin/*` continua ancorado.** Padrão do `.gitattributes` **com barra** é relativo à pasta
+   do `.gitattributes`; sem barra, vale em qualquer nível. Foi por isso que o `*Gemfile`
+   passou a funcionar e o `bin/*` não: `apps/api/bin/rails`, o arquivo que motivou a regra,
+   segue `unspecified`.
+2. **O script não foi commitado** (tarefa 8) — por isso o `i/` vazio. E o `w/crlf` dele pede a
+   explicação que a verificação cobra: o `attr` diz `eol=lf`, o arquivo na pasta está `crlf`.
+   *Pergunta:* em que momento o Git aplica o `eol=lf` na pasta de trabalho — e quem escreveu
+   esse arquivo com `CRLF`?
+3. **Tarefa 5 sem registro.** O experimento era escrever a previsão **antes** de rodar cada
+   linha no `irb` e comparar com o JavaScript. Não chegaram nem as previsões nem os resultados.
+4. **Perguntas em voz alta:**
+   - *1 (imagem × container)* — **parcial.** "Pasta temporária do Docker" não é bem isso:
+     `/tmp` é uma pasta comum do sistema de arquivos **do container**, a camada gravável que o
+     `--rm` apaga junto com ele; o `sandbox/` é o bind mount, ou seja, a própria pasta do
+     Windows vista de dentro. E faltou a primeira metade: o que é imagem e o que é container.
+   - *2 (`10 / 3`)* — **não fecha.** A resposta diz que atrapalha porque finanças precisam de
+     "cada décimo, mesmo que quebre o número" — mas o projeto inteiro existe para **não**
+     quebrar: tudo é centavo inteiro. O seu próprio `01-divisao.rb` usou `/` e deu `64814`
+     sem nenhum `Float`. *Perguntas para chegar lá:* o que aconteceria com os `22` centavos se
+     o script não tivesse a linha do `%`? Haveria algum erro avisando? E o que sai se o total
+     for escrito `1750000.0`?
+
+Para a aula 4.2, não para fechar esta: `valorFornecedor`, `numeroParcelas` — nomes em
+*camelCase* são o costume do JavaScript; o Ruby usa *snake_case*. É o primeiro sinal do
+[padrão a vigiar](../onde-estou.md#padrão-a-vigiar) do port: TypeScript com sintaxe de Ruby.
+Também menor: a prova compara com o literal `1750000` em vez da variável do total, e os
+comentários do `.gitattributes` estão em português (a [convenção](../convencoes.md#idiomas)
+pede inglês). E a tag `4.0.7-slim` fixa o Ruby mas não a base: hoje ela aponta para o Debian
+`trixie`, e muda quando a imagem trocar de base — `4.0.7-slim-trixie` fixaria as duas coisas.
+
+### Quarta revisão — 14/10/2026: não fecha
+
+Commit `1463db2` (`.gitattributes`); `compose.yaml` alterado e `01-divisao.rb` ainda fora do Git.
+
+**Tarefa 5 — previsões × resultado no `irb`:**
+
+| Expressão | Previsão | Ruby | O que ensina |
+|---|---|---|---|
+| `10 / 3` | `3` | `3` | inteiro ÷ inteiro dá inteiro — em JS, `3.3333333333333335` |
+| `10 % 3` | `1` | `1` | |
+| `-7 / 2` | `-3` | **`-4`** | Ruby arredonda para **baixo** (*floor*), não em direção ao zero como o `Math.trunc` do JS; o `%` acompanha: `-7 % 2` é `1`, e `-7.divmod(2)` é `[-4, 1]` |
+| `0.1 + 0.2` | `0.3` | **`0.30000000000000004`** | o `Float` do Ruby é o mesmo IEEE 754 do JavaScript — o mesmo erro do módulo 1 e da primeira frase do README |
+| `2 ** 100` | `10000` | **`1267650600228229401496703205376`** | a previsão foi conta (10⁴ no lugar de 2¹⁰⁰); o que importa é o resultado **exato**: o `Integer` do Ruby não tem limite. Em JS, `2 ** 100` vira `1.2676506002282294e+30`, aproximado; exato só com `BigInt` |
+| `1.class` | `Integer` | `Integer` | |
+| `nil.class` | `nill` | `NilClass` | até o `nil` é objeto de uma classe |
+| `"parcela " + 1` | erro | `TypeError` | Ruby não converte sozinho; em JS sairia `"parcela 1"` |
+
+Registrada. Faltou a coluna do JavaScript que a tarefa pedia; ela está acima.
+
+**Resolvido desde a terceira revisão:** tag `ruby:4.0.7-slim-trixie` — Ruby e base fixados
+(ainda não commitado). `ruby -v` → `4.0.7`; o script segue imprimindo `64814`, `22`, `true`.
+
+**O que impede de fechar:**
+
+1. **O `bin*` piorou a regra.** Padrão sem barra casa com o **nome** de um arquivo ou pasta;
+   `bin*` casa com a pasta `bin`, mas atributo de pasta não desce para os arquivos dentro dela.
+   Agora `bin/rails` da raiz **também** saiu `unspecified`, além do `apps/api/bin/rails`. Use o
+   `git check-attr eol -- apps/api/bin/rails bin/rails` como teste de cada tentativa: os dois
+   precisam sair `lf`.
+2. **Script ainda não commitado**, e a pergunta do `w/crlf` continua sem resposta.
+3. **Pergunta 1 — ainda parcial.** A resposta diz que o `--rm` "apaga o Docker". Não apaga o
+   Docker, e é exatamente aí que mora a diferença que a pergunta quer:
+   *o `--rm` apaga o container ou a imagem? Se apagasse a imagem, o que o próximo
+   `docker compose run` teria que fazer antes de rodar?* Responder isso é responder o que é
+   cada um.
+4. **Pergunta 2 — metade fecha.** Sem o `%`, os `22` centavos somem **em silêncio**, sem erro:
+   certo, e é essa a armadilha da divisão inteira. A outra metade não: com `1750000.0` "o
+   resultado sairia certo, pois a divisão resultaria em um número float". *Rode o próprio
+   `01-divisao.rb` trocando o total por `1750000.0` e leia a terceira linha.* Junto com a
+   previsão `0.1 + 0.2 → 0.3`, é o mesmo ponto — e é o ponto em que o `Money` inteiro se apoia.
+
+### Quinta revisão — 14/10/2026: não fecha
+
+Commits de `87122db` a `6de958c`; `01-divisao.rb` alterado de novo na árvore de trabalho.
+
+Resolvido desde a quarta revisão:
+
+- **Regra do `bin`** — `**/bin/* text eol=lf`. `git check-attr eol` dá `lf` para `bin/rails`
+  **e** `apps/api/bin/rails`. (A linha `bin/*` que ficou acima dela agora é redundante.)
+- **Fim de linha do script** — `git ls-files --eol` dá `i/lf w/lf attr/text eol=lf` para
+  `01-divisao.rb` e para o `compose.yaml`.
+- **`compose.yaml` com `-trixie` commitado.**
+- **Pergunta 1 — fecha.** "Apaga o container. Se apagasse a imagem, o `run` teria que baixar a
+  imagem de novo." É a diferença inteira: a imagem é o molde baixado e guardado na máquina; o
+  container é o que cada `run` cria a partir dele e o `--rm` descarta.
+
+O que impede de fechar:
+
+1. **O script commitado é o experimento, não a entrega.** O `01-divisao.rb` do último commit
+   tem `valorFornecedor = 1750000.0` e só imprime a base; a versão da árvore imprime
+   `64814.81481481482`, `22.0`, `1750022.0`. A verificação da aula pede `64814`, `22`, `true` —
+   e nenhuma das duas versões entrega isso hoje. Experimento é para o `irb` (ou um arquivo à
+   parte); o arquivo da tarefa volta a ser a divisão inteira com a prova.
+2. **Pergunta 2 — o dado chegou, a explicação não.** `1750022.0` é a observação certa. Falta
+   dizer **por quê**: *de onde vieram exatamente os 22 a mais? Multiplique só a base por 27 —
+   quanto dá, e o que o resto passa a representar nesse caso? E `64814.81481481482` centavos é
+   um valor que alguém consegue pagar?* Com isso respondido, volte à pergunta original: a
+   divisão inteira do Ruby ajuda ou atrapalha quem divide centavos, e onde está a armadilha.
+3. **O `w/crlf` da terceira revisão continua sem resposta em palavras.** O arquivo foi
+   apagado e recriado até sair `lf` — funcionou, mas a pergunta era o porquê: *em que momento o
+   Git aplica o `eol=lf` na pasta de trabalho, e quem tinha escrito o arquivo com `CRLF`?*
+
+Sobre os commits, para a próxima vez (não impede o fechamento):
+
+- seis commits para um arquivo de dez linhas — dois deles sem mudança nenhuma de conteúdo, um
+  apagando o arquivo e outro recriando. Para fazer o Git reaplicar o `.gitattributes` num
+  arquivo que já existe, o comando é `git add --renormalize <arquivo>`, num commit só;
+- o tipo `test:` é para testes. Ajuste de fim de linha é `chore:` (ou `fix:` quando conserta
+  algo quebrado), e o assunto vai no imperativo: `create first Ruby script`, não
+  `create of first ruby script`.
+
+### Sexta revisão — 14/10/2026: fecha
+
+Commit `01f7c6f`: o `01-divisao.rb` voltou a ser a divisão inteira, e o experimento com `Float`
+foi para um `experimento.rb` à parte.
+
+```text
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/01-divisao.rb
+64814
+22
+true
+
+$ git ls-files --eol sandbox/modulo-04/
+i/lf    w/lf    attr/text eol=lf        sandbox/modulo-04/01-divisao.rb
+i/lf    w/crlf  attr/text eol=lf        sandbox/modulo-04/experimento.rb
+```
+
+**Pergunta 2 — fecha.** Resumo da resposta: `1750000 / 27` descarta a fração e dá `64814`;
+`1750000.0 / 27` dá `64814.81…`, um valor que ninguém consegue pagar. A armadilha: a divisão
+inteira impede valor quebrado, mas cria um **rombo invisível** — os 22 centavos somem sem erro,
+e o sistema precisa tratar o resto de propósito (somar nas primeiras parcelas, como no
+módulo 1).
+
+Complemento sobre o `1750022.0`: com `Float`, a base **já carrega** a fração do resto
+(`0.8148… × 27 = 22`), então `base × 27` sozinho já dá `1750000.0`; somar o resto conta os
+mesmos 22 centavos **duas vezes**. O resto só é "o que sobrou" quando a divisão é inteira.
+
+**`w/crlf` — fecha.** Quem escreveu com `CRLF` foi o editor, no padrão do Windows; o Git aplica
+o `eol=lf` no `add` (normaliza o que entra no índice) e no `checkout` (o que escreve na
+pasta), e não reescreve sozinho um arquivo da pasta só porque o `.gitattributes` mudou.
+
+> [!note] A prova ao vivo está no próprio commit
+> O `experimento.rb` acabou de sair `i/lf w/crlf`: o editor salvou com `CRLF`, o `add`
+> normalizou para `LF` no índice, e a pasta ficou como o editor deixou. É a resposta acima
+> acontecendo. Na resposta escrita só com as próprias palavras ("o Git aplica assim que você
+> faz `git add`") faltou a metade do `checkout` — vale conseguir dizer as duas sem consulta.
+
+O que a aula deixou: Ruby 4.0.7 rodando em container com tag fixada até a base, o repositório
+inteiro montado, `.gitattributes` garantindo `LF` para tudo que o container vai executar —
+inclusive o `bin/rails` que ainda nem existe — e o primeiro `.rb`.
+
+## Pendências
+
+Para a aula 4.2 (nomes e estilo):
+
+- `valorFornecedor`, `numeroParcelas` em *camelCase* — o Ruby usa *snake_case*;
+- a prova compara com o literal `1750000` em vez da variável do total.
+
+Higiene, sem pressa:
+
+- comentários do `.gitattributes` em português; a linha `bin/*` ficou redundante com
+  `**/bin/*`;
+- o editor salva `CRLF` por padrão — configurá-lo para `LF` evita o `w/crlf` em todo arquivo
+  novo;
+- commits: `test:` só para testes, assunto no imperativo, e `git add --renormalize` em vez de
+  apagar e recriar arquivo.

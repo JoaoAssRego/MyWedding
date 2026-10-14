@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-10-12
+atualizado: 2026-10-14
 modulo_atual: 4
-aula_atual: "4.1"
+aula_atual: "4.2"
 aliases:
   - Onde estou
 tags:
@@ -15,22 +15,23 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial**, na [aula 4.1 — Ruby em Docker](modulo-04/04-1-ruby-em-docker.md),
-> passada em 12/10: ligar o Docker Desktop, escolher a tag da imagem `ruby`, `compose.yaml`,
-> `.gitattributes`, experimentos no `irb` e o primeiro `.rb`. O
-> [módulo 3](modulo-03/README.md) fechou em 11/10. Desde 10/10 o backend é **Ruby on Rails**
-> (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 4 — Ruby essencial.** A [aula 4.1 — Ruby em Docker](modulo-04/04-1-ruby-em-docker.md)
+> fechou em 14/10, na sexta revisão. Próxima: **4.2 — tudo é objeto** (tipos, símbolos, `nil`,
+> *truthiness*, métodos com `?` e `!`), ainda não passada. Desde 10/10 o backend é **Ruby on
+> Rails** (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 12/10/2026 (último commit `df61375`, árvore limpa, sincronizado com o GitHub),
-verificado:
+Situação em 14/10/2026 (último commit `01f7c6f`, à frente do GitHub; notas do vault não
+commitadas), verificado:
 
-- `pnpm test:servidor` → onze casos `OK`; `pnpm typecheck` limpo; `pnpm build` sem testes no
-  `dist/`; os 21 casos do domínio `OK`;
-- Ruby **não** está instalado no Windows; Docker 29.8 e Compose 5.5 estão, mas o **Docker
-  Desktop estava desligado** em 12/10. Ainda não existe `compose.yaml` nem `.gitattributes`;
-  o Git está com `core.autocrlf=true`.
+- `compose.yaml` com `ruby:4.0.7-slim-trixie`, repositório inteiro montado em `/MyWedding`;
+  `docker compose run --rm ruby ruby -v` → `4.0.7`;
+- `.gitattributes`: `LF` para `.rb`, YAML, shell, `Gemfile*` e `**/bin/*` — `bin/rails` e
+  `apps/api/bin/rails` saem `lf`;
+- `sandbox/modulo-04/01-divisao.rb` → `64814`, `22`, `true`; `experimento.rb` ao lado, com o
+  caso `Float`;
+- sandbox TypeScript intacto (servidor e domínio `OK`, conferidos em 13/10).
 
 Estrutura do `sandbox/`:
 
@@ -51,10 +52,9 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Fazer a [aula 4.1](modulo-04/04-1-ruby-em-docker.md) — verificação com `ruby -v` da tag
-   escolhida, `01-divisao.rb` imprimindo `64814`, `22` e `true`, e `git ls-files --eol`.
-2. Seguir o [módulo 4](modulo-04/README.md): 4.2, tudo é objeto.
-3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Passar a aula 4.2 — tudo é objeto. Começa pelas pendências de estilo da 4.1: *snake_case*
+   no lugar do *camelCase*.
+2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
@@ -69,6 +69,8 @@ Cada uma aponta para onde nasceu.
   comportamento; vence no módulo 6, com o `CHECK` da coluna — [aula 2.6](modulo-02/02-6-money-value-object.md)
 
 Para **não repetir no port para Ruby** (módulo 4):
+
+- [ ] *camelCase* nos nomes Ruby (`valorFornecedor`) — [aula 4.1](modulo-04/04-1-ruby-em-docker.md#pendências)
 
 - [ ] Getters no estilo Java em `Contrato` — [aula 2.6](modulo-02/02-6-money-value-object.md)
 - [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
@@ -98,7 +100,11 @@ O que foi entregue **e** verificado — não o que foi só lido.
   conserto.
 - **Depuração:** achou o bug do `&&` a partir da saída dos testes e corrigiu a causa.
 - **Ferramentas:** Git e Conventional Commits, pnpm, scripts `typecheck`, `build` e `clean`.
-- **Ruby e Rails:** nada ainda — começa do zero no módulo 4.
+- **Ruby (módulo 4, aula 4.1):** Ruby em Docker — imagem × container, tag fixada até a base,
+  `compose.yaml` com bind mount, `irb`; fim de linha com `.gitattributes` (`add` × `checkout`);
+  divisão inteira, *floor* com negativos, `Integer` sem limite, `Float` IEEE igual ao JS; e,
+  depois de duas revisões, a armadilha completa: `Float` não serve para centavo, e a divisão
+  inteira perde o resto em silêncio.
 
 ## Padrão a vigiar
 

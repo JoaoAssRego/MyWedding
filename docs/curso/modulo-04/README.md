@@ -12,7 +12,7 @@ tags:
 **Entregável:** `Money` e `Contract` portados para Ruby — soma, divisão em parcelas sem perder
 centavo, imutabilidade —, com testes em Minitest, tudo rodando dentro de um container Docker.
 **Onde vive o código:** `sandbox/modulo-04/`, com o `compose.yaml` na raiz do repositório.
-**Status:** em andamento — [aula 4.1](04-1-ruby-em-docker.md) passada em 12/10/2026.
+**Status:** em andamento — [aula 4.1](04-1-ruby-em-docker.md) concluída em 14/10/2026; próxima, a 4.2.
 
 ## Por que Ruby antes de Rails
 
@@ -56,7 +56,7 @@ Cada arquivo nasce quando a aula for passada.
 
 | # | Aula | Status |
 |---|---|---|
-| 4.1 | [Ruby em Docker: imagem, `compose.yaml` e `irb`](04-1-ruby-em-docker.md) | em andamento |
+| 4.1 | [Ruby em Docker: imagem, `compose.yaml` e `irb`](04-1-ruby-em-docker.md) | concluída |
 | 4.2 | Tudo é objeto: tipos, símbolos, `nil`, *truthiness*, métodos com `?` e `!` | prevista |
 | 4.3 | Coleções, blocos e `Enumerable` — dividir em parcelas sem perder centavo | prevista |
 | 4.4 | Classes, módulos, `Comparable` e `freeze` — `Money` como value object em Ruby | prevista |
