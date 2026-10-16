@@ -1,10 +1,10 @@
-valorFornecedor = 1750000.0
-numeroParcelas = 27
+valor_fornecedor = 1750000.0
+numero_parcelas = 27
 
-valorBaseParcela = valorFornecedor / numeroParcelas
-valorSobra = valorFornecedor % numeroParcelas
+valor_base_parcela = valor_fornecedor / numero_parcelas
+valor_sobra = valor_fornecedor % numero_parcelas
 
-puts valorBaseParcela
-puts valorSobra
-puts ((valorBaseParcela * numeroParcelas) + valorSobra) == 1750000
+puts valor_base_parcela
+puts valor_sobra
+puts ((valor_base_parcela * numero_parcelas) + valor_sobra) == valor_fornecedor
 
