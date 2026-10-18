@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-10-14
+atualizado: 2026-10-18
 modulo_atual: 4
 aula_atual: "4.2"
 aliases:
@@ -15,23 +15,26 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial.** A [aula 4.1 — Ruby em Docker](modulo-04/04-1-ruby-em-docker.md)
-> fechou em 14/10, na sexta revisão. Próxima: **4.2 — tudo é objeto** (tipos, símbolos, `nil`,
-> *truthiness*, métodos com `?` e `!`), ainda não passada. Desde 10/10 o backend é **Ruby on
-> Rails** (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 4 — Ruby essencial**, na [aula 4.2 — tudo é objeto](modulo-04/04-2-tudo-e-objeto.md),
+> passada em 14/10: renomear o `01-divisao.rb` para *snake_case* em inglês, `irb` com previsão
+> e coluna do JavaScript, e o primeiro método — `installment_status`, o status derivado da
+> parcela. A [4.1](modulo-04/04-1-ruby-em-docker.md) fechou em 14/10. Desde 10/10 o backend é
+> **Ruby on Rails** (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 14/10/2026 (último commit `01f7c6f`, à frente do GitHub; notas do vault não
-commitadas), verificado:
+Situação em 18/10/2026 (último commit `d428f6b`), verificado:
 
-- `compose.yaml` com `ruby:4.0.7-slim-trixie`, repositório inteiro montado em `/MyWedding`;
-  `docker compose run --rm ruby ruby -v` → `4.0.7`;
-- `.gitattributes`: `LF` para `.rb`, YAML, shell, `Gemfile*` e `**/bin/*` — `bin/rails` e
-  `apps/api/bin/rails` saem `lf`;
-- `sandbox/modulo-04/01-divisao.rb` → `64814`, `22`, `true`; `experimento.rb` ao lado, com o
-  caso `Float`;
-- sandbox TypeScript intacto (servidor e domínio `OK`, conferidos em 13/10).
+- **`01-divisao.rb` commitado quebrado** — `NameError` em `valor_fornecedor`: a renomeação
+  trocou as declarações mas não os usos;
+- **`02-installment-status.rb` commitado com o experimento** — `nil` lança `ArgumentError`,
+  seis dos sete casos comentados; e `installment_status(-100, 64815)` devolve `:paid`;
+- as duas perguntas em voz alta da 4.2 **fecharam**; o código não — ver a
+  [revisão 2](modulo-04/04-2-tudo-e-objeto.md#revisão-2--18102026-não-fecha--as-perguntas-fecharam-o-código-regrediu);
+- Ruby 4.0.7 ainda instalado no Windows (`C:\Ruby40-x64`), contra a
+  [convenção](convencoes.md#ruby-roda-no-container) — decisão pendente do João;
+- `compose.yaml` com `ruby:4.0.7-slim-trixie`; `.gitattributes` com `LF` para `.rb`, YAML,
+  shell, `Gemfile*` e `**/bin/*`.
 
 Estrutura do `sandbox/`:
 
@@ -52,9 +55,10 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Passar a aula 4.2 — tudo é objeto. Começa pelas pendências de estilo da 4.1: *snake_case*
-   no lugar do *camelCase*.
-2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Fechar a [aula 4.2](modulo-04/04-2-tudo-e-objeto.md): consertar os dois scripts, guarda para
+   o negativo, rodar a verificação **antes** de commitar, e decidir o Ruby do Windows.
+2. Depois, a 4.3 — coleções, blocos e `Enumerable`.
+3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
@@ -112,6 +116,11 @@ Três vezes no módulo 2 uma mudança foi feita **copiando** em vez de **mover**
 cópia antiga apodreceu. Na 3.3 voltou (o teste carregava uma cópia do servidor) e foi corrigido
 na própria aula: o teste passou a importar o `server.ts`, e o `verificar` foi **movido** para
 `test/`, não copiado.
+
+Segundo padrão, aparecido no módulo 4: **commit sem rodar a verificação.** Na 4.1 o
+`01-divisao.rb` foi commitado com o experimento do `Float`; na 4.2, os dois scripts quebrados
+(`NameError` numa renomeação pela metade, e o experimento do `nil` no lugar da entrega). A
+verificação de cada aula é um comando: roda antes do `git commit`, sempre.
 
 No port para Ruby o risco muda de forma: é **traduzir linha a linha** o TypeScript em vez de
 escrever Ruby. Getter vira `def get_id`, `for` vira `for`, e o resultado é TypeScript com
