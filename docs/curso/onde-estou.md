@@ -2,7 +2,7 @@
 tipo: progresso
 atualizado: 2026-10-18
 modulo_atual: 4
-aula_atual: "4.2"
+aula_atual: "4.3"
 aliases:
   - Onde estou
 tags:
@@ -15,26 +15,24 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial**, na [aula 4.2 — tudo é objeto](modulo-04/04-2-tudo-e-objeto.md),
-> passada em 14/10: renomear o `01-divisao.rb` para *snake_case* em inglês, `irb` com previsão
-> e coluna do JavaScript, e o primeiro método — `installment_status`, o status derivado da
-> parcela. A [4.1](modulo-04/04-1-ruby-em-docker.md) fechou em 14/10. Desde 10/10 o backend é
-> **Ruby on Rails** (API) — ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 4 — Ruby essencial.** A [aula 4.2 — tudo é objeto](modulo-04/04-2-tudo-e-objeto.md)
+> fechou em 18/10, na quarta revisão. Próxima: **4.3 — coleções, blocos e `Enumerable`**,
+> ainda não passada. Desde 10/10 o backend é **Ruby on Rails** (API) — ver a
+> [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 18/10/2026 (último commit `d428f6b`), verificado:
+Situação em 18/10/2026 (código no commit `f042a9a`; notas da 4.2 commitadas logo depois,
+tudo sincronizado com o GitHub), verificado:
 
-- **`01-divisao.rb` commitado quebrado** — `NameError` em `valor_fornecedor`: a renomeação
-  trocou as declarações mas não os usos;
-- **`02-installment-status.rb` commitado com o experimento** — `nil` lança `ArgumentError`,
-  seis dos sete casos comentados; e `installment_status(-100, 64815)` devolve `:paid`;
-- as duas perguntas em voz alta da 4.2 **fecharam**; o código não — ver a
-  [revisão 2](modulo-04/04-2-tudo-e-objeto.md#revisão-2--18102026-não-fecha--as-perguntas-fecharam-o-código-regrediu);
-- Ruby 4.0.7 ainda instalado no Windows (`C:\Ruby40-x64`), contra a
-  [convenção](convencoes.md#ruby-roda-no-container) — decisão pendente do João;
+- `01-divisao.rb` → `64814`, `22`, `true`, com nomes em inglês e *snake_case*;
+- `02-installment-status.rb` → `:pending`, `:pending`, `:partial`, `:paid`, erro no negativo,
+  `true`, `false`, erro acima do valor;
 - `compose.yaml` com `ruby:4.0.7-slim-trixie`; `.gitattributes` com `LF` para `.rb`, YAML,
-  shell, `Gemfile*` e `**/bin/*`.
+  shell, `Gemfile*` e `**/bin/*`;
+- Ruby 4.0.7 também instalado no Windows, **mantido de propósito** pelo João, por motivos fora
+  do projeto; neste projeto, tudo roda pelo container
+  ([convenção](convencoes.md#ruby-roda-no-container)).
 
 Estrutura do `sandbox/`:
 
@@ -55,10 +53,9 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Fechar a [aula 4.2](modulo-04/04-2-tudo-e-objeto.md): consertar os dois scripts, guarda para
-   o negativo, rodar a verificação **antes** de commitar, e decidir o Ruby do Windows.
-2. Depois, a 4.3 — coleções, blocos e `Enumerable`.
-3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Passar a aula 4.3 — coleções, blocos e `Enumerable`: dividir em parcelas sem perder centavo,
+   agora devolvendo a lista de parcelas.
+2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
@@ -74,7 +71,8 @@ Cada uma aponta para onde nasceu.
 
 Para **não repetir no port para Ruby** (módulo 4):
 
-- [ ] *camelCase* nos nomes Ruby (`valorFornecedor`) — [aula 4.1](modulo-04/04-1-ruby-em-docker.md#pendências)
+- [x] ~~*camelCase* nos nomes Ruby~~ — resolvido na [aula 4.2](modulo-04/04-2-tudo-e-objeto.md)
+- [ ] `nil` tratado em três lugares no `installment_status` — [aula 4.2](modulo-04/04-2-tudo-e-objeto.md#pendências)
 
 - [ ] Getters no estilo Java em `Contrato` — [aula 2.6](modulo-02/02-6-money-value-object.md)
 - [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
@@ -109,6 +107,9 @@ O que foi entregue **e** verificado — não o que foi só lido.
   divisão inteira, *floor* com negativos, `Integer` sem limite, `Float` IEEE igual ao JS; e,
   depois de duas revisões, a armadilha completa: `Float` não serve para centavo, e a divisão
   inteira perde o resto em silêncio.
+- **Ruby (aula 4.2):** tudo é objeto, operador é método, sem conversão implícita; só `false` e
+  `nil` são falsos; `nil`, `fetch` × `[]`, `&.`; símbolo × string; `?` e `!`; `def` sem
+  `return`, `raise` e `rescue`, guarda com `if` no fim da linha.
 
 ## Padrão a vigiar
 
@@ -119,7 +120,8 @@ na própria aula: o teste passou a importar o `server.ts`, e o `verificar` foi *
 
 Segundo padrão, aparecido no módulo 4: **commit sem rodar a verificação.** Na 4.1 o
 `01-divisao.rb` foi commitado com o experimento do `Float`; na 4.2, os dois scripts quebrados
-(`NameError` numa renomeação pela metade, e o experimento do `nil` no lugar da entrega). A
+(`NameError` numa renomeação pela metade, e o experimento do `nil` no lugar da entrega), e
+depois um "fix" do `NameError` que trouxe outro `NameError`. A
 verificação de cada aula é um comando: roda antes do `git commit`, sempre.
 
 No port para Ruby o risco muda de forma: é **traduzir linha a linha** o TypeScript em vez de

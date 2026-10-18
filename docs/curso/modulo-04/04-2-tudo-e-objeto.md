@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 4
 aula: "4.2"
-status: em-andamento
+status: concluida
 conceitos:
   - objeto-e-metodo
   - snake-case
@@ -18,7 +18,7 @@ tags:
 
 # Aula 4.2 — Tudo é objeto: `nil`, símbolos, *truthiness* e métodos com `?` e `!`
 
-**Status:** em andamento — tarefa passada.
+**Status:** concluída em 18/10/2026, na quarta revisão.
 
 ## Contexto
 
@@ -406,3 +406,81 @@ Menores, ainda da revisão 1: espaço depois da vírgula em `paid?(paid_cents,am
 espaço sobrando depois do `end` da linha 12, linha em branco antes do último `end`, `CRLF` no
 script. E os nomes novos: `base_installments_value` é o valor de **uma** parcela —
 `installment_base`, sem plural, conta melhor; `remain_value` → `remainder`.
+
+### Revisão 3 — 18/10/2026: não fecha — falta um arquivo
+
+Commits `01bc775` e `2be82b9`.
+
+**`02-installment-status.rb` — resolvido.**
+
+```text
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/02-installment-status.rb
+:pending
+:pending
+:partial
+:paid
+#<ArgumentError: Pagamento negativo enviado, valor deve ser positivo>
+true
+false
+#<ArgumentError: Pagamento acima do valor da parcela>
+```
+
+`nil` volta a ser `:pending`, os casos voltaram, e o negativo agora **lança** em vez de virar
+`:paid` — com um caso próprio na saída, o que é melhor que a lista pedida. (A tarefa pedia `p`
+da **classe**; `p e` imprime o erro inteiro. Tanto faz aqui; vale saber a diferença.)
+
+Para revisar, não para fechar: o `nil` agora é tratado em três lugares — `paid_cents &&` em
+cada guarda e `paid_cents == nil ||` no `if`. A primeira versão resolvia em uma linha.
+*O que o `paid_cents ||= 0` fazia que tornaria os outros três desnecessários?* E
+`paid_cents == nil` tem nome na aula: `paid_cents.nil?`.
+
+**`01-divisao.rb` — ainda quebrado, de outro jeito:**
+
+```text
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/01-divisao.rb
+…/01-divisao.rb:5:in '<main>': undefined local variable or method 'installment_number' for main (NameError)
+```
+
+A linha 2 declara `installments_number`; a linha 5 usa `installment_number` (sem o `s`) e a
+linha 9, `number_installments` (a ordem antiga). Três grafias para a mesma variável. O commit
+`01bc775` ("fix: variables with old names") foi feito, de novo, sem rodar o script — **quarta
+vez** do padrão.
+
+**Ruby do Windows** — `where ruby` ainda acha `C:\Ruby40-x64\bin\ruby.exe`, e a decisão não
+veio.
+
+Também: `refactor:` é para mudança que **não** altera comportamento. `2be82b9` mudou o que o
+método faz com `nil` — é `fix:`.
+
+### Revisão 4 — 18/10/2026: fecha
+
+Commit `f042a9a`: as três grafias viraram uma só, `installments_number`.
+
+```text
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/01-divisao.rb
+64814
+22
+true
+```
+
+O `02-installment-status.rb` segue igual à revisão 3. As duas perguntas em voz alta já tinham
+fechado na revisão 2. Aula fechada.
+
+**Ruby do Windows — decidido.** O João mantém o Ruby 4.0.7 instalado no Windows por motivos
+fora deste projeto. A [convenção](../convencoes.md#ruby-roda-no-container) foi ajustada: o Ruby
+da máquina pode existir, mas **neste projeto** comando e verificação rodam no container.
+
+O que a aula deixou: o primeiro método do domínio em Ruby — o status da parcela **derivado**,
+nunca guardado, como manda o [README](../../../README.md) —, guardas que lançam para pagamento
+negativo e acima do valor, e a diferença entre o falso do JavaScript e o do Ruby explicada nas
+próprias palavras.
+
+## Pendências
+
+- O `nil` tratado em três lugares no `installment_status`; um `paid_cents ||= 0` no começo
+  resolve os três. `paid_cents == nil` → `paid_cents.nil?`.
+- `base_installments_value` → `installment_base`; `remain_value` → `remainder`.
+- Espaço depois da vírgula em `paid?(paid_cents,amount_cents)`, espaço sobrando depois do `end`,
+  indentação dentro do `begin` da linha 25, `CRLF` no script.
+- **Rodar a verificação antes de cada commit** — quatro commits quebrados entre a 4.1 e a 4.2
+  (ver o [padrão a vigiar](../onde-estou.md#padrão-a-vigiar)).

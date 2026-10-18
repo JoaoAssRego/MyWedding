@@ -50,8 +50,8 @@ Origem: [troca para Rails, 10/10/2026](00-plano-de-estudos.md#mudança-de-rota-1
 
 ## Ruby roda no container
 
-Não há Ruby instalado no Windows. Todo comando Ruby ou Rails roda pelo Docker Compose, a partir
-do `compose.yaml` da raiz:
+Todo comando Ruby ou Rails **deste projeto** roda pelo Docker Compose, a partir do `compose.yaml`
+da raiz:
 
 ```bash
 docker compose run --rm <servico> <comando>
@@ -59,6 +59,11 @@ docker compose run --rm <servico> <comando>
 
 O container é descartável de propósito: o que não está no `Gemfile`, no `Dockerfile` ou no
 repositório não existe. Arquivo versionado que o container executa usa fim de linha `LF`.
+
+Existe um Ruby instalado no Windows (`C:\Ruby40-x64`), mantido pelo João por motivos fora do
+projeto — decisão de 18/10/2026. Ele não substitui o container: `ruby` ou `irb` digitados direto
+no terminal do Windows respondem pelo Ruby da máquina, não pelo do projeto. Verificação de aula
+vale só quando roda pelo `docker compose`.
 
 Origem: [troca para Rails, 10/10/2026](00-plano-de-estudos.md#mudança-de-rota-10102026); o
 ambiente é montado na aula 4.1.
