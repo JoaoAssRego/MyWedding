@@ -1,8 +1,8 @@
 supplier_value = 1750000
-number_installments = 27
+installments_number = 27
 
-base_installments_value = valor_fornecedor / numero_parcelas
-remain_value = valor_fornecedor % numero_parcelas
+base_installments_value = supplier_value / installments_number
+remain_value = supplier_value % installment_number
 
 puts base_installments_value
 puts remain_value
