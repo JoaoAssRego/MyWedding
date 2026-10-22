@@ -20,7 +20,7 @@ end
 
 
 def split_installments(total_cents,count)
-    raise ArgumentError, "Count need to be Integer. Count: #{count}" if count.is_a?(Integer) 
+    raise ArgumentError, "Count need to be Integer. Count: #{count}" unless count.is_a?(Integer) 
     
     raise ArgumentError, "Count need to be greater than or equal to 1. Count: #{count}" if count < 1
 
@@ -28,15 +28,21 @@ def split_installments(total_cents,count)
     
     raise ArgumentError, "total cents need to be greater than count" if total_cents < count
 
-    installments_value = Integer.floor(total_cents / count)
+    installments_value = total_cents / count # O ruby automaticamente faz uma divisão inteira e arrendonda para baixo, não necessitando de .floor
 
     rest_cents = total_cents % count
 
-    array_installments = Array.new(count) {|i| installments_value + (i < rest_cents ? 1 : 0)}
+    Array.new(count) {|i| installments_value + (i < rest_cents ? 1 : 0)}
 
-    return array_installments
 end
 
 def installments(total_cents,count)
-    
+
+    split_installments(total_cents,count).map.with_index(1) do |value,number|
+      {
+        number: number,
+        installment: value
+      }
+    end
+
 end
