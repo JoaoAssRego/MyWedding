@@ -15,9 +15,10 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial.** A [aula 4.2 — tudo é objeto](modulo-04/04-2-tudo-e-objeto.md)
-> fechou em 18/10, na quarta revisão. Próxima: **4.3 — coleções, blocos e `Enumerable`**,
-> ainda não passada. Desde 10/10 o backend é **Ruby on Rails** (API) — ver a
+> **Módulo 4 — Ruby essencial**, na [aula 4.3 — coleções, blocos e `Enumerable`](modulo-04/04-3-colecoes-e-blocos.md),
+> passada em 18/10: `split_installments` e `installments` sem `for`, e o `verificar` do
+> módulo 1 portado com bloco e `yield`. A [4.2](modulo-04/04-2-tudo-e-objeto.md) fechou em
+> 18/10. Desde 10/10 o backend é **Ruby on Rails** (API) — ver a
 > [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
@@ -53,9 +54,10 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Passar a aula 4.3 — coleções, blocos e `Enumerable`: dividir em parcelas sem perder centavo,
-   agora devolvendo a lista de parcelas.
-2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Fazer a [aula 4.3](modulo-04/04-3-colecoes-e-blocos.md) — verificação: treze linhas, só a
+   calibração em `FALHOU`, e o `grep` sem nenhuma linha. **Rodar antes de commitar.**
+2. Depois, a 4.4 — classes, módulos, `Comparable` e `freeze`: o `Money` em Ruby.
+3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
