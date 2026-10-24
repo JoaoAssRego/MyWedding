@@ -1,4 +1,4 @@
-valor_fornecedor = 1750000.0
+valor_fornecedor = 17_500_000
 numero_parcelas = 27
 
 valor_base_parcela = valor_fornecedor / numero_parcelas
