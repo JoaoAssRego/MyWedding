@@ -15,7 +15,7 @@ end
 
 def validate_payment!(paid, amount_cents)
   raise ArgumentError, 'Negative payment submitted; amount must be positive' if paid.negative?
-  raise ArgumentError, 'Payment exceeds the installment amount' if paid && paid > amount_cents
+  raise ArgumentError, 'Payment exceeds the installment amount' if paid > amount_cents
 end
 
 def paid?(paid_cents, amount_cents)
