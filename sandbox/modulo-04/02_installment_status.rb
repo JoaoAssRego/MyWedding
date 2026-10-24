@@ -4,9 +4,9 @@ def installment_status(paid_cents, amount_cents)
   paid = paid_cents || 0
   validate_payment!(paid, amount_cents)
 
-  if paid_cents.zero?
+  if paid.zero?
     :pending
-  elsif paid_cents < amount_cents
+  elsif paid < amount_cents
     :partial
   else
     :paid
@@ -15,7 +15,7 @@ end
 
 def validate_payment!(paid, amount_cents)
   raise ArgumentError, 'Negative payment submitted; amount must be positive' if paid.negative?
-  raise ArgumentError, 'Payment exceeds the installment amount' if paid_cents && paid > amount_cents
+  raise ArgumentError, 'Payment exceeds the installment amount' if paid && paid > amount_cents
 end
 
 def paid?(paid_cents, amount_cents)
