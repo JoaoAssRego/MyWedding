@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-10-18
+atualizado: 2026-10-23
 modulo_atual: 4
 aula_atual: "4.3"
 aliases:
@@ -23,17 +23,18 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 
 ## Estado
 
-Situação em 18/10/2026 (código no commit `f042a9a`; notas da 4.2 commitadas logo depois,
-tudo sincronizado com o GitHub), verificado:
+Situação em 23/10/2026 (último commit `839a8b9`; os casos de teste do
+`03-split-installments.rb` não commitados), verificado **fora do container** — o Docker Desktop
+estava desligado; diagnóstico no Ruby do Windows, mesma versão:
 
-- `01-divisao.rb` → `64814`, `22`, `true`, com nomes em inglês e *snake_case*;
-- `02-installment-status.rb` → `:pending`, `:pending`, `:partial`, `:paid`, erro no negativo,
-  `true`, `false`, erro acima do valor;
-- `compose.yaml` com `ruby:4.0.7-slim-trixie`; `.gitattributes` com `LF` para `.rb`, YAML,
-  shell, `Gemfile*` e `**/bin/*`;
-- Ruby 4.0.7 também instalado no Windows, **mantido de propósito** pelo João, por motivos fora
-  do projeto; neste projeto, tudo roda pelo container
-  ([convenção](convencoes.md#ruby-roda-no-container)).
+- `split_installments` e `installments` commitados, rodando sem erro;
+- os testes quebram no caso 3 (`TypeError` no `sum += array_installments[i]`); faltam o caso 5
+  e a chave `amount_cents`; `check_error` com um `rescue` sem `=> e`;
+- perguntas em voz alta da 4.3 **fecharam**; o `irb` da tarefa 1 não veio — ver a
+  [revisão 1](modulo-04/04-3-colecoes-e-blocos.md#revisão-1--23102026-não-fecha);
+- `01-divisao.rb` e `02-installment-status.rb` como na 4.2;
+- Ruby 4.0.7 também instalado no Windows, mantido de propósito; verificação de aula vale pelo
+  container ([convenção](convencoes.md#ruby-roda-no-container)).
 
 Estrutura do `sandbox/`:
 
@@ -54,8 +55,11 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Fazer a [aula 4.3](modulo-04/04-3-colecoes-e-blocos.md) — verificação: treze linhas, só a
-   calibração em `FALHOU`, e o `grep` sem nenhuma linha. **Rodar antes de commitar.**
+1. Fechar a [aula 4.3](modulo-04/04-3-colecoes-e-blocos.md): os itens 1 a 5 da revisão 1, com o
+   Docker Desktop **ligado** para a verificação. Rodar antes de commitar.
+   - Em paralelo (pedido do João em 23/10): instalar o **RuboCop** — `Gemfile` na raiz, volume
+     de gems no `compose.yaml`, `.rubocop.yml` e Ruby LSP como formatador no VS Code. Antecipa
+     um pedaço do Bundler da 4.5. Registrar na 4.3 ou na 4.5 quando entregue.
 2. Depois, a 4.4 — classes, módulos, `Comparable` e `freeze`: o `Money` em Ruby.
 3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
