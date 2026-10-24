@@ -1,9 +1,6 @@
 AllCops:
-  TargetRubyVersion: 4.0.7
+  TargetRubyVersion: 4.0
   NewCops: enable
 
 Layout/EndOfLine:
   EnforcedStyle: lf
-
-Style/FrozenStringLiteralComment:
-  Enabled: false
