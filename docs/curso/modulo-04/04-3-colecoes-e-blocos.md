@@ -211,6 +211,11 @@ verificada em cada caso: quantidade, soma, distribuição do resto, numeração 
 A sintaxe foi conferida com `ruby -c`. A verificação pelo comando da aula ficou pendente porque o
 Docker Desktop não estava disponível nesta sessão.
 
+Ao rodar o RuboCop no Windows, `01_divisao.rb` acusou `Layout/EndOfLine` porque o estilo padrão
+nativo esperava `CRLF`, apesar de o projeto exigir `LF` em [`.gitattributes`](../../../.gitattributes).
+O estilo `lf` foi declarado explicitamente em [`.rubocop.yml`](../../../.rubocop.yml); a
+verificação específica do cop passou sem infrações.
+
 ### Revisão 1 — 23/10/2026: não fecha
 
 Commits `aa55263` e `cef281f` (os métodos); os casos de teste estão na árvore de trabalho, não

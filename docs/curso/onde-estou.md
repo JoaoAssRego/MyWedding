@@ -33,6 +33,8 @@ estava desligado; diagnóstico no Ruby do Windows, mesma versão:
 - perguntas em voz alta da 4.3 **fecharam**; o `irb` da tarefa 1 não veio — ver a
   [revisão 1](modulo-04/04-3-colecoes-e-blocos.md#revisão-1--23102026-não-fecha);
 - `01-divisao.rb` e `02-installment-status.rb` como na 4.2;
+- RuboCop configurado para exigir `LF`, alinhado ao `.gitattributes`; `Layout/EndOfLine` passou
+  em `01_divisao.rb`;
 - Ruby 4.0.7 também instalado no Windows, mantido de propósito; verificação de aula vale pelo
   container ([convenção](convencoes.md#ruby-roda-no-container)).
 
