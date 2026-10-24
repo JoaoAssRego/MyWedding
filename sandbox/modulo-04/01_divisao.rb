@@ -1,4 +1,4 @@
-supplier_value = 1750000
+supplier_value = 175_000_0
 installments_number = 27
 
 base_installments_value = supplier_value / installments_number
