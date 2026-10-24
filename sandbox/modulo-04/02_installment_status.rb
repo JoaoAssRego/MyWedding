@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def installment_status(paid_cents, amount_cents)
   paid = paid_cents || 0
   validate_payment!(paid, amount_cents)

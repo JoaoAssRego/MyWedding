@@ -1,4 +1,6 @@
-supplier_value = 175_000_0
+# frozen_string_literal: true
+
+supplier_value = 17_500_00
 installments_number = 27
 
 base_installments_value = supplier_value / installments_number

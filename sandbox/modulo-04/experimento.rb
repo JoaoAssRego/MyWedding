@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 valor_fornecedor = 17_500_000
 numero_parcelas = 27
 

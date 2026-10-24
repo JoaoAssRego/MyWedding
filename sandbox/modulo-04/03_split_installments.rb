@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def check(description, condition)
   if condition
     puts "OK, #{description}"
