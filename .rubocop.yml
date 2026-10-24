@@ -1,0 +1,3 @@
+AllCops:
+  TargetRubyVersion: 4.0.7
+  NewCops: enable

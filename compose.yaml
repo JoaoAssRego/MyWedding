@@ -1,6 +1,9 @@
 services:
   ruby:
-    image: ruby:4.0.7-slim
-    working_dir: /MyWedding
+    build: .
     volumes:
       - .:/MyWedding
+      - gems:/usr/local/bundle
+
+volumes:
+  gems:
