@@ -6,10 +6,14 @@ class Money
 
   attr_reader :cents
 
-  def self.from_cents(cents)
-    raise ArgumentError, 'Cents must be Integer' unless cents.Integer?
-    raise ArgumentError, 'Cents must be positive' if cents.negative?
+  def initialize(cents)
+    raise ArgumentError, 'Cents must be a non-negative Integer' unless cents.is_a?(Integer) && !cents.negative?
 
+    @cents = cents
+    freeze
+  end
+
+  def self.from_cents(cents)
     new(cents)
   end
 
@@ -20,8 +24,7 @@ class Money
   end
 
   def -(other)
-    raise ArgumentError, "Cents can't be negative" if other.cents.negative?
-    raise ArgumentError, "Money can't be negative" if other.cents > cents
+    raise ArgumentError, "Result Money can't be negative" if other.cents > cents
 
     Money.from_cents(cents - other.cents)
   end
@@ -44,27 +47,24 @@ class Money
     installment_base, remainder = cents.divmod(count)
 
     Array.new(count) do |i|
-      {
-        number: i,
-        amount_cents: installment_base + (i < remainder ? 1 : 0)
-      }
+      Money.from_cents(installment_base + (i < remainder ? 1 : 0))
     end
   end
+
+  def to_s
+    inteiro, decimal = cents.abs.divmod(100)
+    inteiro_com_milhar = inteiro.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1.').reverse
+    sinal = cents.negative? ? '-' : ''
+
+    "#{sinal}R$ #{inteiro_com_milhar},#{decimal.to_s.rjust(2, '0')}"
+  end
+
+  private
 
   def validate_count!(count)
     raise ArgumentError, "Count need to be Integer. Count: #{count}" unless count.is_a?(Integer)
     raise ArgumentError, "Count need to be greater than or equal to 1. Count: #{count}" if count < 1
     raise ArgumentError, 'total cents need to be greater than count' if cents < count
-  end
-
-  def to_s
-    numero_formatado = format('%.2f', valor)
-
-    # Inverte ponto por vírgula e adiciona pontos de milhar
-    inteiro, decimal = numero_formatado.split('.')
-    inteiro_com_milhar = inteiro.reverse.gsub(/(\d{3})(?=\d)/, '\1.').reverse
-
-    "R$ #{inteiro_com_milhar},#{decimal}"
   end
 end
 
