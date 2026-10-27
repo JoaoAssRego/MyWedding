@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Creation of money on class
+# Immutable value object representing monetary amounts in cents.
 class Money
   include Comparable
 
@@ -52,11 +52,10 @@ class Money
   end
 
   def to_s
-    inteiro, decimal = cents.abs.divmod(100)
-    inteiro_com_milhar = inteiro.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1.').reverse
-    sinal = cents.negative? ? '-' : ''
+    whole, decimal = cents.divmod(100)
+    whole_with_thousands = whole.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1.').reverse
 
-    "#{sinal}R$ #{inteiro_com_milhar},#{decimal.to_s.rjust(2, '0')}"
+    "R$ #{whole_with_thousands},#{decimal.to_s.rjust(2, '0')}"
   end
 
   private
