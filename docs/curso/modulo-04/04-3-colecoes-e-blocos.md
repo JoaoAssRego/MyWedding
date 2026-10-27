@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 4
 aula: "4.3"
-status: em-andamento
+status: concluida
 conceitos:
   - array
   - hash
@@ -17,7 +17,7 @@ tags:
 
 # Aula 4.3 — Coleções, blocos e `Enumerable`: as parcelas como lista
 
-**Status:** em andamento — tarefa passada.
+**Status:** concluída em 24/10/2026 — ver [revisão 5](#revisão-5--24102026-fecha).
 
 ## Contexto
 
@@ -211,6 +211,9 @@ verificada em cada caso: quantidade, soma, distribuição do resto, numeração 
 A sintaxe foi conferida com `ruby -c`. A verificação pelo comando da aula ficou pendente porque o
 Docker Desktop não estava disponível nesta sessão.
 
+Em 24/10/2026, o RuboCop apontou `Layout/LineLength` no caso 8. A chamada de `check` foi
+quebrada em três linhas, preservando a expressão e o comportamento.
+
 Ao rodar o RuboCop no Windows, `01_divisao.rb` acusou `Layout/EndOfLine` porque o estilo padrão
 nativo esperava `CRLF`, apesar de o projeto exigir `LF` em [`.gitattributes`](../../../.gitattributes).
 O estilo `lf` foi declarado explicitamente em [`.rubocop.yml`](../../../.rubocop.yml); a
@@ -275,7 +278,109 @@ dos testes "foram detalhadas" e que a sintaxe foi conferida com `ruby -c` numa s
 Docker. Pelo [método](../como-ensinar.md#papéis), o código do projeto é escrito pelo João. _Quem
 detalhou as mensagens?_ Se foi outro assistente, vale combinar que ele também só revisa.
 
-Menores: indentação de 4 espaços (o Ruby usa 2); comentário em português dentro do código
+### Revisão 2 — 24/10/2026: ponto de partida, não fecha
+
+Sem entrega nova da 4.3 — é o estado da revisão 1 depois do RuboCop (`c6367c9`) e do rename
+para `03_split_installments.rb` (`a947069`; o comando da Verificação acima usa o nome velho).
+Agora no **container**:
+
+```text
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/03_split_installments.rb
+FAILED, calibration: …                              ← esperado
+OK, … exactly 27 installments
+FAILED, the 27 installments should add up to …      ← caso 3
+OK, … first … 64815 … last … 64814
+OK, … [34, 33, 33]
+OK, … [1]
+FAILED, installments(1750000, 27).first …           ← caso 8
+OK, … numbered 27
+OK ×4 (casos 10 a 13)
+```
+
+Doze linhas, três `FAILED`, sem `warning`.
+
+- **Item 1, caso 3:** o `TypeError` sumiu, mas o `map` virou `each`, e o caso falha em
+  silêncio — o `each` devolve o próprio array, e array nunca é `== 1_750_000`. É o bug que o
+  João descreveu certo na pergunta em voz alta 1, agora no código dele. O `sum = 0` / `sum +=`
+  continua (regra 4).
+- **Item 2, caso 5:** continua faltando.
+- **Item 3, caso 8:** continua `installment:` no `installments`.
+- **Item 4, `check_error`:** continua o `rescue StandardError` sem `=> e`; ali o `e` é `nil`,
+  então imprimiria `FAILED, NilClass` — e sem a descrição.
+- **Item 5, `irb`:** entregue depois, no mesmo dia — ver abaixo.
+- **Menores:** indentação e comentário em português resolvidos pelo RuboCop; nomes
+  (`rest_cents`, `installments_value`) e linhas em branco entre os `raise` continuam.
+
+#### Tarefa 1 (`irb`) — entregue em 24/10, fecha com ressalva
+
+As nove expressões vieram numa tabela com **resultado Ruby**, **equivalente JS** e **resultado
+JS**. Os nove resultados Ruby estão certos, e os equivalentes em JS também — inclusive os dois
+que divergem: `forEach` devolve `undefined` enquanto o `each` devolve o array (linha 2), e
+`["amount"]` acha a chave no JS e dá `nil` no Ruby (linha 9).
+
+Faltou a coluna de **previsão** — a parte que mostra onde a intuição de JS engana. Previsão
+escrita depois de rodar não vale; no lugar dela, uma pergunta em voz alta: *por que a linha 9
+diverge — o que é a chave `amount` em cada linguagem?*
+
+### Revisão 3 — 24/10/2026: os itens 1 a 4 fecham
+
+Árvore de trabalho, ainda sem commit. Verificado no container: **13 linhas**, só a calibração em
+`FAILED`, sem `warning`; RuboCop limpo; o `grep` só pega `return` dentro de descrições (aceito
+na revisão 1).
+
+- **Caso 3:** `array_installments.sum == 17_500_00` — sem contador, sem `each`.
+- **Caso 5:** `array_installments.count(648_15) == 22`.
+- **Caso 8:** `amount_cents:` no `installments`.
+- **`check_error`:** `rescue StandardError => e`.
+- **Além do pedido:** `installment_base, remainder = total_cents.divmod(count)` — `divmod`
+  devolve quociente e resto num par, desestruturado em duas variáveis. Resolve os nomes
+  pedidos e tira as linhas em branco entre os `raise`.
+
+Menores, sem bloquear: o `FAILED` do `rescue StandardError` perde a descrição do caso; a
+descrição do caso 5 imprime `648_15` literalmente (o `_` é sintaxe do Ruby, não texto); a
+mensagem *"total cents need to be positive"* — zero passa por esse `raise` (`0.negative?` é
+`false`), então o certo é "não negativo"; e *"need to be"* → *"must be"*.
+
+Falta: a prova de estragar (resto nas últimas parcelas), o commit `feat:` e a pergunta em voz
+alta da linha 9 do `irb`.
+
+### Revisão 4 — 24/10/2026: commit `d011270`, falta só o relato da prova
+
+Commit `feat: implement installment splitting checks` (`d011270`). Verificado no container:
+13 linhas, 12 `OK` + a calibração; RuboCop limpo no repositório. Os menores da revisão 3 também
+vieram (descrição no `FAILED` do `StandardError`, *"must not be negative"*, `64815` sem `_` na
+descrição).
+
+**Prova de estragar:** o João disse "pronto, tudo certo", sem a lista. O Claude rodou a troca
+(resto nas **últimas**) no container, sem alterar o arquivo, para ter o gabarito: falham os
+casos **4, 6 e 8**; continuam `OK` o 3 (a soma não depende de onde o centavo vai), o 5 (continuam
+22 parcelas de `64815`, só que no fim) e o 7 (`1 / 1` não tem resto). Pedido ao João: a lista e
+o porquê dos três que não acusam.
+
+**Pergunta da linha 9 do `irb`:** metade em 24/10. O lado Ruby está certo — `amount:` é atalho de
+`:amount =>`, símbolo é único e imutável, símbolo ≠ string e o hash não converte. Faltou o lado
+JS: lá a chave **é** a string `"amount"`, e `.amount` é só outra grafia de `["amount"]`.
+
+### Revisão 5 — 24/10/2026: fecha
+
+**Prova de estragar:** o relato bate com o gabarito da revisão 4 — caem 4, 6 e 8; ficam `OK`
+2, 3, 5, 7, 9 e os quatro `check_error`, cada um com o porquê certo. A conclusão do João vale
+registrar: *só os testes que olham a **posição** protegem a regra do centavo; tamanho, soma e
+contagem protegem a conservação do total; `(1, 1)` não tem resto e é cego para a regra por
+construção.*
+
+**Pergunta da linha 9:** fecha. No JS a chave de `{ amount: 100 }` é a string `"amount"`, e
+`.amount` / `["amount"]` são duas grafias da mesma chave; até `obj[1]` vira `"1"`.
+
+> [!note] Complemento
+> O `Symbol` do JS **não** é o símbolo do Ruby: cada `Symbol("amount")` cria um valor **novo** e
+> diferente (`Symbol("a") === Symbol("a")` é `false`). O que se parece com o `:amount` do Ruby —
+> um só objeto para o nome no programa inteiro — é o `Symbol.for("amount")`, do registro global.
+
+**Fica de lição para o módulo:** linter limpo não é código certo (o `02` passou no RuboCop
+quebrado), e teste `OK` não prova que protege — só a prova de estragar diz o quê.
+
+Menores da revisão 1: indentação de 4 espaços (o Ruby usa 2); comentário em português dentro do código
 (linha 31 — a [convenção](../convencoes.md#idiomas) pede inglês); `rest_cents` → `remainder` e
 `installments_value` → `installment_base`; espaço depois da vírgula; linhas em branco sobrando
 dentro dos métodos.
