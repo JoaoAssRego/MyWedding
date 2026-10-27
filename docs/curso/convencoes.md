@@ -68,6 +68,27 @@ vale só quando roda pelo `docker compose`.
 Origem: [troca para Rails, 10/10/2026](00-plano-de-estudos.md#mudança-de-rota-10102026); o
 ambiente é montado na aula 4.1.
 
+## Ruby: RuboCop
+
+Estilo e formatação de Ruby são do RuboCop — o Prettier não entende Ruby. A gem está no
+`Gemfile` da raiz (grupo `development`, `require: false`); as gems instaladas vivem no volume
+nomeado `gems` (`/usr/local/bundle`), para sobreviver ao `--rm` do container.
+
+```bash
+docker compose run --rm ruby bundle exec rubocop        # o repositório inteiro
+docker compose run --rm ruby bundle exec rubocop -a     # só as correções seguras
+```
+
+Ler as infrações antes do `-a`, e commitar antes de corrigir. `-A` (correções inseguras) nunca
+às cegas. Cop desligado no `.rubocop.yml` leva um comentário com o motivo. No editor, o Ruby
+LSP formata ao salvar usando o RuboCop do `Gemfile` (`.vscode/settings.json`); a verificação
+que vale é a do container. `Layout/EndOfLine` está em `lf`, porque o padrão (`native`) exige
+`CRLF` quando roda no Ruby do Windows.
+
+Quando o Rails nascer em `apps/api`, ele traz o próprio `Gemfile` e a própria configuração.
+
+Origem: pedido do João em 23/10/2026, antecipando parte da aula 4.5.
+
 ## Comando repetido vira script
 
 Comando de build, teste ou verificação não se decora nem se copia do histórico do terminal —

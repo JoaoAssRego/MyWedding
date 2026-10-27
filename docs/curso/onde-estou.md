@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-10-23
+atualizado: 2026-10-26
 modulo_atual: 4
-aula_atual: "4.3"
+aula_atual: "4.5"
 aliases:
   - Onde estou
 tags:
@@ -15,26 +15,28 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial**, na [aula 4.3 — coleções, blocos e `Enumerable`](modulo-04/04-3-colecoes-e-blocos.md),
-> passada em 18/10: `split_installments` e `installments` sem `for`, e o `verificar` do
-> módulo 1 portado com bloco e `yield`. A [4.2](modulo-04/04-2-tudo-e-objeto.md) fechou em
-> 18/10. Desde 10/10 o backend é **Ruby on Rails** (API) — ver a
-> [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 4 — Ruby essencial**. A [aula 4.4 — classes, `Comparable` e `freeze`: o `Money` em Ruby](modulo-04/04-4-classes-e-money.md)
+> **fechou em 26/10**, na segunda revisão. Agora, a [aula 4.5 — Bundler e Minitest](modulo-04/04-5-bundler-e-minitest.md),
+> passada em 26/10: `money.rb` separado, suíte em Minitest, `Rakefile`. Desde 10/10 o backend é **Ruby on Rails**
+> (API); ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 23/10/2026 (último commit `839a8b9`; os casos de teste do
-`03-split-installments.rb` não commitados), verificado **fora do container** — o Docker Desktop
-estava desligado; diagnóstico no Ruby do Windows, mesma versão:
+Situação em 26/10/2026, último commit `ee0051a`, verificado **no container**:
 
-- `split_installments` e `installments` commitados, rodando sem erro;
-- os testes quebram no caso 3 (`TypeError` no `sum += array_installments[i]`); faltam o caso 5
-  e a chave `amount_cents`; `check_error` com um `rescue` sem `=> e`;
-- perguntas em voz alta da 4.3 **fecharam**; o `irb` da tarefa 1 não veio — ver a
-  [revisão 1](modulo-04/04-3-colecoes-e-blocos.md#revisão-1--23102026-não-fecha);
-- `01-divisao.rb` e `02-installment-status.rb` como na 4.2;
-- RuboCop configurado para exigir `LF`, alinhado ao `.gitattributes`; `Layout/EndOfLine` passou
-  em `01_divisao.rb`;
+- `04_money.rb`: 21 linhas, só a calibração em `FAILED`; prova de estragar (`Comparable` e
+  `freeze`) relatada e conferida. Os dois commits do conserto trazem
+  `Co-authored-by: Copilot`, e o João esclareceu que o Copilot só escreve as mensagens; ver
+  [a aula](modulo-04/04-4-classes-e-money.md#revisão-2--26102026-fecha);
+- `03_split_installments.rb`: 13 linhas, só a calibração em `FAILED`; prova de estragar feita e
+  relatada (só os casos que olham a posição protegem a regra do centavo);
+- `02_installment_status.rb`: os 8 resultados esperados (quebrado entre `a947069` e `2429a07`);
+- RuboCop no projeto desde 23/10, repositório inteiro sem infrações — `Gemfile` na raiz,
+  `Dockerfile` com `build-essential`, volume `gems` no `compose.yaml`, Ruby LSP formatando no
+  VS Code ([convenção](convencoes.md#ruby-rubocop));
+- em 23/10 os arquivos Ruby trocaram `-` por `_` no nome (`a947069`); notas antigas citam o
+  nome velho;
+- notas do vault de 23 a 26/10 ainda **sem commit**;
 - Ruby 4.0.7 também instalado no Windows, mantido de propósito; verificação de aula vale pelo
   container ([convenção](convencoes.md#ruby-roda-no-container)).
 
@@ -57,13 +59,12 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Fechar a [aula 4.3](modulo-04/04-3-colecoes-e-blocos.md): os itens 1 a 5 da revisão 1, com o
-   Docker Desktop **ligado** para a verificação. Rodar antes de commitar.
-   - Em paralelo (pedido do João em 23/10): instalar o **RuboCop** — `Gemfile` na raiz, volume
-     de gems no `compose.yaml`, `.rubocop.yml` e Ruby LSP como formatador no VS Code. Antecipa
-     um pedaço do Bundler da 4.5. Registrar na 4.3 ou na 4.5 quando entregue.
-2. Depois, a 4.4 — classes, módulos, `Comparable` e `freeze`: o `Money` em Ruby.
-3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Entregar a [aula 4.5](modulo-04/04-5-bundler-e-minitest.md): gems no `Gemfile`, `money.rb` sem testes,
+   `test/money_test.rb`, `Rakefile`, prova de estragar e três perguntas.
+2. Respondido em 26/10: o Copilot só escreve as mensagens de commit, validadas pelo João; sugestão de
+   tirar o trailer `Co-authored-by` dos próximos commits.
+3. Commitar as notas do vault de 23 a 26/10 (`docs:`).
+4. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
@@ -77,10 +78,21 @@ Cada uma aponta para onde nasceu.
 - [ ] **`Money` pode ser negativo?** `subtrair` lança abaixo de zero. O port para Ruby mantém o
   comportamento; vence no módulo 6, com o `CHECK` da coluna — [aula 2.6](modulo-02/02-6-money-value-object.md)
 
+Do RuboCop (24/10):
+
+- [x] ~~`Gemfile` com 3 `Style/StringLiterals`~~, ~~`TargetRubyVersion: 4.0.7`~~, ~~sobra
+  `# gem "rails"`~~ — `f3a3c81`
+- [x] ~~`Style/FrozenStringLiteralComment`~~ religado, comentário nos 4 `.rb` (`c6367c9`);
+  explicação de *chilled strings* entregue por escrito e pergunta de controle respondida (24/10)
+- [x] ~~`175_000_0`~~ → `17_500_00`, agrupado como reais e centavos — escolha válida para
+  centavos; o `experimento.rb` usa outro valor (`17_500_000`)
+- [ ] Containers órfãos do `docker compose run` (o aviso `Found orphan containers`)
+
 Para **não repetir no port para Ruby** (módulo 4):
 
 - [x] ~~*camelCase* nos nomes Ruby~~ — resolvido na [aula 4.2](modulo-04/04-2-tudo-e-objeto.md)
-- [ ] `nil` tratado em três lugares no `installment_status` — [aula 4.2](modulo-04/04-2-tudo-e-objeto.md#pendências)
+- [x] ~~`nil` tratado em três lugares no `installment_status`~~ — um lugar só desde `2429a07` (24/10) — [aula 4.2](modulo-04/04-2-tudo-e-objeto.md#pendências)
+- [x] ~~`validate_payment!`: `paid &&` que não guardava nada~~ — removido em `41f6b2a` (24/10), verificado no container
 
 - [ ] Getters no estilo Java em `Contrato` — [aula 2.6](modulo-02/02-6-money-value-object.md)
 - [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
