@@ -236,3 +236,51 @@ linhas. Nesse caso, separe por assunto, por exemplo `money_split_test.rb`.
   [módulo 2](../modulo-02/02-4-higiene-dos-testes.md): fecha com o item 5.
 - `03_split_installments.rb` continua com o `check` próprio, como registro da 4.3. A regra
   dele agora vive no `Money#split`.
+
+## O que aconteceu
+
+### Revisão 1 — 27/10/2026: não fecha
+
+Commits `76a1dc8`, `de21e6b` (`chore:`), `0a6516c` (`refactor:`) e `7bf372b` (`test:`), já
+sem o trailer `Co-authored-by`. Verificado no container:
+
+```text
+$ docker compose run --rm ruby bundle exec rake
+25 runs, 41 assertions, 0 failures, 0 errors, 0 skips
+$ docker compose run --rm ruby ruby -w sandbox/modulo-04/money.rb      # nenhuma saída
+$ docker compose run --rm ruby bundle exec rubocop
+4  Style/StringLiterals   (Gemfile:7 e 9 — o `bundle add` escreve aspas duplas)
+1  Metrics/ClassLength    (MoneyTest, 114/100)
+```
+
+O que está bom: `money.rb` sem código solto; `minitest` (6.0.6) e `rake` (13.4.2) no lockfile,
+com as três plataformas; `Rakefile` com `default: :test`; `refute_respond_to`; todo
+`assert_raises` confere o `message`; nenhum `if` decidindo se uma asserção roda. A pendência do
+`if (parc[0] && parc[5])` fecha.
+
+**Prova de estragar:** os resultados batem com o container (sem `initialize`: 25 `E`, 0
+asserções; centavo no fim: 2 `F`). A observação sobre o `setup` está certa: o erro acontece
+antes de qualquer asserção, então nenhum teste de erro chega a "passar pelo motivo errado",
+como acontecia com o `check_error`. Mas a prova revelou um buraco que o relato não viu: na 4.3,
+o `split(100, 3) == [34, 33, 33]` **caía** com o centavo no fim. Aqui, o
+`test_split_of_one_hundred_cents_into_three_parts` só confere a soma, e o estrago devolve
+`[33, 33, 34]` sem ninguém perceber. Cobertura perdida na conversão.
+
+**O que impede de fechar:**
+
+1. **`assert true, equal_value_a == equal_value_b`** (linha 65) nunca falha. O primeiro
+   argumento é o que é testado, e o segundo é só a **mensagem**. O `==` entre dois `Money` não
+   está sendo testado. Conferido: `assert true, 1 == 2` passa.
+2. **`test_split_rejects_a_non_integer_count` usa `split(-1)`.** O nome diz "não inteiro", mas o
+   teste repete o caminho do `count < 1`. O caso do `2.5` sumiu.
+3. **`split(3)` de 100 só confere a soma.** Falta o `[34, 33, 33]`, como mostrado acima.
+4. **`to_s` cobre um valor de três.** O `R$ 2.916,67` e o `R$ 0,05` sumiram na conversão.
+5. **`assert a == b && c == d`** (linhas 40, 44, 74, 78, 86 e 94): quando falha, a mensagem é
+   *"Expected false to be truthy"*, sem dizer qual metade nem quais valores. Uma asserção por
+   fato, com `assert_equal`/`assert_predicate`.
+6. **RuboCop:** as aspas do `Gemfile` e o `ClassLength`, que a nota da aula previa. Separe o
+   `split` num `money_split_test.rb`.
+7. **Perguntas 1 e 2** não vieram; o `LoadError` do item 1 e a calibração com `flunk` não foram
+   relatados.
+
+**Pergunta 3 (ordem aleatória):** fecha.

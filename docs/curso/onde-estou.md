@@ -59,8 +59,8 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Entregar a [aula 4.5](modulo-04/04-5-bundler-e-minitest.md): gems no `Gemfile`, `money.rb` sem testes,
-   `test/money_test.rb`, `Rakefile`, prova de estragar e três perguntas.
+1. Fechar a [aula 4.5](modulo-04/04-5-bundler-e-minitest.md): a revisão 1 (27/10) não fecha — `assert true, …`,
+   casos perdidos na conversão (`2.5`, `[34, 33, 33]`, dois `to_s`), RuboCop, perguntas 1 e 2.
 2. Respondido em 26/10: o Copilot só escreve as mensagens de commit, validadas pelo João; sugestão de
    tirar o trailer `Co-authored-by` dos próximos commits.
 3. Commitar as notas do vault de 23 a 26/10 (`docs:`).
