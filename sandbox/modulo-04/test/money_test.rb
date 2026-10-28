@@ -85,8 +85,9 @@ class MoneyTest < Minitest::Test
   end
 
   def test_to_s_formats_cents_as_brazilian_currency
-    assert @total.to_s == 'R$ 17.500,00' && Money.from_cents(2_916_67).to_s == 'R$ 2.916,67' &&
-           Money.from_cents(5).to_s == 'R$ 0,05'
+    assert_equal 'R$ 17.500,00', @total.to_s
+    assert_equal 'R$ 2.916,67', Money.from_cents(2_916_67).to_s
+    assert_equal 'R$ 0,05', Money.from_cents(5).to_s
   end
 
   def test_adding_money_does_not_change_the_previous_value

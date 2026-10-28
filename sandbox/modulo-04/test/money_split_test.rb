@@ -19,7 +19,8 @@ class MoneySplitTest < Minitest::Test
   end
 
   def test_split_puts_the_extra_cent_in_the_first_installments
-    assert @parts.first.cents == 648_15 && @parts.last.cents == 648_14
+    assert_equal 648_15, @parts.first.cents
+    assert_equal 648_14, @parts.last.cents
   end
 
   def test_split_rejects_a_count_below_one
