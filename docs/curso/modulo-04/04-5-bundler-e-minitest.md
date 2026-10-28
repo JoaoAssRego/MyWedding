@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 4
 aula: "4.5"
-status: em-andamento
+status: concluida
 conceitos:
   - bundler
   - bundled-gems
@@ -17,7 +17,7 @@ tags:
 
 # Aula 4.5 — Bundler e Minitest: o `Money` com testes de verdade
 
-**Status:** em andamento — tarefa passada em 26/10/2026.
+**Status:** concluída em 28/10/2026, na terceira revisão.
 
 ## Contexto
 
@@ -284,3 +284,50 @@ o `split(100, 3) == [34, 33, 33]` **caía** com o centavo no fim. Aqui, o
    relatados.
 
 **Pergunta 3 (ordem aleatória):** fecha.
+
+### Revisão 2 — 28/10/2026: o código quase fecha, os relatos não
+
+Commits `73dd378` (`fix:` aspas do `Gemfile`) e `d0c3e91` (`test:` separação em
+`money_test.rb` e `money_split_test.rb`). Verificado no container: `25 runs, 45 assertions,
+0 failures, 0 errors`; RuboCop `0 offenses`.
+
+Itens da revisão 1:
+
+- **1** `assert true, …` → `assert a == b`. Fecha, mas `assert_equal` daria uma mensagem
+  melhor.
+- **2** `split(2.5)` com a mensagem certa. Fecha.
+- **3** `[34, 33, 33]` de volta. Fecha. Com o centavo no fim, o Claude refez o estrago no
+  container e agora caem **3** testes (`six_parts`, `three_parts` e `extra_cent`).
+- **4** os três valores do `to_s` voltaram, mas **numa asserção só, com `&&`**.
+- **5** as asserções compostas foram desfeitas, menos duas: o `to_s` (linha 88) e o
+  `test_split_puts_the_extra_cent_in_the_first_installments`.
+- **6** RuboCop limpo. Fecha.
+
+**Perguntas 1 e 2:** fecham. A 1 liga o Bundler à CI do módulo 10 (versão sem trava, quebra
+sem mudança de código). A 2 separa `F` de `E` e acerta o detalhe de que um `NoMethodError`
+dentro de um `assert_raises(ArgumentError)` vira `F`.
+
+> [!warning] As saídas do `LoadError` e da calibração não vieram do container do projeto
+> - `minitest` **5.16.3**: o lockfile trava a **6.0.6**, e o container responde `6.0.6`;
+> - caminho `/usr/lib/ruby/vendor_ruby/rubygems/…`: é o Ruby de sistema de uma distribuição
+>   Debian/Ubuntu. A imagem `ruby:4.0.7-slim` usa `/usr/local/lib/ruby/4.0.0/…`;
+> - aspas `` `require' ``: é o formato de *backtrace* do Ruby anterior ao 3.4. O 4.0 escreve
+>   `'Kernel.require'`;
+> - a calibração aponta `test/money_test.rb:16`, e o projeto roda `sandbox/modulo-04/test/…`.
+>
+> O raciocínio das respostas está certo; o que não confere é **onde** os comandos rodaram.
+> Pedido: dizer em que ambiente rodaram e repetir os dois pelo `docker compose run`.
+
+### Revisão 3 — 28/10/2026: fecha
+
+As duas asserções com `&&` viraram um `assert_equal` por fato: os três valores do `to_s` e a
+primeira e a última parcela. Ainda **sem commit** no momento da revisão. Verificado no
+container: `25 runs, 48 assertions, 0 failures, 0 errors`; RuboCop limpo.
+
+**Relatos do `LoadError` e da calibração:** dispensados por decisão do João ("já foi entendido o
+necessário"). O conteúdo das duas respostas estava certo, e o que não conferia era o ambiente.
+Ficou em aberto em que Ruby aqueles comandos rodaram. O `LoadError` no container foi verificado
+pelo Claude na preparação desta aula.
+
+A aula fecha. Saldo: Minitest e Rake no lockfile, `money.rb` sem código solto, duas classes de
+teste, e a pendência do `if (parc[0] && parc[5])` fechada.

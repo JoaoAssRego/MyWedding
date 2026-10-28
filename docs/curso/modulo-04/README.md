@@ -12,7 +12,7 @@ tags:
 **Entregável:** `Money` e `Contract` portados para Ruby — soma, divisão em parcelas sem perder
 centavo, imutabilidade —, com testes em Minitest, tudo rodando dentro de um container Docker.
 **Onde vive o código:** `sandbox/modulo-04/`, com o `compose.yaml` na raiz do repositório.
-**Status:** em andamento — [aula 4.5](04-5-bundler-e-minitest.md) passada em 26/10/2026.
+**Status:** em andamento — [aula 4.5](04-5-bundler-e-minitest.md) concluída em 28/10/2026; próxima, a 4.6.
 
 ## Por que Ruby antes de Rails
 
@@ -60,7 +60,7 @@ Cada arquivo nasce quando a aula for passada.
 | 4.2 | [Tudo é objeto: `nil`, símbolos, *truthiness* e métodos com `?` e `!`](04-2-tudo-e-objeto.md) | concluída |
 | 4.3 | [Coleções, blocos e `Enumerable`: as parcelas como lista](04-3-colecoes-e-blocos.md) | concluída |
 | 4.4 | [Classes, `Comparable` e `freeze`: o `Money` em Ruby](04-4-classes-e-money.md) | concluída |
-| 4.5 | [Bundler e Minitest: o `Money` com testes de verdade](04-5-bundler-e-minitest.md) | em andamento |
+| 4.5 | [Bundler e Minitest: o `Money` com testes de verdade](04-5-bundler-e-minitest.md) | concluída |
 | 4.6 | `Contract` e parcelas — o domínio completo em Ruby | prevista |
 
 ## Nomes em inglês a partir daqui

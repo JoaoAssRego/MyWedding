@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-10-26
+atualizado: 2026-10-28
 modulo_atual: 4
-aula_atual: "4.5"
+aula_atual: "4.6"
 aliases:
   - Onde estou
 tags:
@@ -15,19 +15,23 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial**. A [aula 4.4 — classes, `Comparable` e `freeze`: o `Money` em Ruby](modulo-04/04-4-classes-e-money.md)
-> **fechou em 26/10**, na segunda revisão. Agora, a [aula 4.5 — Bundler e Minitest](modulo-04/04-5-bundler-e-minitest.md),
-> passada em 26/10: `money.rb` separado, suíte em Minitest, `Rakefile`. Desde 10/10 o backend é **Ruby on Rails**
-> (API); ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 4 — Ruby essencial**. A [aula 4.5 — Bundler e Minitest](modulo-04/04-5-bundler-e-minitest.md)
+> **fechou em 28/10**, na terceira revisão. A próxima é a **4.6**, `Contract` e parcelas: o
+> domínio completo em Ruby e a última aula do módulo. Ela ainda não foi passada. Desde 10/10 o
+> backend é **Ruby on Rails** (API); ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 26/10/2026, último commit `ee0051a`, verificado **no container**:
+Situação em 28/10/2026, último commit `d0c3e91`, verificado **no container**:
 
-- `04_money.rb`: 21 linhas, só a calibração em `FAILED`; prova de estragar (`Comparable` e
-  `freeze`) relatada e conferida. Os dois commits do conserto trazem
-  `Co-authored-by: Copilot`, e o João esclareceu que o Copilot só escreve as mensagens; ver
-  [a aula](modulo-04/04-4-classes-e-money.md#revisão-2--26102026-fecha);
+- `money.rb` (só a classe) + `test/money_test.rb` e `test/money_split_test.rb`:
+  `bundle exec rake` → `25 runs, 48 assertions, 0 failures, 0 errors`. As asserções separadas
+  da revisão 3 ainda estão **sem commit**;
+- `Gemfile` com `rubocop`, `minitest` (6.0.6) e `rake` (13.4.2); `Rakefile` na raiz com
+  `default: :test`;
+- os relatos do `LoadError` e do `flunk` da 4.5 vieram de outro Ruby (minitest 5.16.3) e foram
+  dispensados pelo João;
+- `04_money.rb` virou `money.rb` (`0a6516c`); o Copilot só escreve as mensagens de commit;
 - `03_split_installments.rb`: 13 linhas, só a calibração em `FAILED`; prova de estragar feita e
   relatada (só os casos que olham a posição protegem a regra do centavo);
 - `02_installment_status.rb`: os 8 resultados esperados (quebrado entre `a947069` e `2429a07`);
@@ -59,11 +63,15 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Fechar a [aula 4.5](modulo-04/04-5-bundler-e-minitest.md): a revisão 1 (27/10) não fecha — `assert true, …`,
-   casos perdidos na conversão (`2.5`, `[34, 33, 33]`, dois `to_s`), RuboCop, perguntas 1 e 2.
-2. Respondido em 26/10: o Copilot só escreve as mensagens de commit, validadas pelo João; sugestão de
-   tirar o trailer `Co-authored-by` dos próximos commits.
-3. Commitar as notas do vault de 23 a 26/10 (`docs:`).
+1. Criar o commit `test: split compound Money assertions by fact` somente com:
+   - `sandbox/modulo-04/test/money_test.rb`;
+   - `sandbox/modulo-04/test/money_split_test.rb`.
+2. Criar separadamente o commit `docs: record completion of Money test review` com:
+   - `docs/curso/modulo-04/04-5-bundler-e-minitest.md`;
+   - `docs/curso/modulo-04/README.md`;
+   - `docs/curso/onde-estou.md`.
+3. Passar a **aula 4.6**, `Contract` e parcelas: o domínio completo em Ruby, que fecha o
+   módulo 4.
 4. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
