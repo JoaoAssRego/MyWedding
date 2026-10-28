@@ -17,3 +17,6 @@
 ## bin/*
 bin/* text eol=lf
 **/bin/* text eol=lf
+
+## Rakefile
+Rakefile text eol=lf
