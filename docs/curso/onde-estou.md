@@ -16,17 +16,17 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 
 > [!abstract] Agora
 > **Módulo 4 — Ruby essencial**. A [aula 4.5 — Bundler e Minitest](modulo-04/04-5-bundler-e-minitest.md)
-> **fechou em 28/10**, na terceira revisão. A próxima é a **4.6**, `Contract` e parcelas: o
-> domínio completo em Ruby e a última aula do módulo. Ela ainda não foi passada. Desde 10/10 o
-> backend é **Ruby on Rails** (API); ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> fechou em 28/10. Agora, a [aula 4.6 — `Contract` e parcelas](modulo-04/04-6-contract-e-parcelas.md),
+> a última do módulo, passada em 28/10: `Installment` com `Data.define`, `Contract` validando na
+> criação e `SAMPLE_CONTRACTS`. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
+> [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 28/10/2026, último commit `d0c3e91`, verificado **no container**:
+Situação em 28/10/2026, último commit `96ddf82`, verificado **no container**:
 
 - `money.rb` (só a classe) + `test/money_test.rb` e `test/money_split_test.rb`:
-  `bundle exec rake` → `25 runs, 48 assertions, 0 failures, 0 errors`. As asserções separadas
-  da revisão 3 ainda estão **sem commit**;
+  `bundle exec rake` → `25 runs, 48 assertions, 0 failures, 0 errors`, tudo commitado;
 - `Gemfile` com `rubocop`, `minitest` (6.0.6) e `rake` (13.4.2); `Rakefile` na raiz com
   `default: :test`;
 - os relatos do `LoadError` e do `flunk` da 4.5 vieram de outro Ruby (minitest 5.16.3) e foram
@@ -63,16 +63,11 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Criar o commit `test: split compound Money assertions by fact` somente com:
-   - `sandbox/modulo-04/test/money_test.rb`;
-   - `sandbox/modulo-04/test/money_split_test.rb`.
-2. Criar separadamente o commit `docs: record completion of Money test review` com:
-   - `docs/curso/modulo-04/04-5-bundler-e-minitest.md`;
-   - `docs/curso/modulo-04/README.md`;
-   - `docs/curso/onde-estou.md`.
-3. Passar a **aula 4.6**, `Contract` e parcelas: o domínio completo em Ruby, que fecha o
-   módulo 4.
-4. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Entregar a [aula 4.6](modulo-04/04-6-contract-e-parcelas.md): `installment.rb`, `contract.rb`,
+   `sample_contracts.rb`, os testes, a prova de estragar e três perguntas.
+2. Depois da 4.6: a revisão oral do módulo 4 e o fechamento do módulo, antes do módulo 5 (Rails
+   API e Postgres).
+3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
@@ -102,8 +97,8 @@ Para **não repetir no port para Ruby** (módulo 4):
 - [x] ~~`nil` tratado em três lugares no `installment_status`~~ — um lugar só desde `2429a07` (24/10) — [aula 4.2](modulo-04/04-2-tudo-e-objeto.md#pendências)
 - [x] ~~`validate_payment!`: `paid &&` que não guardava nada~~ — removido em `41f6b2a` (24/10), verificado no container
 
-- [ ] Getters no estilo Java em `Contrato` — [aula 2.6](modulo-02/02-6-money-value-object.md)
-- [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md)
+- [ ] Getters no estilo Java em `Contrato` — [aula 2.6](modulo-02/02-6-money-value-object.md) — vence na [aula 4.6](modulo-04/04-6-contract-e-parcelas.md)
+- [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md) — vence na [aula 4.6](modulo-04/04-6-contract-e-parcelas.md)
 - [ ] `if (parc[0] && parc[5])` pula o teste em silêncio se o array vier curto — [aula 2.4](modulo-02/02-4-higiene-dos-testes.md)
 
 Higiene do sandbox TypeScript — fecha se for barata, ou morre com o sandbox, que vira histórico
