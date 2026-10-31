@@ -28,14 +28,14 @@ class MoneySplitTest < Minitest::Test
       @total.split(0)
     end
 
-    assert_equal 'Count need to be greater than or equal to 1. Count: 0', error.message
+    assert_equal 'Count need to be greater than or equal to 1.', error.message
   end
 
   def test_split_rejects_a_non_integer_count
     error = assert_raises(ArgumentError) do
       @total.split(2.5)
     end
-    assert_equal 'Count need to be Integer. Count: 2.5', error.message
+    assert_equal 'Count need to be Integer.', error.message
   end
 
   def test_split_rejects_more_parts_than_cents
