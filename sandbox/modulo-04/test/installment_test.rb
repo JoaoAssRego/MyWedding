@@ -44,6 +44,13 @@ class InstallmentTest < Minitest::Test
     assert_equal 'Number must be an Integer greater or equal to 1', error.message
   end
 
+  def test_installment_number_must_be_an_integer
+    error = assert_raises(ArgumentError) do
+      Installment.new(2.5, Money.from_cents(24))
+    end
+    assert_equal 'Number must be an Integer greater or equal to 1', error.message
+  end
+
   def test_installment_amount_is_money
     error = assert_raises(ArgumentError) do
       Installment.new(1, 24)

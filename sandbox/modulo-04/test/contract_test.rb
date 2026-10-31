@@ -6,6 +6,10 @@ require_relative '../contract'
 require_relative '../sample_contracts'
 # Test of contract
 class ContractTest < Minitest::Test
+  def setup
+    @contract = SAMPLE_CONTRACTS.first
+  end
+
   def test_total_is_not_money
     error = assert_raises(ArgumentError) do
       Contract.new(
@@ -29,7 +33,7 @@ class ContractTest < Minitest::Test
       )
     end
 
-    assert_equal 'Count need to be greater than or equal to 1.', error.message
+    assert_equal 'Count must be greater than or equal to 1.', error.message
   end
 
   def test_installment_count_is_not_integer
@@ -42,7 +46,7 @@ class ContractTest < Minitest::Test
       )
     end
 
-    assert_equal 'Count need to be Integer.', error.message
+    assert_equal 'Count must be Integer.', error.message
   end
 
   def test_installment_count_greater_than_total
@@ -55,5 +59,19 @@ class ContractTest < Minitest::Test
       )
     end
     assert_equal 'total cents need to be greater than count', error.message
+  end
+
+  def test_installments_are_frozen
+    assert @contract.installments.frozen?
+  end
+
+  def test_installments_cannot_be_modified
+    assert_raises(FrozenError) do
+      @contract.installments << Installment.new(number: 1, amount: Money.from_cents(1))
+    end
+  end
+
+  def test_sample_contracts_are_frozen
+    assert SAMPLE_CONTRACTS.frozen?
   end
 end
