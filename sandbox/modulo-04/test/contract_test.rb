@@ -4,13 +4,8 @@ require 'minitest/autorun'
 require_relative '../money'
 require_relative '../contract'
 require_relative '../sample_contracts'
-# Test of installment
+# Test of contract
 class ContractTest < Minitest::Test
-  def setup
-    @contrato = SAMPLE_CONTRACTS[0]
-    @installment_generated = @contrato.installments
-  end
-
   def test_total_is_not_money
     error = assert_raises(ArgumentError) do
       Contract.new(
@@ -34,7 +29,7 @@ class ContractTest < Minitest::Test
       )
     end
 
-    assert_equal 'Count of installment must be an Integer greater or equal to 1', error.message
+    assert_equal 'Count need to be greater than or equal to 1.', error.message
   end
 
   def test_installment_count_is_not_integer
@@ -47,7 +42,7 @@ class ContractTest < Minitest::Test
       )
     end
 
-    assert_equal 'Count of installment must be an Integer greater or equal to 1', error.message
+    assert_equal 'Count need to be Integer.', error.message
   end
 
   def test_installment_count_greater_than_total
