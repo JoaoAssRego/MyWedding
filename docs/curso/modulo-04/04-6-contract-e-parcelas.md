@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 4
 aula: "4.6"
-status: em-andamento
+status: concluida
 conceitos:
   - data-define
   - composicao
@@ -15,7 +15,7 @@ tags:
 
 # Aula 4.6 — `Contract` e parcelas: o domínio completo em Ruby
 
-**Status:** em andamento — tarefa passada em 28/10/2026.
+**Status:** concluída em 31/10/2026, na terceira revisão.
 
 ## Contexto
 
@@ -216,3 +216,136 @@ docker compose run --rm ruby bundle exec rubocop
   item 2.
 - **`Money` pode ser negativo?** Continua para o módulo 6.
 - `toJSON`/`deJSON` continuam para o Rails (módulo 5).
+
+## O que aconteceu
+
+### Decisão — 30/10/2026: a regra do "cabe no total" mora só no `Money#split`
+
+O João perguntou por que o `split` valida, se o `Contract` também ia validar. A resposta foi
+que o `split` é público e protege a própria regra, seja quem for que o chame. Sem a guarda,
+`5.divmod(10)` produz parcelas de R$ 0,00 sem erro. A decisão dele: **não repetir a guarda no
+`Contract`**, para que a regra tenha uma fonte só.
+
+Consequência para a tarefa: o item 4 pede que o erro de "5 centavos em 10 parcelas" aconteça
+**ao criar** o contrato. Para isso, sem duplicar a regra, o `initialize` precisa passar pelo
+`split`. Se ninguém chamar o `split` antes do `installments`, o erro chega tarde, e a pergunta
+2 trata justamente disso.
+
+Na mesma conversa, o João escolheu **guardar o resultado no `initialize`**: o `split` roda uma
+vez na criação, valida e já produz as parcelas, e o `installments` só devolve o que foi
+guardado. A justificativa fica para a entrega.
+
+### Revisão 1 — 31/10/2026: não fecha
+
+Commits `ba18db5` e `bf00923` (`feat:`), `21f110a` (`feat:`) e `f94b08d` (`test:`), sem o
+trailer. No container, **a suíte nem carrega**:
+
+```text
+$ docker compose run --rm ruby bundle exec rake
+contract.rb:11:in 'Contract#initialize': undefined local variable or method 'validate_initialize' … (NameError)
+Did you mean?  validade_initialize
+	from sandbox/modulo-04/sample_contracts.rb:6
+	from sandbox/modulo-04/test/contract_test.rb:6
+rake aborted!
+```
+
+O `initialize` chama `validate_initialize`, e o método definido se chama
+`validade_initialize`. O `sample_contracts.rb` cria os contratos já no `require`, então o erro
+derruba o carregamento de **todos** os arquivos de teste, inclusive os 25 do `Money`, que
+estavam verdes. Nenhum teste roda.
+
+Corrigindo só o nome, por diagnóstico e sem tocar no arquivo, aparece o segundo bug:
+
+```text
+Contract.new(id: '1', vendor: 'x', total: Money.from_cents(100), installment_count: 3)
+# => ArgumentError: Total must be Money
+```
+
+A validação usa os leitores `total` e `installment_count` **antes** de o `initialize`
+atribuir `@total` e `@installment_count`. Os dois valem `nil`, e **todo** contrato válido é
+recusado.
+
+> [!warning] A prova de estragar não pode ter rodado neste código
+> O relato traz nomes de teste e resultados (`F` no `test_installment_count_greater_than_total`,
+> `ZeroDivisionError` nos testes do `split`). Com o `HEAD`, o `rake` aborta antes de qualquer
+> teste, e com o nome corrigido nenhum contrato é criado. Os resultados vieram de outra versão
+> do código, não commitada, ou de outro ambiente. Pedido: rodar de novo depois do conserto.
+
+**O que impede de fechar:**
+
+1. `validate_initialize` × `validade_initialize`.
+2. Validação lendo `@` que ainda não existem. Valide os **argumentos** (`total`,
+   `installment_count`, que no `initialize` são variáveis locais) ou atribua antes.
+3. `Installment`: `number < 1` não confere o tipo. `Installment.new(2.5, money)` é aceito, e
+   `Installment.new(nil, money)` dá `NoMethodError` em vez de `ArgumentError`. A tarefa pedia
+   `Integer >= 1`. Mensagem: *"a Integer greather"* → *"an Integer greater"*.
+4. `sample_contracts.rb`:
+   - o Gauss é **R$ 3.900,00** (`390_000`), não `4_500`;
+   - os `id` são strings no TS (`"1"`, `"2"`);
+   - `SAMPLE_CONTRACTS` não está congelado (RuboCop `Style/MutableConstant`);
+   - variáveis em português (`contrato_salao`).
+5. Testes que a tarefa pedia e não vieram: `installments.frozen?` e `FrozenError` no `<<`. O
+   relato da prova reconhece isso (*"a suíte continuou verde, pois não há teste"*), e é
+   exatamente o buraco que a prova deveria mostrar **depois** de o teste existir. Também falta
+   `SAMPLE_CONTRACTS.frozen?`.
+6. Testes do contrato usam `SAMPLE_CONTRACTS[0]` (Casarão), com `27` e `[26]` fixos. A tarefa
+   pedia o Gauss (`[1]`), e `first`/`last` + `installment_count` deixam o teste independente
+   do número.
+7. `assert_equal @installment_generated.size, @contrato.installment_count`: ordem invertida (o
+   esperado vem primeiro). O `test_contract_exists` não testa nada que o `setup` já não teria
+   quebrado. O comentário da `ContractTest` diz *"Test of installment"*, e o `setup` dela não é
+   usado.
+8. RuboCop: `Layout/EndOfLine` no `contract_test.rb`, cuja cópia de trabalho está em `CRLF`, e
+   o `MutableConstant` do item 4.
+
+Detalhe de desenho, para justificar na entrega: o `Contract` repete a regra "`Integer >= 1`" que
+o `split` já tem, mas deixa o "cabe no total" só no `split`, como foi decidido acima. Por que
+uma regra é duplicada e a outra não?
+
+**Perguntas em voz alta:** a 1 e a 2 fecham. A 3 chegou cortada: termina em *"isto ainda
+funcionaria:"*, sem o exemplo e sem a conclusão.
+
+### Revisão 2 — 31/10/2026: verde, mas não fecha
+
+Commits `23c9175` (`fix:` validação), `b1332e9` (`fix:` mensagens do `split`) e `6826554`
+(`test:`). Verificado no container: **`36 runs, 66 assertions, 0 failures, 0 errors`**;
+RuboCop `0 offenses`.
+
+Resolvidos: o nome do método e a ordem da validação (o `Contract` valida o argumento `total` e
+deixa **toda** a regra do `installment_count` para o `split`, o que responde ao detalhe de
+desenho: uma fonte só, sem duplicar o `Integer >= 1`); o `Installment` confere
+`is_a?(Integer)`; os `id` são strings; `SAMPLE_CONTRACTS` congelado; nomes em inglês; ordem do
+`assert_equal`; `first`/`last` + `installment_count` no lugar de `27`/`[26]`; o `setup` morto e
+o comentário errado.
+
+**Pergunta 3:** fecha. O `freeze` é raso, `contract.installments << :x` funcionaria num
+contrato congelado, e por isso objeto e array são congelados separadamente.
+
+**O que impede de fechar:**
+
+1. **Gauss:** R$ 3.900,00 são `390_000` centavos. `3_900` são R$ 39,00.
+2. **Testes que a tarefa pede e ainda não existem:** `contract.installments.frozen?`,
+   `assert_raises(FrozenError) { contract.installments << … }`, `SAMPLE_CONTRACTS.frozen?`, e o
+   `Installment.new(2.5, …)`, agora que o tipo é conferido.
+3. **Prova de estragar**, refeita com o código que está no `HEAD` e **depois** do item 2. Com o
+   teste do `FrozenError` existindo, tirar o `.freeze` precisa derrubar alguma coisa.
+
+Menores: *"Count need to be"* → *"must be"*; o `03_split_installments.rb` é registro da 4.3 e
+não precisava ter mudado; `contract_fotograph` → `photographer_contract`.
+
+### Revisão 3 — 31/10/2026: fecha
+
+Commits `d0be997` (Gauss em `390_000`), `247cc6e` (testes de `freeze`, `FrozenError`,
+`SAMPLE_CONTRACTS` e `2.5`) e `4be8db5` (*"must be"*). Verificado no container:
+**`40 runs, 71 assertions, 0 failures, 0 errors`**; RuboCop limpo; `installment.rb`,
+`contract.rb`, `sample_contracts.rb` e `money.rb` rodados sozinhos não imprimem nada.
+
+**Prova de estragar:** o relato bate com o que o Claude rodou numa cópia, no container. Sem o
+`.freeze` em `installments`, caem exatamente `test_installments_are_frozen` e
+`test_installments_cannot_be_modified` (2 `F`). Desta vez a prova rodou no código do `HEAD`, com
+o teste já existindo: é a ordem certa.
+
+A aula fecha, e com ela as duas pendências do módulo 2: não há *getter* no estilo Java
+(`attr_reader`) nem `arrayObjectParcelas` (`installments`). Com a 4.6, o entregável do
+módulo 4 está completo: `Money`, `Installment` e `Contract` em Ruby, testados com Minitest, no
+container. Falta a revisão oral do módulo.

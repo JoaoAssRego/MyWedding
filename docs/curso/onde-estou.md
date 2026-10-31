@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-10-28
+atualizado: 2026-10-31
 modulo_atual: 4
 aula_atual: "4.6"
 aliases:
@@ -15,18 +15,17 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial**. A [aula 4.5 — Bundler e Minitest](modulo-04/04-5-bundler-e-minitest.md)
-> fechou em 28/10. Agora, a [aula 4.6 — `Contract` e parcelas](modulo-04/04-6-contract-e-parcelas.md),
-> a última do módulo, passada em 28/10: `Installment` com `Data.define`, `Contract` validando na
-> criação e `SAMPLE_CONTRACTS`. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
+> **Módulo 4 — Ruby essencial**: as seis aulas estão concluídas. A
+> [aula 4.6 — `Contract` e parcelas](modulo-04/04-6-contract-e-parcelas.md) fechou em 31/10, e
+> o entregável está completo. Falta a **revisão oral do módulo** antes do módulo 5 (Rails API e
+> Postgres). Desde 10/10 o backend é **Ruby on Rails** (API); ver a
 > [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 28/10/2026, último commit `96ddf82`, verificado **no container**:
+Situação em 31/10/2026, último commit `4be8db5`, verificado **no container**: `bundle exec rake` → `40 runs, 71 assertions, 0 failures, 0 errors`; RuboCop limpo.
 
-- `money.rb` (só a classe) + `test/money_test.rb` e `test/money_split_test.rb`:
-  `bundle exec rake` → `25 runs, 48 assertions, 0 failures, 0 errors`, tudo commitado;
+- `money.rb`, `installment.rb` (`Data.define`), `contract.rb`, `sample_contracts.rb` (Casarão e Gauss), sem código solto; testes em `test/` (`money`, `money_split`, `installment`, `contract`);
 - `Gemfile` com `rubocop`, `minitest` (6.0.6) e `rake` (13.4.2); `Rakefile` na raiz com
   `default: :test`;
 - os relatos do `LoadError` e do `flunk` da 4.5 vieram de outro Ruby (minitest 5.16.3) e foram
@@ -40,7 +39,7 @@ Situação em 28/10/2026, último commit `96ddf82`, verificado **no container**:
   VS Code ([convenção](convencoes.md#ruby-rubocop));
 - em 23/10 os arquivos Ruby trocaram `-` por `_` no nome (`a947069`); notas antigas citam o
   nome velho;
-- notas do vault de 23 a 26/10 ainda **sem commit**;
+- notas do vault da revisão da 4.6 (31/10) ainda **sem commit**;
 - Ruby 4.0.7 também instalado no Windows, mantido de propósito; verificação de aula vale pelo
   container ([convenção](convencoes.md#ruby-roda-no-container)).
 
@@ -63,10 +62,9 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Entregar a [aula 4.6](modulo-04/04-6-contract-e-parcelas.md): `installment.rb`, `contract.rb`,
-   `sample_contracts.rb`, os testes, a prova de estragar e três perguntas.
-2. Depois da 4.6: a revisão oral do módulo 4 e o fechamento do módulo, antes do módulo 5 (Rails
-   API e Postgres).
+1. **Revisão oral do módulo 4**, como no fim dos módulos 2 e 3. Depois dela, marcar o módulo
+   no [checklist do plano](00-plano-de-estudos.md#progresso).
+2. Depois, o módulo 5: Rails API e Postgres.
 3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
@@ -97,9 +95,9 @@ Para **não repetir no port para Ruby** (módulo 4):
 - [x] ~~`nil` tratado em três lugares no `installment_status`~~ — um lugar só desde `2429a07` (24/10) — [aula 4.2](modulo-04/04-2-tudo-e-objeto.md#pendências)
 - [x] ~~`validate_payment!`: `paid &&` que não guardava nada~~ — removido em `41f6b2a` (24/10), verificado no container
 
-- [ ] Getters no estilo Java em `Contrato` — [aula 2.6](modulo-02/02-6-money-value-object.md) — vence na [aula 4.6](modulo-04/04-6-contract-e-parcelas.md)
-- [ ] `arrayObjectParcelas` ainda carrega "arrayObject" no nome — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md) — vence na [aula 4.6](modulo-04/04-6-contract-e-parcelas.md)
-- [ ] `if (parc[0] && parc[5])` pula o teste em silêncio se o array vier curto — [aula 2.4](modulo-02/02-4-higiene-dos-testes.md)
+- [x] ~~Getters no estilo Java em `Contrato`~~ → `attr_reader` no `Contract` — [aula 2.6](modulo-02/02-6-money-value-object.md), fechada na [aula 4.6](modulo-04/04-6-contract-e-parcelas.md)
+- [x] ~~`arrayObjectParcelas`~~ → `installments` — [aula 2.2](modulo-02/02-2-revisao-do-modulo-1.md), fechada na [aula 4.6](modulo-04/04-6-contract-e-parcelas.md)
+- [x] ~~`if (parc[0] && parc[5])` pula o teste em silêncio~~ — [aula 2.4](modulo-02/02-4-higiene-dos-testes.md), fechada na [aula 4.5](modulo-04/04-5-bundler-e-minitest.md) (nenhum `if` decide se uma asserção roda)
 
 Higiene do sandbox TypeScript — fecha se for barata, ou morre com o sandbox, que vira histórico
 quando o backend for para Rails:
