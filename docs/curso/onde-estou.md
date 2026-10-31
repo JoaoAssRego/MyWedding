@@ -1,8 +1,8 @@
 ---
 tipo: progresso
 atualizado: 2026-10-31
-modulo_atual: 4
-aula_atual: "4.6"
+modulo_atual: 5
+aula_atual: "5.1"
 aliases:
   - Onde estou
 tags:
@@ -15,11 +15,10 @@ Nota viva: diz em que ponto da trilha o João está **agora**. É a primeira coi
 antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica nas aulas, não aqui.
 
 > [!abstract] Agora
-> **Módulo 4 — Ruby essencial**: as seis aulas estão concluídas. A
-> [aula 4.6 — `Contract` e parcelas](modulo-04/04-6-contract-e-parcelas.md) fechou em 31/10, e
-> o entregável está completo. Falta a **revisão oral do módulo** antes do módulo 5 (Rails API e
-> Postgres). Desde 10/10 o backend é **Ruby on Rails** (API); ver a
-> [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> **Módulo 4 — Ruby essencial: concluído em 31/10**, com a
+> [revisão oral](modulo-04/README.md#revisão-oral-de-fechamento) fechada na segunda tentativa.
+> Agora, o **módulo 5 — Rails API e Postgres**, na [aula 5.1 — Rack](modulo-05/05-1-rack.md), passada em 31/10. Desde 10/10 o backend é **Ruby on
+> Rails** (API); ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
@@ -62,10 +61,10 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. **Revisão oral do módulo 4**, como no fim dos módulos 2 e 3. Depois dela, marcar o módulo
-   no [checklist do plano](00-plano-de-estudos.md#progresso).
-2. Depois, o módulo 5: Rails API e Postgres.
-3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Entregar a [aula 5.1](modulo-05/05-1-rack.md): a API do módulo 3 em Rack puro (`ContractsApi`), `config.ru`
+   no ar com Puma e porta publicada, testes com `Rack::MockRequest`, prova de estragar e quatro perguntas.
+   Exemplo testado no container em 31/10: com `JSON_HEADERS.freeze` o `Rack::Lint` dava `500`; a nota foi corrigida.
+2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
@@ -131,6 +130,12 @@ O que foi entregue **e** verificado — não o que foi só lido.
 - **Ruby (aula 4.2):** tudo é objeto, operador é método, sem conversão implícita; só `false` e
   `nil` são falsos; `nil`, `fetch` × `[]`, `&.`; símbolo × string; `?` e `!`; `def` sem
   `return`, `raise` e `rescue`, guarda com `if` no fim da linha.
+- **Ruby (módulo 4, fechado com revisão oral, aulas 4.3 a 4.6):** `Enumerable` sem `for`
+  (`map`, `sum`, `count`, `divmod`, `with_index`), bloco e `yield`; classe com `initialize`,
+  `attr_reader`, fábrica e `new` privado; operador como método; `Comparable` com `<=>`; `eql?`
+  e `hash`; `freeze` raso; `Data.define`; validação na criação; Bundler com *bundled gems*,
+  Minitest (`assert_raises` conferindo a mensagem, `F` × `E`) e Rake; RuboCop; prova de
+  estragar como prova de que o teste protege.
 
 ## Padrão a vigiar
 
@@ -142,7 +147,7 @@ na própria aula: o teste passou a importar o `server.ts`, e o `verificar` foi *
 Segundo padrão, aparecido no módulo 4: **commit sem rodar a verificação.** Na 4.1 o
 `01-divisao.rb` foi commitado com o experimento do `Float`; na 4.2, os dois scripts quebrados
 (`NameError` numa renomeação pela metade, e o experimento do `nil` no lugar da entrega), e
-depois um "fix" do `NameError` que trouxe outro `NameError`. A
+depois um "fix" do `NameError` que trouxe outro `NameError`. Voltou na 4.4 (`Integer?`, classe sem `initialize`), no `02` (`NameError` escondido num commit de rename) e na 4.6 (`validade_initialize`, que impediu a suíte inteira de carregar). Nas três, o RuboCop passou limpo. A
 verificação de cada aula é um comando: roda antes do `git commit`, sempre.
 
 No port para Ruby o risco muda de forma: é **traduzir linha a linha** o TypeScript em vez de

@@ -101,8 +101,8 @@ alta** o que escreveu, sem olhar o código.
 - [x] Módulo 1 — JavaScript essencial
 - [x] [Módulo 2 — TypeScript](modulo-02/README.md)
 - [x] [Módulo 3 — Node e HTTP sem framework](modulo-03/README.md)
-- [ ] [Módulo 4 — Ruby essencial](modulo-04/README.md)
-- [ ] Módulo 5 — Rails API e Postgres
+- [x] [Módulo 4 — Ruby essencial](modulo-04/README.md)
+- [ ] [Módulo 5 — Rails API e Postgres](modulo-05/README.md)
 - [ ] Módulo 6 — Modelagem financeira no ActiveRecord
 - [ ] Módulo 7 — Autenticação e multi-tenant
 - [ ] Módulo 8 — React e Vite
