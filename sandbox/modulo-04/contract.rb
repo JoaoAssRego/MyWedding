@@ -5,30 +5,33 @@ require_relative 'installment'
 
 # Contract of my wedding
 class Contract
-  attr_reader :id, :vendor, :total, :installment_count
+  attr_reader :id, :vendor, :total, :installment_count, :installments
 
   def initialize(id:, vendor:, total:, installment_count:)
-    raise ArgumentError, 'Total must be Money' unless total.is_a?(Money)
-    raise ArgumentError, 'Count of installment must be an Integer greater or equal to 1' if installment_count < 1
+    validate_initialize
 
     @id = id
     @vendor = vendor
     @total = total
     @installment_count = installment_count
+    @installments = build_installments.freeze
 
     freeze
   end
 
-  def installments
+  private
+
+  def build_installments
     @total.split(@installment_count).map.with_index(1) do |amount, number|
       Installment.new(number: number, amount: amount)
     end
   end
-end
 
-puts Contract.new(
-  id: 1,
-  vendor: 'Casarão Paraíso',
-  total: Money.from_cents(17_500_00),
-  installment_count: 27
-).installments
+  def validade_initialize
+    raise ArgumentError, 'Total must be Money' unless total.is_a?(Money)
+    return if installment_count.is_a?(Integer) && installment_count >= 1
+
+    raise ArgumentError,
+          'Count of installment must be an Integer greater or equal to 1'
+  end
+end
