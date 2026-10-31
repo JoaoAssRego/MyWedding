@@ -10,11 +10,11 @@ contract_salon = Contract.new(
   installment_count: 27
 )
 
-contract_fotograph = Contract.new(
+photographer_contract = Contract.new(
   id: '2',
   vendor: 'Gauss',
-  total: Money.from_cents(3_900),
+  total: Money.from_cents(390_000),
   installment_count: 20
 )
 
-SAMPLE_CONTRACTS = [contract_salon, contract_fotograph].freeze
+SAMPLE_CONTRACTS = [contract_salon, photographer_contract].freeze
