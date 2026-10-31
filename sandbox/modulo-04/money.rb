@@ -61,8 +61,8 @@ class Money
   private
 
   def validate_count!(count)
-    raise ArgumentError, 'Count need to be Integer.' unless count.is_a?(Integer)
-    raise ArgumentError, 'Count need to be greater than or equal to 1.' if count < 1
+    raise ArgumentError, 'Count must be Integer.' unless count.is_a?(Integer)
+    raise ArgumentError, 'Count must be greater than or equal to 1.' if count < 1
     raise ArgumentError, 'total cents need to be greater than count' if cents < count
   end
 end
