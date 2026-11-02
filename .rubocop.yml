@@ -4,3 +4,6 @@ AllCops:
 
 Layout/EndOfLine:
   EnforcedStyle: lf
+
+Metrics/MethodLength:
+  Max: 15

@@ -85,6 +85,9 @@ LSP formata ao salvar usando o RuboCop do `Gemfile` (`.vscode/settings.json`); a
 que vale é a do container. `Layout/EndOfLine` está em `lf`, porque o padrão (`native`) exige
 `CRLF` quando roda no Ruby do Windows.
 
+`Metrics/MethodLength` permite até 15 linhas por método; quando um método ultrapassar esse
+limite, prefira extrair uma responsabilidade antes de aumentar a configuração novamente.
+
 Quando o Rails nascer em `apps/api`, ele traz o próprio `Gemfile` e a própria configuração.
 
 Origem: pedido do João em 23/10/2026, antecipando parte da aula 4.5.
