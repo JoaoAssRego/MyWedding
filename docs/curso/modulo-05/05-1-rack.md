@@ -141,6 +141,49 @@ Quatro coisas para ver:
   que as camadas do meio (*middlewares*) acrescentem cabeçalhos, e por isso exige um `Hash`
   mutável. É o único lugar do projeto em que congelar está **errado**.
 
+### Uma guarda precisa retornar
+
+Em Ruby, `not_found` e `method_not_allowed` são chamadas de método. A ausência de parênteses
+não muda isso, mas também não encerra `call`. A forma abaixo chama o método quando a condição
+falha e depois continua executando:
+
+```ruby
+not_found unless resource == 'books' && rest.empty?
+```
+
+Para a resposta ser devolvida imediatamente, a guarda precisa de `return`:
+
+```ruby
+return not_found unless resource == 'books' && rest.empty?
+return method_not_allowed unless env['REQUEST_METHOD'] == 'GET'
+```
+
+Sem o primeiro `return`, uma rota desconhecida pode continuar até a segunda guarda; por isso um
+`POST` em uma rota inexistente pode acabar respondendo `405`, em vez de `404`. Sem o segundo,
+uma requisição `GET` válida continua até o fim e `call` não devolve a resposta Rack.
+
+Quando há mais de um valor aceito, `%w[contracts health]` cria um array de strings e `include?`
+verifica se `resource` está dentro dele:
+
+```ruby
+%w[contracts health].include?(resource)
+# equivalente a:
+resource == 'contracts' || resource == 'health'
+```
+
+O método `json` concentra a montagem da resposta Rack:
+
+```ruby
+def json(status, body, extra_headers = {})
+  [status, { 'content-type' => 'application/json' }.merge(extra_headers), [JSON.generate(body)]]
+end
+```
+
+Ele recebe o status, o objeto que será enviado no corpo e, opcionalmente, cabeçalhos adicionais.
+O `merge` cria um novo `Hash` de cabeçalhos, `JSON.generate` transforma o objeto em uma `String`
+JSON, e os colchetes externos formam os três elementos exigidos pelo Rack: status, cabeçalhos e
+corpo iterável. O corpo fica dentro de um array porque o Rack espera algo que responda a `each`.
+
 ### JSON: símbolos vão, strings voltam
 
 ```ruby
@@ -322,3 +365,38 @@ content-type: application/json
 - O teste do módulo 3 tipava o resultado do `json()` como `Contrato[]` sem conferir nada. Em
   Ruby não há tipo para mentir. O equivalente é **conferir o conteúdo** no item 5, não só o
   status.
+
+## O que aconteceu
+
+### Dúvida — 01/11/2026: para que serve o `config.ru`?
+
+O João não entendeu o propósito do arquivo nem como montá-lo. A explicação dada:
+
+- **Ponte com o módulo 3.** Lá, o `server.ts` **criava** o servidor e o `index.ts` o **ligava**
+  na porta. No Rack a divisão é a mesma: o `contracts_api.rb` define a aplicação, e o
+  `config.ru` diz **qual** objeto o servidor deve chamar. Quem liga a porta é o Puma, chamado
+  pelo `rackup`.
+- **É Ruby comum**, executado dentro de um `Rack::Builder`, e por isso ganha três palavras
+  próprias: `run` (o objeto que responde), `use` (uma camada que embrulha esse objeto) e `map`
+  (um objeto diferente para um prefixo de caminho).
+- **O que o `rackup` faz:** lê o arquivo, monta o objeto final, entrega ao Puma, e o Puma chama
+  `objeto.call(env)` a cada requisição.
+- **No Rails** (aula 5.2), o `config.ru` gerado tem o mesmo formato:
+  `run Rails.application`.
+- **Não é carregado pelos testes:** o `Rack::MockRequest` recebe o objeto direto. O `config.ru`
+  só existe para o servidor.
+
+A explicação foi dada sem rodar no container, porque o Docker estava desligado.
+
+### Dúvida — 01/11/2026: o que é o Puma?
+
+- **É o servidor web:** abre a porta, recebe os bytes do HTTP, monta o `env`, chama o
+  `app.call(env)` e devolve a resposta em bytes. No módulo 3, o `node:http` fazia tudo isso
+  dentro do próprio Node. O Ruby não traz servidor web pronto (o WEBrick saiu da biblioteca
+  padrão no Ruby 3.0), por isso ele é uma gem.
+- **Por que separado:** o Rack é o contrato entre servidor e aplicação. Qualquer servidor Rack
+  (Puma, Falcon, Unicorn) roda qualquer aplicação Rack (a sua `ContractsApi`, o Rails, o
+  Sinatra). O Rails usa o Puma por padrão.
+- **Concorrência:** o Node atende várias requisições com uma *thread* e o *event loop*. O Puma
+  usa um conjunto de *threads* (`Min threads: 0`, `Max threads: 5` no log) e, no modo *cluster*,
+  vários processos (*workers*). O log da aula mostra `single mode`, que é um processo só.

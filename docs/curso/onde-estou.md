@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-10-31
+atualizado: 2026-11-01
 modulo_atual: 5
 aula_atual: "5.1"
 aliases:
@@ -23,6 +23,12 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 ## Estado
 
 Situação em 31/10/2026, último commit `4be8db5`, verificado **no container**: `bundle exec rake` → `40 runs, 71 assertions, 0 failures, 0 errors`; RuboCop limpo.
+
+Na leitura da tarefa da 5.1, ficou identificado que as guardas de
+[`contracts_api.rb`](../../sandbox/modulo-05/contracts_api.rb) precisam de `return`: chamar
+`not_found` ou `method_not_allowed` sem `return` não interrompe `call`. A explicação foi
+registrada na [aula 5.1](modulo-05/05-1-rack.md#uma-guarda-precisa-retornar); o código da
+tarefa continua para o João corrigir.
 
 - `money.rb`, `installment.rb` (`Data.define`), `contract.rb`, `sample_contracts.rb` (Casarão e Gauss), sem código solto; testes em `test/` (`money`, `money_split`, `installment`, `contract`);
 - `Gemfile` com `rubocop`, `minitest` (6.0.6) e `rake` (13.4.2); `Rakefile` na raiz com
