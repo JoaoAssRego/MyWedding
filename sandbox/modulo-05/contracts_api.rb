@@ -7,16 +7,12 @@ require_relative '../modulo-04/sample_contracts'
 # Api for Contract
 class ContractApi
   def call(env)
-    _, resource, id, *rest = env['PATH_INFO'].split('/')
+    path = env['PATH_INFO'].split('/')
 
-    return not_found unless %w[contracts health].include?(resource) && rest.empty?
+    return not_found unless valid_path?(path)
     return method_not_allowed unless env['REQUEST_METHOD'] == 'GET'
 
-    if resource == 'health'
-      health
-    elsif resource == 'contracts'
-      id ? contract(id) : contracts
-    end
+    dispatch(path)
   end
 
   def health
@@ -52,6 +48,26 @@ class ContractApi
   end
 
   private
+
+  def valid_path?(path)
+    _, resource, id, *rest = path
+
+    return false unless rest.empty?
+    return false if resource == 'health' && id
+
+    %w[contracts health].include?(resource)
+  end
+
+  def dispatch(path)
+    _, resource, id = path
+
+    case resource
+    when 'health'
+      health
+    when 'contracts'
+      id ? contract(id) : contracts
+    end
+  end
 
   def contract_data(contract)
     {
