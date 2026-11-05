@@ -43,6 +43,14 @@ class ContractApi
     )
   end
 
+  def not_found
+    json(404, { error: 'Not found' })
+  end
+
+  def method_not_allowed
+    json(405, { error: 'Method not allowed' }, 'allow' => 'GET')
+  end
+
   private
 
   def contract_data(contract)
