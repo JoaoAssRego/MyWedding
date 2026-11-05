@@ -3,7 +3,7 @@
 require 'minitest/test_task'
 
 Minitest::TestTask.create do |t|
-  t.test_globs = ['./sandbox/modulo-04/test/*_test.rb']
+  t.test_globs = ['./sandbox/modulo-04/test/*_test.rb', './sandbox/modulo-05/test/*_test.rb']
 end
 
 task default: :test
