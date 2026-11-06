@@ -8,8 +8,8 @@ gem 'minitest', '~> 6.0', group: :test, require: false
 
 gem 'rake', '~> 13.4', group: :development
 
-gem "rack", "~> 3.2"
+gem 'rack', '~> 3.2'
 
-gem "rackup", "~> 2.3"
+gem 'rackup', '~> 2.3'
 
-gem "puma", "~> 8.0"
+gem 'puma', '~> 8.0'
