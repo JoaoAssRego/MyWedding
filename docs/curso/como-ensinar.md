@@ -32,8 +32,9 @@ método mudar, muda aqui — não só no chat.
      comparação é a ponte; o exemplo continua em outro domínio.
 3. **Tarefa numerada**, para ser conferida item a item.
 4. **Verificação por comando**, com a saída esperada escrita. "Parece certo" não fecha aula.
-5. **Pergunta para responder em voz alta** ao final. Se ele não consegue explicar sem olhar o
-   código, a aula não fechou.
+5. **Perguntas em voz alta só no fim do módulo**, na revisão oral de fechamento. A aula pode
+   listar as perguntas que vão cair lá, mas elas não seguram a aula (decisão de 05/11/2026,
+   ver *Ritmo*).
 
 O registro de cada aula segue [como-registrar-as-aulas.md](como-registrar-as-aulas.md).
 
@@ -53,6 +54,16 @@ O registro de cada aula segue [como-registrar-as-aulas.md](como-registrar-as-aul
 - Uma aula por conceito. Quando a higiene que sobrou de uma aula é grande, ela vira a próxima
   aula (foi o que aconteceu entre a 2.3 e a 2.4), em vez de inchar a atual.
 - 5 a 10 horas por semana; o [plano](00-plano-de-estudos.md) tem a expectativa de prazo.
+- **Ritmo ágil (05/11/2026).** Depois de dois meses e ainda no módulo 5, o João pediu mais
+  velocidade. A partir daqui:
+  - **o que segura uma aula é correção:** a verificação passa no container, o código faz o que
+    a tarefa pede, os testes protegem as regras (a prova de estragar derruba algum teste) e o
+    commit não quebra o `HEAD`;
+  - **o resto é registrado e não segura:** nomes, comentários, mensagens, estilo de teste,
+    detalhes de commit. Vira pendência na nota da aula, numa lista curta, sem pedir nova
+    entrega;
+  - **perguntas em voz alta só na revisão oral do fim do módulo;**
+  - revisões curtas: o que bloqueia primeiro, em poucas linhas.
 
 ## Idioma
 
