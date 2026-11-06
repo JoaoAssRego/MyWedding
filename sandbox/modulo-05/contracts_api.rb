@@ -15,6 +15,8 @@ class ContractApi
     dispatch(path)
   end
 
+  private
+
   def health
     json(200, { status: 'OK' })
   end
@@ -23,7 +25,12 @@ class ContractApi
     json(
       200,
       SAMPLE_CONTRACTS.map do |contract|
-        contract_data(contract)
+        {
+          id: contract.id,
+          vendor: contract.vendor,
+          total_cents: contract.total.cents,
+          installment_count: contract.installment_count
+        }
       end
     )
   end
@@ -46,8 +53,6 @@ class ContractApi
   def method_not_allowed
     json(405, { error: 'Method not allowed' }, 'allow' => 'GET')
   end
-
-  private
 
   def valid_path?(path)
     _, resource, id, *rest = path

@@ -33,8 +33,14 @@ class ContractApiTest < Minitest::Test
 
     assert_equal 200, response.status
     assert_equal 2, contracts.size
-    assert_equal expected_contract_summary(SAMPLE_CONTRACTS[0]), contracts[0]
-    assert_equal expected_contract_summary(SAMPLE_CONTRACTS[1]), contracts[1]
+    assert_equal expected_contracts(SAMPLE_CONTRACTS[0]), contracts[0]
+    assert_equal expected_contracts(SAMPLE_CONTRACTS[1]), contracts[1]
+  end
+
+  def test_requisition_contracts_nonexistent_method
+    response = @request.post('/contracts')
+
+    assert_equal 405, response.status
   end
 
   def test_requisition_contracts_specific
@@ -47,6 +53,18 @@ class ContractApiTest < Minitest::Test
     assert_equal(contracts_gauss.total, Money.from_cents(contracts[:installments].sum do |installment|
       Integer(installment[:amount_cents])
     end))
+  end
+
+  def test_requisition_contracts_nonexistent__specific
+    response = @request.get('/contracts/99')
+
+    assert_equal 404, response.status
+  end
+
+  def test_requisition_contracts_nonexistent_endpoint
+    response = @request.get('/contracts/1/x')
+
+    assert_equal 404, response.status
   end
 
   def test_access_nonexistent_contract
@@ -75,6 +93,12 @@ class ContractApiTest < Minitest::Test
     assert_equal 404, response.status
   end
 
+  def test_endpoint_and_method_nonexistent
+    response = @request.post('/nonexistent')
+
+    assert_equal 404, response.status
+  end
+
   private
 
   def expected_contract_summary(contract)
@@ -89,6 +113,15 @@ class ContractApiTest < Minitest::Test
           amount_cents: installment.amount.cents
         }
       end
+    }
+  end
+
+  def expected_contracts(contract)
+    {
+      id: contract.id,
+      vendor: contract.vendor,
+      total_cents: contract.total.cents,
+      installment_count: contract.installment_count
     }
   end
 end
