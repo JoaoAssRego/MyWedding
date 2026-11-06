@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 5
 aula: "5.1"
-status: em-andamento
+status: concluida
 conceitos:
   - rack
   - env
@@ -18,7 +18,7 @@ tags:
 
 # Aula 5.1 — Rack: a API do módulo 3 sem framework, em Ruby
 
-**Status:** em andamento — tarefa passada em 31/10/2026; exemplo testado no container no mesmo dia.
+**Status:** concluída em 05/11/2026, na segunda revisão.
 
 ## Contexto
 
@@ -400,3 +400,68 @@ A explicação foi dada sem rodar no container, porque o Docker estava desligado
 - **Concorrência:** o Node atende várias requisições com uma *thread* e o *event loop*. O Puma
   usa um conjunto de *threads* (`Min threads: 0`, `Max threads: 5` no log) e, no modo *cluster*,
   vários processos (*workers*). O log da aula mostra `single mode`, que é um processo só.
+
+### Revisão 1 — 05/11/2026: não fecha
+
+Commits `508289f` (`chore:` gems), `84b60b6` (`chore:` `Metrics/MethodLength` em 15, com a
+regra registrada em [convencoes.md](../convencoes.md#ruby-rubocop)), `67d7a8f`, `f5f4f79`,
+`f788e1d` (`feat:`), `73e52b0` (`chore:` `Rakefile`) e `a167bc0` (`test:`). Verificado no
+container: **`48 runs, 88 assertions, 0 failures, 0 errors`**. A suíte carrega, o `Rack::Lint`
+está em volta da aplicação nos testes, e os 40 testes do módulo 4 continuam verdes.
+
+O que está bom: o `json(status, body, extra_headers = {})` com um `Hash` novo a cada resposta;
+a ordem das guardas certa (`404` antes de `405`); `valid_path?` com `*rest`; o domínio do módulo
+4 intocado (nenhum `to_json` no `Contract`); o teste da soma das parcelas reconstruindo `Money`
+pelo `from_cents`; `JSON.parse(…, symbolize_names: true)`.
+
+**Prova de estragar:** o relato é honesto e bate com o container (sem o `rest.empty?`,
+`/contracts/1/x` responde `200`). E ele mostra o que a prova existe para mostrar: **nenhuma das
+duas trocas derrubou um teste.** As duas guardas estão no código e nenhum teste as protege.
+
+**O que impede de fechar:**
+
+1. **Testes que faltam.** A tabela do Contexto tem `GET /contracts/1/x` → `404` e
+   `POST /contracts` → `405`, e nenhum dos dois virou teste. Faltam também o id inexistente
+   (`/contracts/99`) e o caso que a prova revelou (`POST /nonexistent` → `404`, que garante a
+   ordem das guardas). Depois de escrever, refaça as duas trocas: as duas têm que derrubar um
+   teste.
+2. **A lista devolve as parcelas.** A tarefa pede `GET /contracts` **sem** `installments`, e
+   `/contracts/:id` **com** elas. O `contract_data` é usado nos dois.
+3. **O teste repete a implementação.** O `expected_contract_summary` do teste é cópia do
+   `contract_data`. Se a API montar o JSON errado, o teste monta igual e passa, como no item 2.
+   Confira campos e valores conhecidos (`vendor: 'Gauss'`, `total_cents: 390_000`, 20
+   parcelas), não uma segunda cópia da mesma função.
+4. **Só o `call` deveria ser público.** `health`, `contracts`, `contract`, `not_found` e
+   `method_not_allowed` estão acima do `private`. De fora, o contrato de um app Rack é o
+   `call(env)`.
+5. **RuboCop:** 6 `Style/StringLiterals` no `Gemfile`, as aspas do `bundle add` de novo (a
+   mesma coisa da [4.5](../modulo-04/04-5-bundler-e-minitest.md)).
+6. **Itens 3 e 4 da tarefa:** as saídas do `curl.exe` (com e sem `-o 0.0.0.0`) e a explicação
+   do `(52) Empty reply from server` não vieram.
+7. **As quatro perguntas em voz alta** não vieram.
+
+Menores: `ContractApi` → `ContractsApi` (o recurso é plural, como a rota); `status: 'OK'` →
+`'ok'`, como no módulo 3; `test_requisition_*` → `test_get_health…` (*request*, não
+*requisition*); o comentário *"Api for Contract"* não diz o que a classe atende.
+
+### Revisão 2 — 05/11/2026: fecha
+
+Na árvore de trabalho, **ainda sem commit**. Verificado no container: **`52 runs, 92 assertions,
+0 failures, 0 errors`**; RuboCop limpo (as aspas do `Gemfile` foram corrigidas).
+
+- Testes novos: `/contracts/1/x` → `404`, `POST /contracts` → `405`, `/contracts/99` → `404`,
+  `POST /nonexistent` → `404`.
+- **Prova de estragar refeita:** cada troca agora derruba um teste (guardas invertidas: o
+  `POST /nonexistent` recebe `405`; sem `rest.empty?`: o `/contracts/1/x` recebe `200`).
+- A lista sem `installments`; só o `call` é público.
+- Sem `-o 0.0.0.0`: `curl: (52) Empty reply from server`.
+
+**Mudança de ritmo, a pedido do João:** as quatro perguntas desta aula vão para a revisão oral
+de fim do módulo 5, e a aula fecha por correção ([como-ensinar](../como-ensinar.md#ritmo)).
+
+**Pendências, sem bloquear:**
+
+- o teste ainda monta o esperado copiando a lógica da API (`expected_contracts`,
+  `expected_contract_summary`). Valores conhecidos (`'Gauss'`, `390_000`) pegariam mais erros;
+- `ContractApi` → `ContractsApi`; `status: 'OK'` → `'ok'`; `test_requisition_*` →
+  `test_get_*`; o `test_…nonexistent__specific` tem `__` duplo.
