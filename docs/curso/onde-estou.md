@@ -1,6 +1,6 @@
 ---
 tipo: progresso
-atualizado: 2026-11-01
+atualizado: 2026-11-05
 modulo_atual: 5
 aula_atual: "5.1"
 aliases:
@@ -17,12 +17,14 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 > [!abstract] Agora
 > **Módulo 4 — Ruby essencial: concluído em 31/10**, com a
 > [revisão oral](modulo-04/README.md#revisão-oral-de-fechamento) fechada na segunda tentativa.
-> Agora, o **módulo 5 — Rails API e Postgres**, na [aula 5.1 — Rack](modulo-05/05-1-rack.md), passada em 31/10. Desde 10/10 o backend é **Ruby on
-> Rails** (API); ver a [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
+> Agora, o **módulo 5 — Rails API e Postgres**: a [aula 5.1 — Rack](modulo-05/05-1-rack.md)
+> fechou em 05/11, e a [aula 5.2 — `rails new --api`](modulo-05/05-2-rails-new.md) foi passada
+> em 06/11. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
+> [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 31/10/2026, último commit `4be8db5`, verificado **no container**: `bundle exec rake` → `40 runs, 71 assertions, 0 failures, 0 errors`; RuboCop limpo.
+Situação em 05/11/2026, último commit `a167bc0` + conserto da 5.1 na árvore de trabalho, verificado **no container**: `52 runs, 92 assertions, 0 failures, 0 errors`; RuboCop limpo.
 
 Na leitura da tarefa da 5.1, ficou identificado que as guardas de
 [`contracts_api.rb`](../../sandbox/modulo-05/contracts_api.rb) precisam de `return`: chamar
@@ -67,10 +69,14 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Entregar a [aula 5.1](modulo-05/05-1-rack.md): a API do módulo 3 em Rack puro (`ContractsApi`), `config.ru`
-   no ar com Puma e porta publicada, testes com `Rack::MockRequest`, prova de estragar e quatro perguntas.
-   Exemplo testado no container em 31/10: com `JSON_HEADERS.freeze` o `Rack::Lint` dava `500`; a nota foi corrigida.
-2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Commitar a 5.1 (a árvore de trabalho tem o conserto: `Gemfile`, `contracts_api.rb`, os
+   testes), rodando o `rake` antes. A aula fechou na revisão 2 (05/11): `52 runs, 0 failures`.
+2. Entregar a [aula 5.2](modulo-05/05-2-rails-new.md): `Dockerfile` com `git`/`libpq-dev`, `db` e
+   `api` no Compose, `rails new` em `apps/api/`, `.git` aninhado apagado, RuboCop da raiz
+   excluindo `apps/`, `/up` → `200`. Roteiro testado no container em 06/11 (Rails 8.1.4.1,
+   Postgres 18.6). **Ritmo ágil desde 05/11**: aula fecha por correção, perguntas só no fim do
+   módulo ([como-ensinar](como-ensinar.md#ritmo)).
+3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 

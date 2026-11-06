@@ -13,7 +13,7 @@ tags:
 Postgres, com os mesmos casos de teste da [aula 3.3](../modulo-03/03-3-async-e-teste-do-servidor.md).
 **Onde vive o código:** `sandbox/modulo-05/` na aula 5.1 e, a partir da 5.2, `apps/api/`, a
 aplicação Rails de verdade.
-**Status:** em andamento — [aula 5.1](05-1-rack.md) passada em 31/10/2026.
+**Status:** em andamento — [aula 5.2](05-2-rails-new.md) passada em 06/11/2026.
 
 ## Por que começar pelo Rack
 
@@ -44,10 +44,10 @@ mostrarem.
 
 | # | Aula | Status |
 |---|---|---|
-| 5.1 | [Rack: a API do módulo 3 sem framework, em Ruby](05-1-rack.md) | em andamento |
-| 5.2 | `rails new --api` no container: o que o gerador cria, e o Rails como app Rack | prevista |
+| 5.1 | [Rack: a API do módulo 3 sem framework, em Ruby](05-1-rack.md) | concluída |
+| 5.2 | [`rails new --api`: a aplicação Rails no container, com Postgres](05-2-rails-new.md) | em andamento |
 | 5.3 | Rotas, controllers e JSON: `/health` e `/contracts` com o domínio do módulo 4 | prevista |
-| 5.4 | Postgres no Compose e SQL à mão: a tabela `contracts` com `BIGINT` e `CHECK` | prevista |
+| 5.4 | SQL à mão no Postgres: a tabela `contracts` com `BIGINT` e `CHECK` | prevista |
 | 5.5 | Migration × SQL e ActiveRecord básico: a mesma tabela, gerada e lida | prevista |
 | 5.6 | `POST`: corpo, *strong parameters*, validação e erros como resposta HTTP (`201`, `422`) | prevista |
 | 5.7 | Teste de integração contra o Postgres: os casos da 3.3 em Rails | prevista |
@@ -64,7 +64,7 @@ novas aparecem neste módulo:
   for publicada (`-p 9292:9292` no `docker compose run`, ou `ports:` no `compose.yaml`) **e** se
   o servidor escutar em `0.0.0.0`, não em `localhost`. O `localhost` de dentro do container não
   é o do Windows.
-- **Um segundo serviço.** Na 5.4 o `compose.yaml` ganha o Postgres, e o container do Ruby passa
+- **Um segundo serviço.** Na 5.2 o `compose.yaml` ganha o Postgres (antecipado da 5.4: sem banco, o Rails em desenvolvimento responde `500` até no `/up`), e o container do Ruby passa
   a falar com ele pelo nome do serviço, não por `localhost`.
 
 ## Pendências herdadas
@@ -75,3 +75,24 @@ novas aparecem neste módulo:
   `Contrato[]` tipando o que vem do `json()` e o `catch` que avisa em vez de reprovar. As duas
   morrem com o sandbox TypeScript; o equivalente em Ruby é o teste de integração da 5.7, que
   reprova de verdade.
+
+## Revisão oral de fechamento
+
+No ritmo combinado em 05/11/2026, as perguntas em voz alta ficam todas para cá. Respondidas
+**sem olhar o código**, ao fim da 5.7. A lista cresce a cada aula.
+
+Da [5.1](05-1-rack.md):
+
+1. O que é uma aplicação Rack? Compare o `call(env)` com o `(req, res) => …` do `createServer`:
+   o que um recebe e devolve que o outro não?
+2. Por que o teste do módulo 3 precisava de porta e o da 5.1 não precisa?
+3. O que o `-o 0.0.0.0` resolve, e por que o problema não existia no módulo 3, rodando o Node
+   direto no Windows?
+4. `JSON.parse(body)[:id]` dá `nil`. Por quê, e em que aula isso já apareceu?
+
+Da [5.2](05-2-rails-new.md):
+
+5. Por que o `/up` responde `500` com o Postgres desligado, se ele não consulta nenhuma tabela?
+6. Por que o `api` encontra o Postgres em `db` e não em `localhost`?
+7. Na lista do `bin/rails middleware`, onde está o equivalente da sua `ContractsApi` da 5.1? E
+   o do `Rack::Lint`?
