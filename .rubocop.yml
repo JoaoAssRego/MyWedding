@@ -1,6 +1,7 @@
 AllCops:
   TargetRubyVersion: 4.0
   NewCops: enable
+  inherit_mode: { merge: [Exclude] }
 
 Layout/EndOfLine:
   EnforcedStyle: lf
