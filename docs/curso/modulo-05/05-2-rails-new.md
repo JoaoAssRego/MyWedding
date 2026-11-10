@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 5
 aula: "5.2"
-status: em-andamento
+status: concluida
 conceitos:
   - rails-new
   - compose-multi-servico
@@ -17,7 +17,7 @@ tags:
 
 # Aula 5.2 — `rails new --api`: a aplicação Rails no container, com Postgres
 
-**Status:** em andamento — tarefa passada em 06/11/2026.
+**Status:** concluída em 08/11/2026, na primeira revisão.
 
 ## Contexto
 
@@ -32,7 +32,7 @@ Puma 8.0.2 e Postgres **18.6**. O teste mostrou quatro coisas que entram na tare
 1. o `rails new` chama o `git`, e o container não tem: `No such file or directory - git`;
 2. a gem `pg` compila contra a biblioteca do Postgres, então o container precisa de `libpq-dev`;
 3. **sem banco, até o `/up` dá `500`.** Em desenvolvimento, o Rails confere a cada requisição
-   se há *migration* pendente (`ActiveRecord::Migration::CheckPending`), e isso abre conexão.
+   se há *migration* pendente (`ActiveRecord::Migration::CheckPending`), e isso abre conexão (na verdade, só na primeira requisição; ver a revisão 1).
    Sem Postgres, a resposta é `ActiveRecord::ConnectionNotEstablished`. Por isso o Postgres
    entra no Compose já nesta aula, e não na 5.4;
 4. o `rails new` faz `git init` dentro da pasta, e isso cria um **repositório dentro do
@@ -216,3 +216,36 @@ HTTP/1.1 200 OK
 Ficam no [README do módulo](README.md#revisão-oral-de-fechamento): por que o `/up` dá `500` sem
 banco; por que o `api` acha o Postgres em `db` e não em `localhost`; e onde, na lista do
 `bin/rails middleware`, está o equivalente da sua `ContractsApi`.
+
+## O que aconteceu
+
+### Revisão 1 — 08/11/2026: fecha
+
+Commits `97a898f` (`chore:` `Dockerfile` e Compose), `a996cea` (`fix:` RuboCop da raiz excluindo
+`apps/**/*`, com `inherit_mode`) e `f908c91` (`feat:` a aplicação gerada). Verificado no
+container:
+
+- `MyWedding::Application`; `apps/api/.git` apagado; 51 arquivos versionados em `apps/api`, sem o
+  `master.key`;
+- `bin/rails test` → `0 runs, 0 failures, 0 errors`; `bin/rubocop` → `20 files, no offenses`;
+- raiz: `52 runs, 0 failures`, RuboCop com `17 files, no offenses`;
+- `bin/rails middleware` → 19 camadas; `/up` → `200`.
+
+**Prova de estragar: o João acertou, e a previsão da aula estava incompleta.** Ele parou o `db`
+com a `api` no ar e o `/up` respondeu `200`, não `500`. O Claude refez a prova nos containers
+dele:
+
+```text
+api aquecida, db parado:   200
+api reiniciada, db parado: 500   (ActiveRecord::DatabaseConnectionError)
+db de volta:               200
+```
+
+O `CheckPending` não abre conexão a **toda** requisição. Ele confere uma vez e guarda a
+resposta até algum arquivo de `db/migrate` mudar. Com a `api` já aquecida, ninguém precisa do
+banco para responder o `/up`. O `500` aparece quando a `api` sobe **sem** banco, que foi o caso
+do teste de 06/11. A teoria desta aula foi escrita a partir desse teste, e por isso dizia "a
+cada requisição". O certo é "na primeira requisição, e de novo quando as *migrations* mudam".
+
+Menor, sem bloquear: o corpo do `f908c91` não registra as opções do `rails new`, como a tarefa
+pedia. Elas estão nesta nota.
