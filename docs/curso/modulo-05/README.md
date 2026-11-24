@@ -13,7 +13,7 @@ tags:
 Postgres, com os mesmos casos de teste da [aula 3.3](../modulo-03/03-3-async-e-teste-do-servidor.md).
 **Onde vive o código:** `sandbox/modulo-05/` na aula 5.1 e, a partir da 5.2, `apps/api/`, a
 aplicação Rails de verdade.
-**Status:** em andamento — [aula 5.2](05-2-rails-new.md) passada em 06/11/2026.
+**Status:** em andamento — [aula 5.3](05-3-rotas-e-controllers.md) passada em 08/11/2026.
 
 ## Por que começar pelo Rack
 
@@ -45,8 +45,8 @@ mostrarem.
 | # | Aula | Status |
 |---|---|---|
 | 5.1 | [Rack: a API do módulo 3 sem framework, em Ruby](05-1-rack.md) | concluída |
-| 5.2 | [`rails new --api`: a aplicação Rails no container, com Postgres](05-2-rails-new.md) | em andamento |
-| 5.3 | Rotas, controllers e JSON: `/health` e `/contracts` com o domínio do módulo 4 | prevista |
+| 5.2 | [`rails new --api`: a aplicação Rails no container, com Postgres](05-2-rails-new.md) | concluída |
+| 5.3 | [Rotas, controllers e JSON: a API da 5.1 dentro do Rails](05-3-rotas-e-controllers.md) | em andamento |
 | 5.4 | SQL à mão no Postgres: a tabela `contracts` com `BIGINT` e `CHECK` | prevista |
 | 5.5 | Migration × SQL e ActiveRecord básico: a mesma tabela, gerada e lida | prevista |
 | 5.6 | `POST`: corpo, *strong parameters*, validação e erros como resposta HTTP (`201`, `422`) | prevista |
@@ -92,7 +92,14 @@ Da [5.1](05-1-rack.md):
 
 Da [5.2](05-2-rails-new.md):
 
-5. Por que o `/up` responde `500` com o Postgres desligado, se ele não consulta nenhuma tabela?
+5. O `/up` respondeu `200` com o `db` parado, mas `500` quando a `api` subiu sem banco. Por quê?
 6. Por que o `api` encontra o Postgres em `db` e não em `localhost`?
 7. Na lista do `bin/rails middleware`, onde está o equivalente da sua `ContractsApi` da 5.1? E
    o do `Rack::Lint`?
+
+Da [5.3](05-3-rotas-e-controllers.md):
+
+8. Por que o Zeitwerk exige que `app/domain/sample_contracts.rb` defina `SampleContracts`? O que
+   ele ganha com essa regra?
+9. A 5.1 respondia `405` para `POST /contracts`, e o Rails responde `404`. O que o roteador do
+   Rails procura que a sua guarda não procurava?

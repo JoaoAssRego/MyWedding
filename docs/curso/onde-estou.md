@@ -17,21 +17,16 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 > [!abstract] Agora
 > **Módulo 4 — Ruby essencial: concluído em 31/10**, com a
 > [revisão oral](modulo-04/README.md#revisão-oral-de-fechamento) fechada na segunda tentativa.
-> Agora, o **módulo 5 — Rails API e Postgres**: a [aula 5.1 — Rack](modulo-05/05-1-rack.md)
-> fechou em 05/11, e a [aula 5.2 — `rails new --api`](modulo-05/05-2-rails-new.md) foi passada
-> em 06/11. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
+> Agora, o **módulo 5 — Rails API e Postgres**: [5.1 — Rack](modulo-05/05-1-rack.md) fechou em
+> 05/11 e [5.2 — `rails new --api`](modulo-05/05-2-rails-new.md) em 08/11. Agora, a **[5.3](modulo-05/05-3-rotas-e-controllers.md)**,
+> rotas, controllers e JSON, passada em 08/11. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
 > [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 05/11/2026, último commit `a167bc0` + conserto da 5.1 na árvore de trabalho, verificado **no container**: `52 runs, 92 assertions, 0 failures, 0 errors`; RuboCop limpo.
+Situação em 08/11/2026, último commit `f908c91`, verificado **no container**: sandbox `52 runs, 0 failures`; `apps/api` (Rails 8.1.4.1, `MyWedding::Application`) com `bin/rails test` vazio e `bin/rubocop` limpos; `db` (Postgres 18.6) e `api` no Compose; `/up` → `200`.
 
-Na leitura da tarefa da 5.1, ficou identificado que as guardas de
-[`contracts_api.rb`](../../sandbox/modulo-05/contracts_api.rb) precisam de `return`: chamar
-`not_found` ou `method_not_allowed` sem `return` não interrompe `call`. A explicação foi
-registrada na [aula 5.1](modulo-05/05-1-rack.md#uma-guarda-precisa-retornar); o código da
-tarefa continua para o João corrigir.
-
+- `sandbox/modulo-05/`: a `ContractsApi` em Rack puro da 5.1, testada com `Rack::MockRequest` + `Rack::Lint` (guardas com `return`);
 - `money.rb`, `installment.rb` (`Data.define`), `contract.rb`, `sample_contracts.rb` (Casarão e Gauss), sem código solto; testes em `test/` (`money`, `money_split`, `installment`, `contract`);
 - `Gemfile` com `rubocop`, `minitest` (6.0.6) e `rake` (13.4.2); `Rakefile` na raiz com
   `default: :test`;
@@ -69,14 +64,10 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Commitar a 5.1 (a árvore de trabalho tem o conserto: `Gemfile`, `contracts_api.rb`, os
-   testes), rodando o `rake` antes. A aula fechou na revisão 2 (05/11): `52 runs, 0 failures`.
-2. Entregar a [aula 5.2](modulo-05/05-2-rails-new.md): `Dockerfile` com `git`/`libpq-dev`, `db` e
-   `api` no Compose, `rails new` em `apps/api/`, `.git` aninhado apagado, RuboCop da raiz
-   excluindo `apps/`, `/up` → `200`. Roteiro testado no container em 06/11 (Rails 8.1.4.1,
-   Postgres 18.6). **Ritmo ágil desde 05/11**: aula fecha por correção, perguntas só no fim do
-   módulo ([como-ensinar](como-ensinar.md#ritmo)).
-3. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
+1. Entregar a [aula 5.3](modulo-05/05-3-rotas-e-controllers.md): banco de teste, domínio em `apps/api/app/domain/`
+   (Zeitwerk: `module SampleContracts`), rotas, controllers e testes de integração. Roteiro testado no
+   container em 08/11. **Ritmo ágil**: aula fecha por correção ([como-ensinar](como-ensinar.md#ritmo)).
+2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
 
