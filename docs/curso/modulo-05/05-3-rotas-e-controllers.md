@@ -252,3 +252,35 @@ Pendências, sem bloquear: `ContractController` no singular, com `health` dentro
 `ContractsController`, e o `health` no próprio *controller*); o teste do `/contracts/2` ainda
 monta o esperado copiando a lógica (`expected_contract_summary`), e a tarefa pedia valores
 escritos (`"Gauss"`, `390000`, 20); o `require "minitest/autorun"` sobrando no `contract_test.rb`.
+
+### Erro ao abrir `/contracts/1` — 24/11/2026
+
+O log mostrou `ActionDispatch::MissingController (uninitialized constant ContractsController)`.
+A rota aponta para `contracts#contract`, então o Rails procura `ContractsController`. A classe
+já se chama `ContractsController`, mas está em `app/controllers/contract_controller.rb`; o
+Zeitwerk espera encontrá-la em `app/controllers/contracts_controller.rb`. Renomear o arquivo
+para o plural deve resolver esse erro. A aplicação ainda não foi alterada nesta sessão.
+
+### Revisão 1 — 24/11/2026: falta só limpar e commitar
+
+Ainda **sem commit** de código. Verificado no container:
+
+- `db/schema.rb` gerado pelo `db:migrate`: o `bin/rails test` voltou a rodar em paralelo (8
+  processos) e terminou com **`52 runs, 94 assertions, 0 failures, 0 errors`**. O travamento era
+  mesmo o `schema.rb` faltando.
+- `SampleContracts::ALL` nos testes do domínio; `ContractsController` e `HealthController`
+  separados; `405` mantido com `match … via: :all`.
+- `curl.exe`: `/health`, `/contracts` (sem parcelas) e `/contracts/2` (Gauss, 20 × 19500)
+  conferem.
+- **Prova de estragar:** sem o `return`, o `/contracts/99` dá
+  `NoMethodError: undefined method 'id' for nil`, e o teste do id inexistente cai. O `render`
+  não encerra o método. Fecha.
+
+**Falta, e bloqueia:**
+
+1. **`sandbox/modulo-04/test/` foi sobrescrito** com as versões do Rails
+   (`require "test_helper"`, aspas duplas). O `rake` da raiz quebra com
+   `cannot load such file -- test_helper`, e o RuboCop da raiz acusa 34 infrações. Os arquivos
+   do domínio no sandbox voltaram certos, e só os 4 testes ficaram com a versão nova.
+2. `bin/rubocop` da `api`: 4 infrações de espaço e quebra de linha, todas corrigíveis com `-a`.
+3. Os commits.

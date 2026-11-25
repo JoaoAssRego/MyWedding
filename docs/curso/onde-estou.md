@@ -75,6 +75,9 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 Cada uma aponta para onde nasceu.
 
+- [ ] `GET /contracts/1` falha porque `ContractsController` está em
+  `app/controllers/contract_controller.rb`; o Zeitwerk espera `contracts_controller.rb` —
+  [aula 5.3](modulo-05/05-3-rotas-e-controllers.md)
 - [ ] `listaContratosApi: Contrato[]` tipa como `Contrato` o que vem do `json()` — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
 - [ ] `catch` do caso do valor avisa em vez de reprovar — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
 - [ ] `exclude` do build lista as pastas de teste uma a uma — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
