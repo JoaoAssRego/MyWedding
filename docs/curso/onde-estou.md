@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-11-05
+atualizado: 2026-11-26
 modulo_atual: 5
-aula_atual: "5.1"
+aula_atual: "5.5"
 aliases:
   - Onde estou
 tags:
@@ -18,13 +18,13 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 > **Módulo 4 — Ruby essencial: concluído em 31/10**, com a
 > [revisão oral](modulo-04/README.md#revisão-oral-de-fechamento) fechada na segunda tentativa.
 > Agora, o **módulo 5 — Rails API e Postgres**: [5.1 — Rack](modulo-05/05-1-rack.md) fechou em
-> 05/11 e [5.2 — `rails new --api`](modulo-05/05-2-rails-new.md) em 08/11. Agora, a **[5.3](modulo-05/05-3-rotas-e-controllers.md)**,
-> rotas, controllers e JSON, passada em 08/11. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
+> 05/11, [5.2 — `rails new --api`](modulo-05/05-2-rails-new.md) em 08/11 e [5.3 — rotas e controllers](modulo-05/05-3-rotas-e-controllers.md)
+> em 24/11. A [5.4 — SQL à mão](modulo-05/05-4-sql-a-mao.md) fechou em 26/11; agora, a [5.5 — migration × SQL](modulo-05/05-5-migration-e-activerecord.md), passada em 26/11. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
 > [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
 
-Situação em 08/11/2026, último commit `f908c91`, verificado **no container**: sandbox `52 runs, 0 failures`; `apps/api` (Rails 8.1.4.1, `MyWedding::Application`) com `bin/rails test` vazio e `bin/rubocop` limpos; `db` (Postgres 18.6) e `api` no Compose; `/up` → `200`.
+Situação em 24/11/2026, último commit `03661ad`, verificado **no container**: sandbox `52 runs, 0 failures`; `apps/api` com o domínio em `app/domain/`, `ContractsController` e `HealthController`, `bin/rails test` → `52 runs, 94 assertions, 0 failures` (em paralelo, com `db/schema.rb`); RuboCop limpo nos dois; `db` (Postgres 18.6) e `api` no Compose; `sql_lab` com a tabela `contracts` escrita à mão (`sandbox/modulo-05/sql/`, montado em `/sql` no `db`).
 
 - `sandbox/modulo-05/`: a `ContractsApi` em Rack puro da 5.1, testada com `Rack::MockRequest` + `Rack::Lint` (guardas com `return`);
 - `money.rb`, `installment.rb` (`Data.define`), `contract.rb`, `sample_contracts.rb` (Casarão e Gauss), sem código solto; testes em `test/` (`money`, `money_split`, `installment`, `contract`);
@@ -64,9 +64,8 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Entregar a [aula 5.3](modulo-05/05-3-rotas-e-controllers.md): banco de teste, domínio em `apps/api/app/domain/`
-   (Zeitwerk: `module SampleContracts`), rotas, controllers e testes de integração. Roteiro testado no
-   container em 08/11. **Ritmo ágil**: aula fecha por correção ([como-ensinar](como-ensinar.md#ritmo)).
+1. Entregar a [aula 5.5](modulo-05/05-5-migration-e-activerecord.md): `Contract` vira *model*, *migration* com os `CHECK` da 5.4, seed, *fixtures* e o *controller* lendo do banco.
+   **Ritmo ágil**: aula fecha por correção ([como-ensinar](como-ensinar.md#ritmo)).
 2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).
@@ -75,8 +74,8 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 Cada uma aponta para onde nasceu.
 
-- [ ] `GET /contracts/1` falha porque `ContractsController` está em
-  `app/controllers/contract_controller.rb`; o Zeitwerk espera `contracts_controller.rb` —
+- [x] ~~`GET /contracts/1` falhava porque `ContractsController` estava em
+  `contract_controller.rb`~~ — resolvido no `d8eeb22` —
   [aula 5.3](modulo-05/05-3-rotas-e-controllers.md)
 - [ ] `listaContratosApi: Contrato[]` tipa como `Contrato` o que vem do `json()` — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)
 - [ ] `catch` do caso do valor avisa em vez de reprovar — [aula 3.3](modulo-03/03-3-async-e-teste-do-servidor.md#pendências)

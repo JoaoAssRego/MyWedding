@@ -13,7 +13,7 @@ tags:
 Postgres, com os mesmos casos de teste da [aula 3.3](../modulo-03/03-3-async-e-teste-do-servidor.md).
 **Onde vive o código:** `sandbox/modulo-05/` na aula 5.1 e, a partir da 5.2, `apps/api/`, a
 aplicação Rails de verdade.
-**Status:** em andamento — [aula 5.3](05-3-rotas-e-controllers.md) passada em 08/11/2026.
+**Status:** em andamento — [aula 5.5](05-5-migration-e-activerecord.md) passada em 26/11/2026.
 
 ## Por que começar pelo Rack
 
@@ -46,9 +46,9 @@ mostrarem.
 |---|---|---|
 | 5.1 | [Rack: a API do módulo 3 sem framework, em Ruby](05-1-rack.md) | concluída |
 | 5.2 | [`rails new --api`: a aplicação Rails no container, com Postgres](05-2-rails-new.md) | concluída |
-| 5.3 | [Rotas, controllers e JSON: a API da 5.1 dentro do Rails](05-3-rotas-e-controllers.md) | em andamento |
-| 5.4 | SQL à mão no Postgres: a tabela `contracts` com `BIGINT` e `CHECK` | prevista |
-| 5.5 | Migration × SQL e ActiveRecord básico: a mesma tabela, gerada e lida | prevista |
+| 5.3 | [Rotas, controllers e JSON: a API da 5.1 dentro do Rails](05-3-rotas-e-controllers.md) | concluída |
+| 5.4 | [SQL à mão: a tabela `contracts` no Postgres](05-4-sql-a-mao.md) | concluída |
+| 5.5 | [Migration × SQL, e o ActiveRecord lendo os contratos](05-5-migration-e-activerecord.md) | em andamento |
 | 5.6 | `POST`: corpo, *strong parameters*, validação e erros como resposta HTTP (`201`, `422`) | prevista |
 | 5.7 | Teste de integração contra o Postgres: os casos da 3.3 em Rails | prevista |
 
@@ -103,3 +103,14 @@ Da [5.3](05-3-rotas-e-controllers.md):
    ele ganha com essa regra?
 9. A 5.1 respondia `405` para `POST /contracts`, e o Rails responde `404`. O que o roteador do
    Rails procura que a sua guarda não procurava?
+
+Da [5.4](05-4-sql-a-mao.md):
+
+10. O que um `CHECK` no banco garante que a validação do `Money` no Ruby não garante?
+11. Por que o `INSERT` com total `1750000.4` entrou sem erro numa coluna `bigint`?
+
+Da [5.5](05-5-migration-e-activerecord.md):
+
+12. Por que o contrato saiu de `app/domain` e virou *model*, e o `Money` ficou?
+13. O que é o `db/schema.rb`, e por que ele vai para o Git?
+14. Por que `GET /contracts/01` encontra o contrato de `id` 1?
