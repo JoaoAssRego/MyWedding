@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 5
 aula: "5.3"
-status: em-andamento
+status: concluida
 conceitos:
   - routes
   - controller
@@ -17,7 +17,7 @@ tags:
 
 # Aula 5.3 — Rotas, controllers e JSON: a API da 5.1 dentro do Rails
 
-**Status:** em andamento — tarefa passada em 08/11/2026.
+**Status:** concluída em 24/11/2026, na segunda revisão.
 
 ## Contexto
 
@@ -284,3 +284,21 @@ Ainda **sem commit** de código. Verificado no container:
    do domínio no sandbox voltaram certos, e só os 4 testes ficaram com a versão nova.
 2. `bin/rubocop` da `api`: 4 infrações de espaço e quebra de linha, todas corrigíveis com `-a`.
 3. Os commits.
+
+### Revisão 2 — 24/11/2026: fecha
+
+Commits `bea5ba7` (`chore:` `db/schema.rb`), `a66cf53` (`feat:` domínio e testes),
+`d8eeb22` (`feat:` *controllers*, rotas e testes) e `b7cdffe` (`docs:`). Árvore limpa.
+Verificado no container:
+
+- `apps/api`: `zeitwerk:check` → `All is good!`; `bin/rails test` → **`52 runs, 94 assertions,
+  0 failures, 0 errors`** (em paralelo); `bin/rubocop` → `32 files, no offenses`.
+- raiz: `bundle exec rake` → `52 runs, 0 failures` (o `sandbox/modulo-04/test/` voltou ao
+  original); RuboCop → `17 files, no offenses`.
+- O `MissingController` registrado acima foi resolvido no commit: o arquivo é
+  `contracts_controller.rb`.
+
+Pendências, sem bloquear: o `expected_contracts`/`expected_contract_summary` do teste da lista
+ainda copia a lógica (o do Gauss já usa valores escritos); assuntos de commit longos (*"implement
+Contract, Installment, and Money classes with validations and sample contracts"*) para o que é
+"move domain into the Rails app".
