@@ -64,10 +64,9 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Entregar a [aula 5.5](modulo-05/05-5-migration-e-activerecord.md): `Contract` vira *model*, *migration* com os `CHECK` da 5.4, seed, *fixtures* e o *controller* lendo do banco.
-   A *migration* e o `schema.rb` já estão no `5492194`. Na [conferência 2 (28/11)](modulo-05/05-5-migration-e-activerecord.md#conferência-2--28112026-ainda-vermelha-nada-commitado)
-   a suíte ainda tinha 23 erros: as *fixtures* `one`/`two` do gerador e o `InstallmentTest` sem
-   *fixtures*. A prova de estragar precisa ser refeita com a suíte verde.
+1. Fechar a [aula 5.5](modulo-05/05-5-migration-e-activerecord.md): o código está verde e commitado
+   (`5492194` e `0660748`, [conferência 4](modulo-05/05-5-migration-e-activerecord.md#conferência-4--28112026-verde-código-commitado)).
+   Faltam anotar a comparação do `\d contracts` (tarefa 3) e o `curl.exe -i` no ar (tarefa 8).
    **Ritmo ágil**: aula fecha por correção ([como-ensinar](como-ensinar.md#ritmo)).
 2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da

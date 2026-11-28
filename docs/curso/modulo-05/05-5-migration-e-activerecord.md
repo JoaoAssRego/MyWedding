@@ -305,3 +305,42 @@ O que segura:
   `id` 2. Depois de corrigir isso, a chave `installment` do *controller* (o teste lê
   `installments`) vai derrubar o mesmo teste.
 - **`GET /contracts/0#{salon.id}` → 200**, e o teste espera `404`. Agora já aparece na saída.
+
+### Conferência 4 — 28/11/2026: verde, código commitado
+
+O João corrigiu o `installment_test.rb` no lugar certo (o sandbox voltou com `git restore`), o
+teste do `/contracts/:id` passou a usar `contracts(:photographer).id`, e a chave voltou a ser
+`installments`. A pedido dele, o Claude rodou `bin/rubocop -a` no `test/models/contract_test.rb`,
+que tirou só os dois espaços no fim da linha.
+
+Verificação no container, antes do commit:
+
+- `bin/rails zeitwerk:check` → `All is good!`.
+- `bin/rails test` → `45 runs, 82 assertions, 0 failures, 0 errors`.
+- `bin/rubocop` → `32 files inspected, no offenses detected`.
+- `rake` da raiz (sandbox) → `52 runs, 0 failures`.
+
+O código foi para o `0660748` (`feat: back contracts with an ActiveRecord model`). A separação
+em três commits da tarefa 10 não fica verde: sem o *controller* junto, o domínio não pode sair,
+e o *model* não pode entrar com o `Contract` de `app/domain` ainda no lugar. Por isso foram dois
+commits: o `5492194` (*migration* e `schema.rb`) e o `0660748` (o resto).
+
+> [!note] Decisão: `/contracts/0<id>` responde `404`
+> O `find_by` converte `"0123"` em `123` e encontraria o contrato. O João pôs uma guarda antes da
+> consulta: `params[:id]` tem que casar com `/\A[1-9]\d*\z/`, ou a resposta é `404`. Assim, o
+> mesmo contrato tem um só caminho.
+
+Pendências, sem bloquear:
+
+- a lista confere `contracts[0]` como `photographer`. Passa porque o `id` de uma *fixture* é
+  fixo, mas depende da ordem dos `id`, e a tarefa 7 pedia que não dependesse;
+- os testes que conferiam a numeração das parcelas (primeira `1`, última `installment_count`)
+  saíram com o `SampleContracts`. Hoje o esperado é calculado pelo próprio `installments` do
+  *model*. Um `with_index(0)` ainda seria pego pela validação do `Installment`, mas um
+  `with_index(2)` passaria sem nenhum teste cair;
+- o `setup` do `contract_test.rb` atribui `@contract_photographer` duas vezes;
+- o `assert_kind_of ActiveRecord::StatementInvalid` repete o `assert_raises`;
+- acento no salão: `Paraíso` no seed, `Paraiso` na *fixture*.
+
+Ainda sem registro de entrega: a comparação do `\d contracts` (tarefa 3) e o `curl.exe -i` no
+ar (tarefa 8). A aula fecha quando os dois forem anotados.
