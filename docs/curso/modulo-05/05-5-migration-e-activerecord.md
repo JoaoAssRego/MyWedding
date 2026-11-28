@@ -232,3 +232,51 @@ As colunas `NOT NULL` e os três `CHECK`, com os nomes da 5.4.
 No [README do módulo](README.md#revisão-oral-de-fechamento): por que o contrato saiu de
 `app/domain` e o `Money` ficou; o que o `schema.rb` é e por que vai para o Git; e por que
 `/contracts/01` encontra o contrato 1.
+
+## O que aconteceu
+
+### Conferência 1 — 26/11/2026: commit parcial
+
+A suíte rodou com `45 runs, 20 errors`: o `SampleContracts` foi apagado mas continuava em uso, e
+as *fixtures* geradas estavam com `total_cents` vazio. Testada numa cópia limpa, só a
+*migration* com o `db/schema.rb` passou (`52 runs, 0 failures, 0 errors`), e foi para o
+`5492194` (`feat: add contracts migration with check constraints`). Isso adiantou o segundo
+commit da tarefa 10.
+
+### Conferência 2 — 28/11/2026: ainda vermelha, nada commitado
+
+O João entregou a prova de estragar: com o `CHECK` do total fora, cai
+`ContractTest#test_rejects_5_cents_split_into_10_installments`
+(`ActiveRecord::CheckViolation expected but nothing was raised`).
+
+Conferido no container sobre a árvore de trabalho:
+
+- `bin/rails zeitwerk:check` → `All is good!`.
+- `bin/rails test` → `48 runs, 48 assertions, 0 failures, 23 errors`.
+- `bin/rubocop` → `2 offenses` (`Layout/TrailingWhitespace` em `test/models/contract_test.rb`).
+- O seed foi corrigido (`Contract`, `find_or_create_by!`, `total_cents`).
+- O *model* passou a usar `installments`, no plural.
+
+O que segura:
+
+- **As *fixtures* `one` e `two` do gerador ficaram**, com `total_cents` vazio. O Rails carrega
+  todas as *fixtures* antes de cada teste. Por isso há 15 `PG::NotNullViolation`, inclusive no
+  `health_controller_test.rb`.
+- **O `InstallmentTest` herda de `Minitest::Test`**, que não tem `contracts(...)`. São 8
+  `NoMethodError`. A tarefa 1 pede que ele crie os próprios `Installment`, sem contrato.
+- **A prova de estragar não vale ainda.** Nesta árvore, o teste do `CHECK` dá `NotNullViolation`
+  ao carregar as *fixtures* e nem chega ao `assert_raises`. A prova se refaz com a suíte verde.
+- Atrás desses erros, ainda escondidos:
+  - o *controller* devolve a chave `installment`, e o teste (e a API da 5.3) usam `installments`;
+  - `"/contracts/0#{contracts(:salon).id}"` espera `404`, mas o `find_by` converte `"0…"` em
+    número e encontra o contrato. A decisão do que ele responde ainda precisa ser tomada e
+    registrada;
+  - a lista confere `contracts[0]` como `photographer`, e isso depende da ordem dos `id` das
+    *fixtures*, o que a tarefa 7 proíbe.
+
+Pendências, sem bloquear:
+
+- o `setup` do `contract_test.rb` atribui `@contract_photographer` duas vezes, então o fotógrafo
+  nunca é testado;
+- o `assert_kind_of ActiveRecord::StatementInvalid` repete o que o `assert_raises` já garante;
+- o salão tem acento no seed (`Paraíso`) e não tem na *fixture* (`Paraiso`).
