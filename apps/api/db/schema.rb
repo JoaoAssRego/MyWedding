@@ -10,8 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 0) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_26_234506) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "contracts", force: :cascade do |t|
+    t.text "vendor", null: false
+    t.bigint "total_cents", null: false
+    t.integer "installment_count", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.check_constraint "installment_count >= 1", name: "contract_installment_count_check"
+    t.check_constraint "total_cents >= 0", name: "contract_total_cents_check"
+    t.check_constraint "total_cents >= installment_count", name: "total_cents_covers_installment_count"
+  end
 end
