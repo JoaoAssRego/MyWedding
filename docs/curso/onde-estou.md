@@ -66,8 +66,6 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 1. Passar a aula 5.6: `POST`, corpo, *strong parameters*, validação e erros como resposta HTTP
    (`201`, `422`). O `CheckViolation` que hoje vira `500` entra aqui.
-   Antes, rodar `bin/rails db:seed`: a tabela do `my_wedding_development` foi recriada depois do
-   curl da 5.5 e está vazia.
 2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).

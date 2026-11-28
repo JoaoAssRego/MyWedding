@@ -372,5 +372,9 @@ Depois do curl, a tabela `contracts` do `my_wedding_development` foi recriada (a
 voltou para 1, sem nenhum `INSERT`), provavelmente num `db:rollback` + `db:migrate`, e ficou
 vazia. Para ter os dados de novo, basta rodar `bin/rails db:seed`.
 
+Conferido depois do `db:seed` do João (28/11): `GET /contracts` devolve os `id` 1 e 2, e
+`GET /contracts/2` devolve o Gauss com a chave `installments`, que parte de 19.500 centavos. As
+duas observações acima ficaram resolvidas.
+
 **Aula fechada em 28/11/2026.** A verificação passa no container, a prova de estragar derruba o
 teste do `CHECK`, e o `HEAD` está verde.
