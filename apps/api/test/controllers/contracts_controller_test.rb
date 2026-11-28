@@ -10,8 +10,8 @@ class ContractsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     assert_equal 2, contracts.size
-    assert_equal expected_contracts(SampleContracts::ALL[0]), contracts[0]
-    assert_equal expected_contracts(SampleContracts::ALL[1]), contracts[1]
+    assert_equal expected_contracts(contracts(:photographer)), contracts[0]
+    assert_equal expected_contracts(contracts(:salon)), contracts[1]
   end
 
   test "requisition contracts nonexistent method" do
@@ -21,11 +21,12 @@ class ContractsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "requisition contracts specific" do
-    get "/contracts/2"
+    photographer = contracts(:photographer)
+    get "/contracts/#{photographer.id}"
     contracts = response.parsed_body
 
     assert_equal 200, response.status
-    assert_equal "2", contracts["id"]
+    assert_equal photographer.id, contracts["id"]
     assert_equal "Gauss", contracts["vendor"]
     assert_equal 20, contracts["installment_count"]
 
@@ -48,7 +49,7 @@ class ContractsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "access nonexistent contract" do
-    get "/contracts/01"
+    get "/contracts/0#{contracts(:salon).id}"
 
     assert_equal 404, response.status
   end

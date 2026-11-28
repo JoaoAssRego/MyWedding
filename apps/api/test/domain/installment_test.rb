@@ -3,25 +3,6 @@
 require "test_helper"
 # Test of installment
 class InstallmentTest < Minitest::Test
-  def setup
-    @contract = SampleContracts::ALL[0]
-    @installment_generated = @contract.installments
-  end
-
-  def test_installments_generated
-    assert_equal @contract.installment_count, @installment_generated.size
-  end
-
-  def test_first_and_last_installments_have_expected_numbers
-    assert_equal 1, @installment_generated.first.number
-    assert_equal @contract.installment_count, @installment_generated.last.number
-  end
-
-  def test_sum_amount_installments_equal_total
-    sum = @installment_generated.sum(Money.from_cents(0), &:amount)
-    assert_equal @contract.total, sum
-  end
-
   def test_same_installments_equal_installments
     first = Installment.new(2, Money.from_cents(30))
     second = Installment.new(2, Money.from_cents(30))

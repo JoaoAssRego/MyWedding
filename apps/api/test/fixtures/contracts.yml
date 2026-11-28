@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+photographer:
+  vendor: Gauss
+  total_cents: 390000
+  installment_count: 20
+
+salon:
+  vendor: Casarao do Paraiso
+  total_cents: 1750000
+  installment_count: 27

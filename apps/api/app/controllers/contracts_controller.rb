@@ -1,6 +1,6 @@
 class ContractsController < ApplicationController
     def contracts
-      contracts = SampleContracts::ALL.map do |contract|
+      contracts = Contract.order(:id).map do |contract|
         {
           id: contract.id,
           vendor: contract.vendor,
@@ -12,9 +12,9 @@ class ContractsController < ApplicationController
     end
 
     def contract
-        contract = SampleContracts::ALL.find do |contract|
-            contract.id == params[:id]
-        end
+        return render json: { error: "Contract not found" }, status: :not_found unless params[:id].match?(/\A[1-9]\d*\z/)
+
+        contract = Contract.find_by(id: params[:id])
 
         return render json: { error: "Contract not found" }, status: :not_found unless contract
 
