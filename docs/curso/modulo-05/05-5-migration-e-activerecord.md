@@ -280,3 +280,28 @@ Pendências, sem bloquear:
   nunca é testado;
 - o `assert_kind_of ActiveRecord::StatementInvalid` repete o que o `assert_raises` já garante;
 - o salão tem acento no seed (`Paraíso`) e não tem na *fixture* (`Paraiso`).
+
+### Conferência 3 — 28/11/2026: faltam o `InstallmentTest` e o *controller*
+
+Conferido no container sobre a árvore de trabalho:
+
+- `bin/rails zeitwerk:check` → `All is good!`.
+- `bin/rails test` → `48 runs, 71 assertions, 2 failures, 8 errors`.
+- `bin/rubocop` → as mesmas `2 offenses` de espaço no fim da linha.
+- As *fixtures* `one` e `two` saíram, e com isso sumiram os 15 `NotNullViolation`.
+- **A prova de estragar vale.** Foi refeita numa cópia temporária: com o `CHECK`, o
+  `test/models/contract_test.rb` dá `3 runs, 0 failures`. Sem
+  `total_cents_covers_installment_count`, cai `test_rejects_5_cents_split_into_10_installments`
+  (`CheckViolation expected but nothing was raised`). Bate com o relato do João.
+
+O que segura:
+
+- **A correção do `InstallmentTest` foi no arquivo errado.** Quem mudou foi o
+  `sandbox/modulo-04/test/installment_test.rb`, e lá três testes que passavam foram apagados (o
+  `rake` da raiz caiu de 52 para 49 runs). O `apps/api/test/domain/installment_test.rb` continua
+  chamando `contracts(:photographer)` dentro de um `Minitest::Test`, e dá 8 `NoMethodError`. O
+  sandbox volta com `git restore`, e a mudança vai para o `apps/api`.
+- **`GET /contracts/2` → 404.** O teste ainda escreve o `id` à mão, e as *fixtures* não têm
+  `id` 2. Depois de corrigir isso, a chave `installment` do *controller* (o teste lê
+  `installments`) vai derrubar o mesmo teste.
+- **`GET /contracts/0#{salon.id}` → 200**, e o teste espera `404`. Agora já aparece na saída.
