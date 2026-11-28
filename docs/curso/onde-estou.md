@@ -1,8 +1,8 @@
 ---
 tipo: progresso
-atualizado: 2026-11-26
+atualizado: 2026-11-28
 modulo_atual: 5
-aula_atual: "5.5"
+aula_atual: "5.6"
 aliases:
   - Onde estou
 tags:
@@ -19,7 +19,7 @@ antes de uma aula, e é reescrita ao final de cada sessão — o histórico fica
 > [revisão oral](modulo-04/README.md#revisão-oral-de-fechamento) fechada na segunda tentativa.
 > Agora, o **módulo 5 — Rails API e Postgres**: [5.1 — Rack](modulo-05/05-1-rack.md) fechou em
 > 05/11, [5.2 — `rails new --api`](modulo-05/05-2-rails-new.md) em 08/11 e [5.3 — rotas e controllers](modulo-05/05-3-rotas-e-controllers.md)
-> em 24/11. A [5.4 — SQL à mão](modulo-05/05-4-sql-a-mao.md) fechou em 26/11; agora, a [5.5 — migration × SQL](modulo-05/05-5-migration-e-activerecord.md), passada em 26/11. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
+> em 24/11. A [5.4 — SQL à mão](modulo-05/05-4-sql-a-mao.md) fechou em 26/11; a [5.5 — migration × SQL](modulo-05/05-5-migration-e-activerecord.md) fechou em 28/11; a 5.6 (`POST`, validação, `201`/`422`) ainda não foi passada. Desde 10/10 o backend é **Ruby on Rails** (API); ver a
 > [mudança de rota](00-plano-de-estudos.md#mudança-de-rota-10102026).
 
 ## Estado
@@ -64,10 +64,10 @@ testes de `04-testes.ts` e de `servidor.ts` dizem o que o Ruby precisa fazer.
 
 ## Próximos passos
 
-1. Fechar a [aula 5.5](modulo-05/05-5-migration-e-activerecord.md): o código está verde e commitado
-   (`5492194` e `0660748`, [conferência 4](modulo-05/05-5-migration-e-activerecord.md#conferência-4--28112026-verde-código-commitado)).
-   Faltam anotar a comparação do `\d contracts` (tarefa 3) e o `curl.exe -i` no ar (tarefa 8).
-   **Ritmo ágil**: aula fecha por correção ([como-ensinar](como-ensinar.md#ritmo)).
+1. Passar a aula 5.6: `POST`, corpo, *strong parameters*, validação e erros como resposta HTTP
+   (`201`, `422`). O `CheckViolation` que hoje vira `500` entra aqui.
+   Antes, rodar `bin/rails db:seed`: a tabela do `my_wedding_development` foi recriada depois do
+   curl da 5.5 e está vazia.
 2. Opcional, pendente do módulo 3: repetir um dos estragos da 3.3 com as próprias mãos, e a
    pergunta de aprofundamento `ReferenceError` × `undefined` da
    [revisão oral](modulo-03/README.md#primeira-tentativa--11102026-fecha).

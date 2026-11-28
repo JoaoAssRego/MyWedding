@@ -2,7 +2,7 @@
 tipo: aula
 modulo: 5
 aula: "5.5"
-status: em-andamento
+status: concluida
 conceitos:
   - migration
   - schema-rb
@@ -17,7 +17,7 @@ tags:
 
 # Aula 5.5 — Migration × SQL, e o ActiveRecord lendo os contratos
 
-**Status:** em andamento — tarefa passada em 26/11/2026.
+**Status:** concluída em 28/11/2026, na quarta conferência.
 
 ## Contexto
 
@@ -344,3 +344,33 @@ Pendências, sem bloquear:
 
 Ainda sem registro de entrega: a comparação do `\d contracts` (tarefa 3) e o `curl.exe -i` no
 ar (tarefa 8). A aula fecha quando os dois forem anotados.
+
+### Entrega das tarefas 3 e 8 — 28/11/2026: fecha
+
+**Tarefa 3, `\d contracts`.** O João colou a saída dos dois bancos. As colunas `NOT NULL` e as
+três expressões dos `CHECK` são iguais. As diferenças:
+
+| | `sql_lab` (5.4, à mão) | `my_wedding_development` (*migration*) |
+|---|---|---|
+| `id` | `generated always as identity` | `nextval('contracts_id_seq')` |
+| `created_at` | `timestamp with time zone`, *default* `now()` | `timestamp(6) without time zone`, sem *default* (o Rails preenche) |
+| `updated_at` | não existe | `timestamp(6) without time zone` |
+| nomes dos `CHECK` | `contracts_installment_count_check`, `contracts_total_cents_check`, `total_cents_cover_installment_count` | `contract_installment_count_check`, `contract_total_cents_check`, `total_cents_covers_installment_count` |
+
+Os nomes dos `CHECK` não ficaram iguais aos da 5.4, ao contrário do que a tarefa pedia. É
+diferença de nome, então vira pendência e não segura a aula.
+
+**Tarefa 8, no ar.** `GET /contracts` → `200`, com os dois contratos do seed (`id` 1 e 2, o
+`id` já como número). `GET /contracts/1` → `200`, com as 27 parcelas do salão e o centavo extra
+nas 22 primeiras. Duas observações:
+
+- o curl do detalhe foi feito antes da conferência 4 e ainda mostra a chave `installment`. O
+  código commitado (`0660748`) devolve `installments`, e o teste do *controller* confere isso;
+- a tarefa pedia o `id` do Gauss, e o curl foi no salão. Não segura.
+
+Depois do curl, a tabela `contracts` do `my_wedding_development` foi recriada (a *sequence*
+voltou para 1, sem nenhum `INSERT`), provavelmente num `db:rollback` + `db:migrate`, e ficou
+vazia. Para ter os dados de novo, basta rodar `bin/rails db:seed`.
+
+**Aula fechada em 28/11/2026.** A verificação passa no container, a prova de estragar derruba o
+teste do `CHECK`, e o `HEAD` está verde.

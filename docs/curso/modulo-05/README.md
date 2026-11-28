@@ -13,7 +13,7 @@ tags:
 Postgres, com os mesmos casos de teste da [aula 3.3](../modulo-03/03-3-async-e-teste-do-servidor.md).
 **Onde vive o código:** `sandbox/modulo-05/` na aula 5.1 e, a partir da 5.2, `apps/api/`, a
 aplicação Rails de verdade.
-**Status:** em andamento — [aula 5.5](05-5-migration-e-activerecord.md) passada em 26/11/2026.
+**Status:** em andamento — [aula 5.5](05-5-migration-e-activerecord.md) concluída em 28/11/2026; a 5.6 ainda não foi passada.
 
 ## Por que começar pelo Rack
 
@@ -48,7 +48,7 @@ mostrarem.
 | 5.2 | [`rails new --api`: a aplicação Rails no container, com Postgres](05-2-rails-new.md) | concluída |
 | 5.3 | [Rotas, controllers e JSON: a API da 5.1 dentro do Rails](05-3-rotas-e-controllers.md) | concluída |
 | 5.4 | [SQL à mão: a tabela `contracts` no Postgres](05-4-sql-a-mao.md) | concluída |
-| 5.5 | [Migration × SQL, e o ActiveRecord lendo os contratos](05-5-migration-e-activerecord.md) | em andamento |
+| 5.5 | [Migration × SQL, e o ActiveRecord lendo os contratos](05-5-migration-e-activerecord.md) | concluída |
 | 5.6 | `POST`: corpo, *strong parameters*, validação e erros como resposta HTTP (`201`, `422`) | prevista |
 | 5.7 | Teste de integração contra o Postgres: os casos da 3.3 em Rails | prevista |
 
